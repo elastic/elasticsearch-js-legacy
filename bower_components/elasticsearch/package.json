@@ -1,0 +1,22 @@
+{
+  "name": "elasticsearch-browser",
+  "version": "0.0.1",
+  "description": "Seperate repo for maintaining the elasticsearch browser build",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "elasticsearch",
+    "browser"
+  ],
+  "author": "Spencer Alger",
+  "license": "Apache 2.0",
+  "devDependencies": {
+    "elasticsearch": "https://spenceralger.com/esjs-tarball"
+  },
+  "dependencies": {},
+  "script": {
+    "prepublish": "cd node_modules/elasticsearch-js && npm install && npm run export_client --outputDir=../../ && cd ../../"
+  }
+}
