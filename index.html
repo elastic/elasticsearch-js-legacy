@@ -66,7 +66,7 @@ var bunyan = require('bunyan');
 &nbsp;
 function LogToBunyan(config) {
   // config is the object passed to the client constructor.
-  var bun = bunyan.createLogger({name: "elasticsearch"});
+  var bun = bunyan.createLogger({name: 'elasticsearch'});
   this.error = bun.error.bind(bun);
   this.warning = bun.warn.bind(bun);
   this.info = bun.info.bind(bun);
