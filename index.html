@@ -1,10 +1,25 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="styles/prism.css"><link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Signika+Negative:300,400"><link rel="stylesheet" type="text/css" href="styles/main.css"><link rel="shortcut icon" href="http://www.elasticsearch.org/content/themes/elasticsearch-org/favicon.ico"><meta name="viewport" content="initial-scale=1"><title>Elasticsearch.js - Official Elasticsearch client for Node.js and the Browser</title></head><body class="language-javascript"><a href="https://github.com/elasticsearch/elasticsearch-js"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" class="ghribbon"></a><header><h1>Elasticsearch.js</h1><p>A low-level Elasticsearch client for Node.js and the Browser</p></header><nav><h1><a href="index.html">Elasticsearch.js</a></h1><ul><li><a href="index.html#quick-start">Quick Start</a></li><li><a href="index.html#configuration">Configuration</a></li><li><a href="index.html#extending">Extending Core Components</a></li><li><a href="index.html#logging">Logging</a></li><li><a href="index.html#contributing">Contributing</a></li><h2><a href="api.html">Api</a></h2><ul><li><a href="api.html#bulk">bulk</a></li><li><a href="api.html#clearscroll">clearScroll</a></li><li><a href="api.html#count">count</a></li><li><a href="api.html#delete">delete</a></li><li><a href="api.html#deletebyquery">deleteByQuery</a></li><li><a href="api.html#exists">exists</a></li><li><a href="api.html#explain">explain</a></li><li><a href="api.html#get">get</a></li><li><a href="api.html#getsource">getSource</a></li><li><a href="api.html#index">index</a></li><li><a href="api.html#info">info</a></li><li><a href="api.html#mget">mget</a></li><li><a href="api.html#mlt">mlt</a></li><li><a href="api.html#msearch">msearch</a></li><li><a href="api.html#percolate">percolate</a></li><li><a href="api.html#scroll">scroll</a></li><li><a href="api.html#search">search</a></li><li><a href="api.html#suggest">suggest</a></li><li><a href="api.html#update">update</a></li><h3>Cluster</h3><ul><li><a href="api.html#cluster-getsettings">getSettings</a></li><li><a href="api.html#cluster-health">health</a></li><li><a href="api.html#cluster-nodehotthreads">nodeHotThreads</a></li><li><a href="api.html#cluster-nodeinfo">nodeInfo</a></li><li><a href="api.html#cluster-nodeshutdown">nodeShutdown</a></li><li><a href="api.html#cluster-nodestats">nodeStats</a></li><li><a href="api.html#cluster-putsettings">putSettings</a></li><li><a href="api.html#cluster-reroute">reroute</a></li><li><a href="api.html#cluster-state">state</a></li></ul><h3>Indices</h3><ul><li><a href="api.html#indices-analyze">analyze</a></li><li><a href="api.html#indices-clearcache">clearCache</a></li><li><a href="api.html#indices-close">close</a></li><li><a href="api.html#indices-create">create</a></li><li><a href="api.html#indices-delete">delete</a></li><li><a href="api.html#indices-deletealias">deleteAlias</a></li><li><a href="api.html#indices-deletemapping">deleteMapping</a></li><li><a href="api.html#indices-deletetemplate">deleteTemplate</a></li><li><a href="api.html#indices-deletewarmer">deleteWarmer</a></li><li><a href="api.html#indices-exists">exists</a></li><li><a href="api.html#indices-existsalias">existsAlias</a></li><li><a href="api.html#indices-existstype">existsType</a></li><li><a href="api.html#indices-flush">flush</a></li><li><a href="api.html#indices-getalias">getAlias</a></li><li><a href="api.html#indices-getaliases">getAliases</a></li><li><a href="api.html#indices-getfieldmapping">getFieldMapping</a></li><li><a href="api.html#indices-getmapping">getMapping</a></li><li><a href="api.html#indices-getsettings">getSettings</a></li><li><a href="api.html#indices-gettemplate">getTemplate</a></li><li><a href="api.html#indices-getwarmer">getWarmer</a></li><li><a href="api.html#indices-open">open</a></li><li><a href="api.html#indices-optimize">optimize</a></li><li><a href="api.html#indices-putalias">putAlias</a></li><li><a href="api.html#indices-putmapping">putMapping</a></li><li><a href="api.html#indices-putsettings">putSettings</a></li><li><a href="api.html#indices-puttemplate">putTemplate</a></li><li><a href="api.html#indices-putwarmer">putWarmer</a></li><li><a href="api.html#indices-refresh">refresh</a></li><li><a href="api.html#indices-segments">segments</a></li><li><a href="api.html#indices-snapshotindex">snapshotIndex</a></li><li><a href="api.html#indices-stats">stats</a></li><li><a href="api.html#indices-status">status</a></li><li><a href="api.html#indices-updatealiases">updateAliases</a></li><li><a href="api.html#indices-validatequery">validateQuery</a></li></ul></ul><h2>Misc</h2><ul><li><a href="transport_api.html">Transport</a></li><li><a href="errors.html">Errors</a></li></ul></ul></nav><h2>Features</h2><ul><li>One-to-one mapping with REST API and other language clients</li><li>Generalized, pluggable architecture. See <a href="#extending">extending core components</a></li><li>Configurable, automatic discovery of cluster nodes</li><li>Persistent, Keep-Alive connections</li><li>Load balancing (with pluggable selection strategy) across all available nodes.</li><li>works great in node, as well as modern browsers
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Signika+Negative:300,400"><link rel="stylesheet" type="text/css" href="styles/prism.css"><link rel="stylesheet" type="text/css" href="styles/main.css"><link rel="shortcut icon" href="http://www.elasticsearch.org/content/themes/elasticsearch-org/favicon.ico"><meta name="viewport" content="initial-scale=1"><title>Elasticsearch.js - Official Elasticsearch client for Node.js and the Browser</title></head><body class="language-javascript"><a href="https://github.com/elasticsearch/elasticsearch-js"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" class="ghribbon"></a><header><h1>Elasticsearch.js</h1><p>A low-level Elasticsearch client for Node.js and the Browser</p></header><nav><h1><a href="index.html">Elasticsearch.js</a></h1><ul><li><a href="index.html#about">About/Install</a></li><li><a href="index.html#quick-start">Quick Start</a></li><li><a href="index.html#configuration">Configuration</a></li><li><a href="index.html#extending">Extending Core Components</a></li><li><a href="index.html#logging">Logging</a></li><li><a href="index.html#dev">Development/Contributing</a></li><h2><a href="api.html">Api</a></h2><ul><li><a href="api.html#bulk">bulk</a></li><li><a href="api.html#clearscroll">clearScroll</a></li><li><a href="api.html#count">count</a></li><li><a href="api.html#delete">delete</a></li><li><a href="api.html#deletebyquery">deleteByQuery</a></li><li><a href="api.html#exists">exists</a></li><li><a href="api.html#explain">explain</a></li><li><a href="api.html#get">get</a></li><li><a href="api.html#getsource">getSource</a></li><li><a href="api.html#index">index</a></li><li><a href="api.html#info">info</a></li><li><a href="api.html#mget">mget</a></li><li><a href="api.html#mlt">mlt</a></li><li><a href="api.html#msearch">msearch</a></li><li><a href="api.html#percolate">percolate</a></li><li><a href="api.html#scroll">scroll</a></li><li><a href="api.html#search">search</a></li><li><a href="api.html#suggest">suggest</a></li><li><a href="api.html#update">update</a></li><h3>Cluster</h3><ul><li><a href="api.html#cluster-getsettings">getSettings</a></li><li><a href="api.html#cluster-health">health</a></li><li><a href="api.html#cluster-nodehotthreads">nodeHotThreads</a></li><li><a href="api.html#cluster-nodeinfo">nodeInfo</a></li><li><a href="api.html#cluster-nodeshutdown">nodeShutdown</a></li><li><a href="api.html#cluster-nodestats">nodeStats</a></li><li><a href="api.html#cluster-putsettings">putSettings</a></li><li><a href="api.html#cluster-reroute">reroute</a></li><li><a href="api.html#cluster-state">state</a></li></ul><h3>Indices</h3><ul><li><a href="api.html#indices-analyze">analyze</a></li><li><a href="api.html#indices-clearcache">clearCache</a></li><li><a href="api.html#indices-close">close</a></li><li><a href="api.html#indices-create">create</a></li><li><a href="api.html#indices-delete">delete</a></li><li><a href="api.html#indices-deletealias">deleteAlias</a></li><li><a href="api.html#indices-deletemapping">deleteMapping</a></li><li><a href="api.html#indices-deletetemplate">deleteTemplate</a></li><li><a href="api.html#indices-deletewarmer">deleteWarmer</a></li><li><a href="api.html#indices-exists">exists</a></li><li><a href="api.html#indices-existsalias">existsAlias</a></li><li><a href="api.html#indices-existstype">existsType</a></li><li><a href="api.html#indices-flush">flush</a></li><li><a href="api.html#indices-getalias">getAlias</a></li><li><a href="api.html#indices-getaliases">getAliases</a></li><li><a href="api.html#indices-getfieldmapping">getFieldMapping</a></li><li><a href="api.html#indices-getmapping">getMapping</a></li><li><a href="api.html#indices-getsettings">getSettings</a></li><li><a href="api.html#indices-gettemplate">getTemplate</a></li><li><a href="api.html#indices-getwarmer">getWarmer</a></li><li><a href="api.html#indices-open">open</a></li><li><a href="api.html#indices-optimize">optimize</a></li><li><a href="api.html#indices-putalias">putAlias</a></li><li><a href="api.html#indices-putmapping">putMapping</a></li><li><a href="api.html#indices-putsettings">putSettings</a></li><li><a href="api.html#indices-puttemplate">putTemplate</a></li><li><a href="api.html#indices-putwarmer">putWarmer</a></li><li><a href="api.html#indices-refresh">refresh</a></li><li><a href="api.html#indices-segments">segments</a></li><li><a href="api.html#indices-snapshotindex">snapshotIndex</a></li><li><a href="api.html#indices-stats">stats</a></li><li><a href="api.html#indices-status">status</a></li><li><a href="api.html#indices-updatealiases">updateAliases</a></li><li><a href="api.html#indices-validatequery">validateQuery</a></li></ul></ul><h2>Misc</h2><ul><li><a href="transport_api.html">Transport</a></li><li><a href="errors.html">Errors</a></li></ul></ul></nav><h2 id="about">Features</h2><ul><li>One-to-one mapping with REST API and other language clients</li><li>Generalized, pluggable architecture. See <a href="#extending">extending core components</a></li><li>Configurable, automatic discovery of cluster nodes</li><li>Persistent, Keep-Alive connections</li><li>Load balancing (with pluggable selection strategy) across all available nodes.</li><li>works great in node, as well as modern browsers
 (many thanks to <a href="https://github com/substack/node-browserify">browserify</a>!!).
-</li></ul><h2>Install in Node</h2><pre><code>npm install --save elasticsearch</code></pre><h2>Browser Builds</h2><p>Download one of these browser-ready builds, or install them with `bower`</p><p><b>NOTE:</b> The entire API is compatible with IE 10+, Chrome, Firefox, Safari, and Opera. Both IE 8 & 9
-limit cross domain requests to GET and POST. The majority of the API will function in these browsers, but
-you should be aware of the limitations in older versions of IE.
-</p><h3><a href="https://github.com/elasticsearch/elasticsearch-browser">Generic</a></h3><ul><li>uses the browser's native XMLHttpRequest object</li><li>Node style callbacks or promises provided by <a hrer="https://github.com/cujojs/when">when.js</a></li></ul><pre><code>bower install elasticsearch
-</code></pre><h4>or download from</h4><h3><a href="https://github.com/elasticsearch/elasticsearch-angular">Angular</a></h3><ul><li>Uses Angular's $http service</li><li>Returns promises using Angular's $q service (Adds an `abort()` method)</li></ul><pre><code>bower install elasticsearch-angular</code></pre><h3><a href="https://github.com/elasticsearch/elasticsearch-jqueyr">jQuery</a></h3><ul><li>Uses jQuery's .ajax() functionality</li><li>Returns jQuery promises (Adds an `abort()` method)</li></ul><pre><code>bower install elasticsearch-jquery</code></pre><h2 id="quick-start">Quick Start</h2><h4>Create the client</h4><pre><code>var es = require('elasticsearch');
+</li></ul><h2>Install in Node</h2><pre><code>npm install --save elasticsearch</code></pre><h2>Browser Builds</h2><p>To download a build of elasticsearch.js which functions well within modern browsers, use the links
+below. This version of the client is currently <em>experimental</em>. It can break from time to time
+and should probably not be used on public-facing websites (it's a whopping 150kb of code).
+</p><ul><li>v0.0.1 [<a href="https://download.elasticsearch.org/elasticsearch/elasticsearch-js/0.0.1/elasticsearch-js.zip">zip</a>] [<a href="https://download.elasticsearch.org/elasticsearch/elasticsearch-js/0.0.1/elasticsearch-js.tar.gz">tarball</a>]</li><li>master [<a href="https://download.elasticsearch.org/elasticsearch/elasticsearch-js/master/elasticsearch-js.zip">zip</a>] [<a href="https://download.elasticsearch.org/elasticsearch/elasticsearch-js/master/elasticsearch-js.tar.gz">tarball</a>]</li></ul><h3>Browser Compatiblity</h3><p><b>NOTE:</b> The entire API is compatible with IE 10+, Chrome, Firefox, Safari, and Opera. The majority
+of the API will function properly in IE 8 &amp; 9, but they limit cross domain requests to GET and POST. IE
+versions before 8 do not support cross-domain requests.
+</p><h3>Angular/jQuery Builds</h3><p>In the downloads you will find versions of the elasticsearch.js client modified to work well
+with a both Angular and jQuery.
+</p><h4>Angular Build (elasticsarch.angular.js)</h4><ul><li>Registers the elasticsearch object as a factory <code>esFactory</code></li><li>Uses Angular's <code>$http</code> service</li><li>Returns promises using Angular's <code>$q</code> service which properly trigger digest
+cycles within Angular
+</li></ul><h5>Create a client instance and register it as a service</h5><pre><code>module.serivce('es', function (esFactory) {
+  return esFactory({
+    host: 'localhost:9200',
+    // ...
+  });
+});
+</code></pre><h4>jQuery Build</h4><ul><li>Uses jQuery's <code>.ajax()</code> functionality</li><li>Returns jQuery "promises"</li><li>Registers the module at <code>jQuery.es</code></li></ul><h5>Create a client with the jQuery build</h5><pre><code>var es = new $.es.Client({
+  hosts: 'localhost:9200'
+});
+</code></pre><h2 id="quick-start">Quick Start</h2><h4>Create the client</h4><pre><code>var es = require('elasticsearch');
 var client = new es.Client({
   hosts: [
     'localhost:9200'
@@ -39,77 +54,161 @@ var client = new es.Client({
     console.error(err.message);
   }
 });</code></pre><h2 id="configuration">Configuration</h2><p>The <code>Client</code> constructor accepts a single object as it's argument, and the following keys
-can be used to configure that client instance:
+can be used to configure that client instance.
 </p><pre><code>var elasticsearch = require('elasticsearch');
 var es = new elasticsearch.Client({
   ...
 });
-</code></pre><h3>Config options:</h3><ul class="params config"><li><code class="name">[hosts=...]</code> <span class="types">String, String[], Object[]</span> Specify
-the list of hosts that this client will connect to. If sniffing is enabled, or you call
-<code>client.sniff()</code>, this list will be used as seeds to discover the rest of your cluster.<h4>Default:</h4><pre><code>[{
-  host: 'localhost',
-  port: '9200',
-  protocol: 'http'
-}]
-</code></pre></li><li><code class="name">[log=...]</code> <span class="types">String, String[], Object, Object[],
+</code></pre><h3>Config options</h3><dl class="params config"><dt id="config-hosts"><dfn><code>host/hosts</code></dfn></dt><dd><p><span class="types">String, String[], Object[]</span> Specify the hosts that this client will connect to.
+If sniffing is enabled, or you call <code>client.sniff()</code>, this list will be used as seeds to
+discover the rest of your cluster.
+</p><h4>Default</h4><pre><code>'http://localhost:9200'
+</code></pre><h4>Examples</h4><h5>Just an address</h5><pre><code>var es = new elasticsearch.Client({
+  host: 'localhost:9200'
+});
+</code></pre><h5>A couple of addresses</h5><pre><code>var es = new elasticsearch.Client({
+  hosts: [ 'https://box1.server.org:9200', 'https://box2.server.org:9200' ]
+});
+</code></pre><h5>Addresses with auth</h5><pre><code>var es = new elasticsearch.Client({
+  hosts: [
+    'https://user:pass@box1.server.org:9200',
+    'https://user:pass@box2.server.org:9200'
+  ]
+});
+</code></pre><h5>Complete config objects with additional metadata used by our selector</h5><pre><code>var es = new elasticsearch.Client({
+  hosts: [
+    {
+      protocol: 'https',
+      host: 'box1.server.org',
+      auth: 'user:password',
+      path: '/es-v0.90',
+      port: 9200,
+      query: {
+        node: 1234
+      },
+      contry: 'EU',
+      weight: 50
+    },
+    {
+      protocol: 'https',
+      host: 'box2.server.org',
+      auth: 'user:password',
+      path: '/es-v0.90',
+      port: 9200,
+      query: {
+        node: 1234
+      },
+      country: 'US',
+      weight: 100
+    }
+  ],
+  selector: function (nodes) {
+    // extra keys passed in the config objects get added to objects passed to this callback
+    // now you can use it when selecting a connection
+    return _.find(node, { country: process.env.COUNTRY }) || _(nodes).sortBy('weight').first();
+  }
+});
+</code></pre></dd><dt><dfn><code>log</code></dfn></dt><dd><p><span class="types">String, String[], Object, Object[],
 Constructor</span> Unless a constructor is specified, this sets the output settings for the bundled
-logger. See the section on <a href="#configuring-logging">logging</a> for more information.<h4>Default:</h4><pre><code>[{
- type: 'stdio',
+logger. See the section on <a href="#configuring-logging">logging</a> for more information.
+</p><h4>Default</h4><pre><code>[{
+ type: 'stdio', // "console" in the browser build
  levels: ['error', 'warning']
 }]
-</code></pre></li><li><code class="name">[connectionClass=...]</code> <span class="types">String, Constructor</span> Defines the
-class that will be used to create connections.
-If you are looking to implement a protocol besides HTTP you will probably start by writing a Connection
-class and specifying it here.<h4>Defaults:</h4><ul><li>Node: <code>"http"</code></li><li>Browser: <code>"xhr"</code></li><li>Angular Build: <code>"angular"</code></li><li>jQuery Build: <code>"jquery"</code></li></ul></li><li><code class="name">[selector="roundRobin"]</code> <span class="types">String, Function</span> This
+</code></pre></dd><dt><dfn><code>connectionClass</code></dfn></dt><dd><p><span class="types">String, Constructor</span> Defines the class that will be used to create connections
+to store in the connection pool. If you are looking to implement additional protocols you should probably
+start by writing a Connection class that extends the ConnectionAbstract. See
+</p><h4>Defaults</h4><ul><li>Node: <code>"http"</code></li><li>Browser Build: <code>"xhr"</code></li><li>Angular Build: <code>"angular"</code></li><li>jQuery Build: <code>"jquery"</code></li></ul></dd><dt><dfn><code>selector</code></dfn></dt><dd><p><span class="types">String, Function</span> This
 function will be used to select a connection from the ConnectionPool. It should received a single
 argument, the list of "active" connections, and return the connection to use. Use this selector to
 implement special logic for your client such as preferring nodes in a certain rack or data-center.<br>
 <br>
 To make this function asynchronous, accept a second argument which will be the callback to use.
-The callback should be called Node-style, with a possible error like `cb(err, selectedConnection)`.<h4>Options:</h4><ul><li><code>"roundRobin"</code></li><li><code>"random"</code></li></ul></li><li><code class="name">[sniffOnStart=false]</code> <span class="types">Boolean</span> Should the client
-attempt to detect the rest of the cluster when it is first instantiated?
-</li><li><code class="name">[sniffAfterRequests=false]</code> <span class="types">Number, false</span> After
-<code>n</code> requests, perform a sniff operation and ensure our list of nodes is up to date.
-</li><li><code class="name">[sniffOnConnectionFail=false]</code> <span class="types">Boolean</span> Should
-the client immediately sniff for a more current list of nodes when a connection dies?
-</li><li><code class="name">[maxRetries=3]</code> <span class="types">`Number`</span> How many times should
-the client try to connect to other nodes before returning a [ConnectionFault](docs/error.md#connectionfault)
-error.
-</li><li><code class="name">[requestTimeout=10000]</code> <span class="types">`Number`</span> Milliseconds before
-any HTTP request to a node is aborted and retried. This can also be set per request by passing
-<code>requestTimeout:</code> to the API methods.
-</li><li><code class="name">[deadTimeout=30000]</code> <span class="types">`Number`</span> Milliseconds a dead
-connection/node will sit before a ping is sent attempting to revive the connection.
-</li><li><code class="name">[maxSockets=10]</code> <span class="types">`Number`</span> How many sockets should
-a connection keep to it's corresponding node? These sockets are currently kept alive <em>forever</em>
-using the <a href="https://github.com/TBEDP/agentkeepalive">agentkeepalive</a> module.
-</li><li><code class="name">[nodesToHostCallback=...]</code> <span class="types">`Function`</span> This function
-will receive a list of nodes received during a sniff. The list of nodes should be transformed into an
-array of objects which will each be used to create [Host](src/lib/host.js) objects.<h4>Default:<a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/src/lib/nodes_to_host.js">see nodes_to_host.js</a></h4></li></ul><h2 id="extending">Extending Core Components</h2><p>Since this client is designed to be low-level, we probably have not implemented all the features you or others want. For this reason, we made extending or even replacing the core components simple.</p><h3>For Users</h3><h4>Connection</h4><h4>ConnectionPool</h4><h4>Log</h4><p>see <a href="#logging">logging section</a>.</p><h3>For developers of other clients</h3><h4>Client/API</h4><p>The Client's only real purpose (as you may be able to tell from client.js) is to hold the API methods, set a few default values, and instanciate the transport. The transport is where all the networking, retry, and cluster discovery takes place and including it in your client is as simple as <code>transp = new es.Transport({});</code>. This way, you can benefit from the <i>really</i> low-level feautres of our client while providing a complete API that works best for your usecase. See</p><h2 id="logging">Logging</h2><p>Every application needs to have some solution for logging, and there isn't a standard
-in JavaScript, so instead of forcing you to rely on a specific logging modules, we created
+The callback should be called Node-style, with a possible error like `cb(err, selectedConnection)`.
+</p><h4>Default</h4><code>"roundRobin"</code><h4>Options:<ul><li><code>"roundRobin"</code></li><li><code>"random"</code></li></ul></h4></dd><dt><dfn><code>sniffOnStart</code></dfn></dt><dd><p><span class="types">Boolean</span> Should the client
+attempt to detect the rest of the cluster when it is first instantiated?</p><h4>Default</h4><code>false</code></dd><dt><dfn><code>sniffInterval</code></dfn></dt><dd><p><span class="types">Number, false</span> Every <code>n</code> milliseconds, perform a sniff
+operation and make sure our list of nodes is complete.</p><h4>Default</h4><code>false</code></dd><dt><dfn><code>sniffOnConnectionFault</code></dfn></dt><dd><p><span class="types">Boolean</span> Should
+the client immediately sniff for a more current list of nodes when a connection dies?</p><h4>Default</h4><code>false</code></dd><dt><dfn><code>maxRetries</code></dfn></dt><dd><p>How many times should the client try to connect to other nodes before returning
+a <a href="errors.html">ConnectionFault</a> error.</p><h4>Default</h4><code>3</code></dd><dt><dfn><code>requestTimeout</code></dfn></dt><dd><p><span class="types">Number</span> Milliseconds before an HTTP request will be aborted
+and retried. This can also be set per request by passing <code>requestTimeout:</code>
+to the API methods.</p><h4>Default</h4><code>30000</code></dd><dt><dfn><code>deadTimeout</code></dfn></dt><dd><p><span class="types">Number</span> Milliseconds that a dead connection will wait
+before attempting to revive itself.</p><h4>Default</h4><code>30000</code></dd><dt><dfn><code>maxSockets</code></dfn></dt><dd><p><span class="types">Number</span> Number of sockets each connection should keep
+to it's corresponding node. This will also be the maximum number of concurrent requests
+that could be made to that node. These sockets are currently kept alive using
+<a href="https://github.com/TBEDP/agentkeepalive">agentkeepalive</a>.</p><h4>Default</h4><code>10</code></dd><dt><dfn><code>maxKeepAliveTime</code></dfn></dt><dd><p><span class="types">Number, false</span> Milliseconds of inactivity before the socket is destroyed
+</p><h4>Default</h4><code>60000</code></dd><dt><dfn><code>nodesToHostCallback</code></dfn></dt><dd><p><span class="types">Function</span> This function
+will receive a list of nodes retruned from the <code>_cluster/nodes</code> API during a sniff
+operation. The function should return an array of objects which match the
+<a href="index.html#config-hosts">specification for the <code>hosts</code> config</a>.</p><h4>Default</h4><a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/src/lib/nodes_to_host.js">see nodes_to_host.js
+</a><h4>Example</h4><pre><code>var client = new elasticsearch.Client({
+  nodesToHostCallback: function (nodes) {
+    /*
+     * The nodes will look something like this
+     * {
+     *    "y-YWd-LITrWXWoCi4r2GlQ": {
+     *      "name": "Supremor",
+     *      "transport_address": "inet[/192.168.1.17:9300]",
+     *      "hostname": "MacBook-Pro.local",
+     *      "version": "1.0.0",
+     *      "http_address": "inet[/192.168.1.17:9200]"
+     *    },
+     *    "EyG7lDm6TuC2jkJcHtWjAw": {
+     *      "name": "Monstra",
+     *      "transport_address": "inet[/192.168.1.17:9300]",
+     *      "hostname": "MacBook-Pro.local",
+     *      "version": "1.0.0",
+     *      "http_address": "inet[/192.168.1.17:9200]"
+     *    },
+     *    "joYJjUm8TDKq6qs4cI9epg": {
+     *      "name": "Wilson, Sam",
+     *      "transport_address": "inet[/192.168.1.17:9300]",
+     *      "hostname": "Spencers-MacBook-Pro.local",
+     *      "version": "1.0.0.RC1-SNAPSHOT",
+     *      "http_address": "inet[/192.168.1.17:9200]",
+     *      "attributes": {
+     *         custom attributes
+     *      }
+     *    }
+     *  }
+     */
+     
+    return _.transform(nodes, function (nodeList, details, id) {
+      nodeList.push({
+        host: ...,
+        port: ...,
+        path: ...,
+        // etc
+      })
+    }, []);
+  }
+})</code></pre></dd></dl><h2 id="extending">Extending Core Components</h2><p>Since this client is designed to be low-level, we probably have not implemented all the features you or others want. For this reason, we made extending or even replacing the core components simple.</p><h3>For Users</h3><h4>Connection</h4><h4>ConnectionPool</h4><h4>Log</h4><p>see <a href="#logging">logging section</a>.</p><h3>For developers of other clients</h3><h4>Client/API</h4><p>The Client's only real purpose (as you may be able to tell from client.js) is to hold the API methods, set a few default values, and instanciate the transport. The transport is where all the networking, retry, and cluster discovery takes place and including it in your client is as simple as <code>transp = new es.Transport({});</code>. This way, you can benefit from the <i>really</i> low-level feautres of our client while providing a complete API that works best for your usecase. See</p><h2 id="logging">Logging</h2><p>Every application needs to have some solution for logging, and there isn't a standard
+in JavaScript, so instead of forcing you to rely on a specific logging module we created
 a bare bones logging soultion and <a href="#logging-customization">below</a> we show you
 how to configure it. That said, our implementation of logging is very minimal and <b>it
-is highly recommended that you use something like
-<a href="https://github.com/trentm/node-bunyan">Bunyan</a> once you move to production</b>.
-</p><h3>Using A Library</h3><p>When the client receives a function for the <code>log:</code> config value, it expects
+is highly recommended that you use something like <a href="https://github.com/trentm/node-bunyan">Bunyan</a>
+once you move to production</b>.
+</p><h2>Using A Library</h2><p>When the client receives a function for the <code>log:</code> config value, it expects
 that the function is a constructor for a custom log class. This is the simplest way to
 integrate other logging libraries into the elasticsearch client at this time. The contract
-for this Log class is pretty straight-forward:
-</p><h4><code>new Constructor(config)</code></h4><p class="method-desc">Constructs the Log object, should determine the log level from the config.</p><ul class="params"><li>config is the object that was passed to the client constructor. Place configuration values
-for your class here.
-</li></ul><h4><code>#error(error)</code></h4><p class="tight">Receives an error object and logs the details from that error.</p><ul class="params"><li><code class="name">error</code> <span class="types">Error</span> The error that occured
-</li></ul><h4><code>#warning(message)</code></h4><p class="tight">Receives a message to be logged, logs the message.</p><ul class="params"><li><span class="name"><code>message</code></span> <span class="types">String</span>
-The message to be logged</li></ul><h4><code>#info(message)</code></h4><p class="tight">Receives a message to be logged, logs the message.</p><ul class="params"><li><span class="name"><code>message</code></span> <span class="types">String</span>
-The message to be logged</li></ul><h4><code>#debug(message)</code></h4><p class="tight">Receives a message to be logged, logs the message.</p><ul class="params"><li><span class="name"><code>message</code></span> <span class="types">String</span>
-The message to be logged</li></ul><h4><code>#trace(httpMethod, requestUrl, requestBody, responseBody, responseStatus)</code></h4><p class="tight">Called after every HTTP request.</p><ul class="params"><li><span class="name"><code>httpMethod</code></span> <span class="types">String</span>
-The request's HTTP method</li><li><span class="name"><code>requestUrl</code></span> <span class="types">Object, String</span>
-Depending on the connector in use, this will either a string of the url requested, or the object passed
-to http.request which has keys represesenting the different parts of the url.</li><li><span class="name"><code>requestBody</code></span> <span class="types">String, false-y</span>
-The body of the http request, if the body is false-y no body was sent</li><li><span class="name"><code>responseStatus</code></span> <span class="types">Integrer</span>
-The HTTP response status</li></ul><p>In the future we may add loggers for some of the more common libraries, but for now this is an exercise for the implementor. Here is a hint to get you started implementing a <a href="https://github.com/trentm/node-bunyan">Bunyan</a> log class. Be sure to check out the Bunyan repo for more info about setting things up.</p><h4>in log_to_bunyan.js</h4><pre><code>module.exports = LogToBunyan;
-&nbsp;
+for this Log class is pretty straight-forward. See <a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/src/lib/log.js">our implementation</a> for additional details.
+</p><dl class="methods logger"><dt class="constructor"><dfn>new Constructor(config)</dfn></dt><dd><h3>Params</h3><dl class="params"><dt><dfn><code>config</code></dfn></dt><dd>The object that was passed to the client constructor, use to determine the log level.
+</dd></dl></dd><dt class="fn"><dfn>error(error)</dfn></dt><dd><h3>Params</h3><dl class="params"><dt><dfn><code>error</code></dfn></dt><dd><span class="types">Error</span> The error that occured
+</dd></dl></dd><dt class="fn"><dfn>warning(message)</dfn></dt><dd><h3>Params</h3><dl class="params"><dt><dfn><code>message</code></dfn></dt><dd><span class="types">String</span> The message to be logged
+</dd></dl></dd><dt class="fn"><dfn>info(message)</dfn></dt><dd><h3>Params</h3><dl class="params"><dt><dfn><code>message</code></dfn></dt><dd><span class="types">String</span> The message to be logged
+</dd></dl></dd><dt class="fn"><dfn>debug(message)</dfn></dt><dd><h3>Params</h3><dl class="params"><dt><dfn><code>message</code></dfn></dt><dd><span class="types">String</span> The message to be logged
+</dd></dl></dd><dt class="fn"><dfn>trace(httpMethod, requestUrl, requestBody, responseBody, responseStatus)</dfn></dt><dd><p class="tight">Called after every HTTP request.</p><h3>Params</h3><dl class="params"><dt><dfn><code>httpMethod</code></dfn></dt><dd><span class="types">String</span> The request's HTTP method</dd><dt><dfn><code>requestUrl</code></dfn></dt><dd><span class="types">Object, String</span>
+Depending on the connector in use, this will either be a url string or the
+object passed to node's http.request. See</dd><dt><dfn><code>requestBody</code></dfn></dt><dd><span class="types">String, false-y</span> The body of the http request,
+if the body is false-y no body was sent</dd><dt><dfn><code>responseStatus</code></dfn></dt><dd><span class="types">Integrer</span> The HTTP response status
+
+</dd></dl></dd></dl><p>In the future we may add loggers for some of the more common libraries, but for
+now this is an exercise for the user. Here is a hint to get you started implementing
+a <a href="https://github.com/trentm/node-bunyan">Bunyan</a> log class. Be sure
+to check out the Bunyan repo for more info about setting things up.
+</p><h4>in log_to_bunyan.js</h4><pre><code>module.exports = LogToBunyan;
+
 var bunyan = require('bunyan');
-&nbsp;
+
 function LogToBunyan(config) {
   // config is the object passed to the client constructor.
   var bun = bunyan.createLogger({name: 'mylogger'});
@@ -128,45 +227,62 @@ function LogToBunyan(config) {
   };
   this.close = function () { /* bunyan's loggers do not need to be closed */ };
 }
-&nbsp;</code></pre><h4>in model.js</h4><pre><code>var es = require('elasticsearch');
+</code></pre><h4>in model.js</h4><pre><code>var es = require('elasticsearch');
 var LogClass = require('./log_to_bunyan');
 // now just pass the log class to the client constructor using the "log" config option.
-var client = new es.Client({ log: LogClass });</code></pre><h3 id="logging-customization">Customizating our loggers.</h3><p>By default, the client creates a <code>"warning"</code> level, Console or Stdio logger. To change this, specify the client's <code>log:</code> config value to either an array of logger config's, a single logger config, a log level, an array of log levels, or a constructor for your own logger. That's a lot of options, so here is an example of each.</p><h4>Change the logging level to trace, so we get every log message</h4><pre><code>var client = new es.Client({ log: 'trace' });</code></pre><h4>Change the logging level, only listen for error and trace messages</h4><pre><code>var client = new es.Client({ log: ['error', 'trace'] });</code></pre><h4>Log every message to a file</h4><pre><code>var client = new es.Client({
+var client = new es.Client({ log: LogClass });
+
+</code></pre><h2 id="logging-customization">Customizating our loggers.</h2><p>By default, the client creates a <code>"warning"</code> level, Console or Stdio logger.
+To change this, specify the client's <code>log:</code> config value to either an array
+of logger config's, a single logger config, a log level, an array of log levels, or a
+constructor for your own logger. That's a lot of options, so here is an example of each.
+</p><h3>Change the logging level to trace, so we get every log message</h3><pre><code>var client = new es.Client({ log: 'trace' });
+</code></pre><h3>Change the logging level, only listen for error and trace messages</h3><pre><code>var client = new es.Client({ log: ['error', 'trace'] });
+</code></pre><h3>Log every message to a file</h3><pre><code>var client = new es.Client({
   log: {
     type: 'file',
     level: 'trace',
     path: '/var/log/elasticsearch.log'
   }
-});</code></pre><h4>Log everything to a file and errors to a socket</h4><pre><code>var client = new es.Client({
+});
+</code></pre><h3>Log everything to a file and errors to a socket</h3><pre><code>var client = new es.Client({
   log: [
     {
       type: 'stream',
       level: 'error',
+      // config option specific to stream type loggers
       stream: mySocket
     },
     {
       type: 'file',
       level: 'trace',
+      // config options specific to file type loggers
       path: '/var/log/elasticsearch.log'
     }
   ]
-});</code></pre><h4>To use your own logger class, just pass it in as the logger's type</h4><pre><code>var LoggerAbstract = require('elasticsearch/src/lib/logger');
+});
+</code></pre><h3>To use your own logger class, just pass it in as the logger's type</h3><pre><code>var LoggerAbstract = require('elasticsearch/src/lib/logger');
 var util = require('util');
-&nbsp;
+
 function CustomLogger(log, config)  {
   LoggerAbstract.call(this, log, config);
 }
 util.inherits(CustomLogger, LoggerAbstract);
-&nbsp;
+
 CustomLogger.prototype.write = function (label, message) {
   console.log(label, new Date(), message);
 };
-&nbsp;
+
 var client = new es.Client({
   log: {
     type: CustomLogger,
     level: 'error'
   }
-});</code></pre><h3>Logger Types</h3><ul class="params"><li><code>"stdio"</code> (default in Node) Write the log messages for "info", "debug", and "trace" to stdout and "error"
-and "warning" to stderr.<h4>Config options</h4><ul><li><code>[color=true]</code> <span class="types">Boolean</span> Write with a bit of flair.
-The default value is actually choosen by <a href="https://github.com/sindresorhus/chalk">chalk</a></li></ul></li><li><code>"file"</code> Append the log messages to a file.<h4>Config options</h4><ul><li><code>[path="elasticsearch.log"]</code> <span class="types">String</span> Location of the file. It is created if it does not exists</li></ul></li><li><code>"stream"</code> Send log messages to a <a href="http://nodejs.org/api/stream.html#stream_class_stream_writable">WriteableStream</a><h4>Config options</h4><ul><li><code>stream</code> <span class="types">WriteableStream</span> The object to write to.</li></ul></li><li><code>"console"</code> (default in the browser)</li></ul><h2 id="contributing">Contributing</h2><p>We <em>love</em> contributions, but please check out <a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> before submitting a pull request.</p><script type="text/javascript" src="elasticsearch.js"></script><script type="text/javascript" src="js/prism.js"></script></body></html>
+});
+</code></pre><h3>Logger Types</h3><dl class="options"><dt><dfn><code>"stdio"</code></dfn></dt><dd>(default in Node) Write the log messages for "info", "debug", and "trace" to stdout and "error"
+and "warning" to stderr.<h4>Options</h4><dl><dt><dfn><code>[color=true]</code></dfn></dt><dd><span class="types">Boolean</span> Write with a bit of flair. The default value
+is intelligently choosen by <a href="https://github.com/sindresorhus/chalk">chalk</a> based
+on the details of your environment.
+</dd></dl></dd><dt><dfn><code>"file"</code></dfn></dt><dd>Append the log messages to a file.<h4>Options</h4><dl><dt><dfn><code>[path="elasticsearch.log"]</code></dfn></dt><dd><span class="types">String</span> Location of the file. It is created if it does not exists
+</dd></dl></dd><dt><dfn><code>"stream"</code></dfn></dt><dd>Send log messages to a
+<a href="http://nodejs.org/api/stream.html#stream_class_stream_writable">WriteableStream</a><h4>Options</h4><dl><dt><dfn><code>stream</code></dfn></dt><dd><span class="types">WriteableStream</span> The object to write to.</dd></dl></dd><dt><dfn><code>"console"</code></dfn></dt><dd>Default logger for the browser build, logs to the console when one exists.</dd></dl><h2 id="dev">Development/Contributing</h2><p>We <em>love</em> contributions, but please check out <a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> before submitting a pull request.</p><script type="text/javascript" src="elasticsearch.js"></script><script type="text/javascript" src="js/prism.js"></script></body></html>

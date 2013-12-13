@@ -1,4 +1,4 @@
-/*! elasticsearch - v0.0.1 - 2013-12-12
+/*! elasticsearch - v0.0.1 - 2013-12-13
  * https://github.com/elasticsearch/elasticsearch-js
  * Copyright (c) 2013 Spencer Alger; Licensed Apache 2.0 */
  // built using browserify
