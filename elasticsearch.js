@@ -1,6 +1,6 @@
-/*! elasticsearch-js - v0.0.1 - 2013-11-22
+/*! elasticsearch - v0.0.1 - 2013-12-12
  * https://github.com/elasticsearch/elasticsearch-js
- * Copyright (c) 2013 Spencer Alger; Licensed Apache License */
+ * Copyright (c) 2013 Spencer Alger; Licensed Apache 2.0 */
  // built using browserify
 
 !function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.elasticsearch=e():"undefined"!=typeof global?global.elasticsearch=e():"undefined"!=typeof self&&(self.elasticsearch=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1032,7 +1032,7 @@ exports.extname = function(path) {
   return splitPath(path)[3];
 };
 
-},{"__browserify_process":12,"_shims":2,"util":8}],6:[function(require,module,exports){
+},{"__browserify_process":13,"_shims":2,"util":8}],6:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3782,6 +3782,2386 @@ Buffer.prototype.writeDoubleBE = function(value, offset, noAssert) {
 }());
 
 },{}],12:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+exports.readIEEE754 = function(buffer, offset, isBE, mLen, nBytes) {
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isBE ? 0 : (nBytes - 1),
+      d = isBE ? 1 : -1,
+      s = buffer[offset + i];
+
+  i += d;
+
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+  if (e === 0) {
+    e = 1 - eBias;
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
+  } else {
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
+
+exports.writeIEEE754 = function(buffer, value, offset, isBE, mLen, nBytes) {
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isBE ? (nBytes - 1) : 0,
+      d = isBE ? -1 : 1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
+
+  value = Math.abs(value);
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2);
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--;
+      c *= 2;
+    }
+    if (e + eBias >= 1) {
+      value += rt / c;
+    } else {
+      value += rt * Math.pow(2, 1 - eBias);
+    }
+    if (value * c >= 2) {
+      e++;
+      c /= 2;
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0;
+      e = eMax;
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
+
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
+
+  buffer[offset + i - d] |= s * 128;
+};
+
+},{}],"q9TxCC":[function(require,module,exports){
+var assert;
+exports.Buffer = Buffer;
+exports.SlowBuffer = Buffer;
+Buffer.poolSize = 8192;
+exports.INSPECT_MAX_BYTES = 50;
+
+function stringtrim(str) {
+  if (str.trim) return str.trim();
+  return str.replace(/^\s+|\s+$/g, '');
+}
+
+function Buffer(subject, encoding, offset) {
+  if(!assert) assert= require('assert');
+  if (!(this instanceof Buffer)) {
+    return new Buffer(subject, encoding, offset);
+  }
+  this.parent = this;
+  this.offset = 0;
+
+  // Work-around: node's base64 implementation
+  // allows for non-padded strings while base64-js
+  // does not..
+  if (encoding == "base64" && typeof subject == "string") {
+    subject = stringtrim(subject);
+    while (subject.length % 4 != 0) {
+      subject = subject + "="; 
+    }
+  }
+
+  var type;
+
+  // Are we slicing?
+  if (typeof offset === 'number') {
+    this.length = coerce(encoding);
+    // slicing works, with limitations (no parent tracking/update)
+    // check https://github.com/toots/buffer-browserify/issues/19
+    for (var i = 0; i < this.length; i++) {
+        this[i] = subject.get(i+offset);
+    }
+  } else {
+    // Find the length
+    switch (type = typeof subject) {
+      case 'number':
+        this.length = coerce(subject);
+        break;
+
+      case 'string':
+        this.length = Buffer.byteLength(subject, encoding);
+        break;
+
+      case 'object': // Assume object is an array
+        this.length = coerce(subject.length);
+        break;
+
+      default:
+        throw new Error('First argument needs to be a number, ' +
+                        'array or string.');
+    }
+
+    // Treat array-ish objects as a byte array.
+    if (isArrayIsh(subject)) {
+      for (var i = 0; i < this.length; i++) {
+        if (subject instanceof Buffer) {
+          this[i] = subject.readUInt8(i);
+        }
+        else {
+          this[i] = subject[i];
+        }
+      }
+    } else if (type == 'string') {
+      // We are a string
+      this.length = this.write(subject, 0, encoding);
+    } else if (type === 'number') {
+      for (var i = 0; i < this.length; i++) {
+        this[i] = 0;
+      }
+    }
+  }
+}
+
+Buffer.prototype.get = function get(i) {
+  if (i < 0 || i >= this.length) throw new Error('oob');
+  return this[i];
+};
+
+Buffer.prototype.set = function set(i, v) {
+  if (i < 0 || i >= this.length) throw new Error('oob');
+  return this[i] = v;
+};
+
+Buffer.byteLength = function (str, encoding) {
+  switch (encoding || "utf8") {
+    case 'hex':
+      return str.length / 2;
+
+    case 'utf8':
+    case 'utf-8':
+      return utf8ToBytes(str).length;
+
+    case 'ascii':
+    case 'binary':
+      return str.length;
+
+    case 'base64':
+      return base64ToBytes(str).length;
+
+    default:
+      throw new Error('Unknown encoding');
+  }
+};
+
+Buffer.prototype.utf8Write = function (string, offset, length) {
+  var bytes, pos;
+  return Buffer._charsWritten =  blitBuffer(utf8ToBytes(string), this, offset, length);
+};
+
+Buffer.prototype.asciiWrite = function (string, offset, length) {
+  var bytes, pos;
+  return Buffer._charsWritten =  blitBuffer(asciiToBytes(string), this, offset, length);
+};
+
+Buffer.prototype.binaryWrite = Buffer.prototype.asciiWrite;
+
+Buffer.prototype.base64Write = function (string, offset, length) {
+  var bytes, pos;
+  return Buffer._charsWritten = blitBuffer(base64ToBytes(string), this, offset, length);
+};
+
+Buffer.prototype.base64Slice = function (start, end) {
+  var bytes = Array.prototype.slice.apply(this, arguments)
+  return require("base64-js").fromByteArray(bytes);
+};
+
+Buffer.prototype.utf8Slice = function () {
+  var bytes = Array.prototype.slice.apply(this, arguments);
+  var res = "";
+  var tmp = "";
+  var i = 0;
+  while (i < bytes.length) {
+    if (bytes[i] <= 0x7F) {
+      res += decodeUtf8Char(tmp) + String.fromCharCode(bytes[i]);
+      tmp = "";
+    } else
+      tmp += "%" + bytes[i].toString(16);
+
+    i++;
+  }
+
+  return res + decodeUtf8Char(tmp);
+}
+
+Buffer.prototype.asciiSlice = function () {
+  var bytes = Array.prototype.slice.apply(this, arguments);
+  var ret = "";
+  for (var i = 0; i < bytes.length; i++)
+    ret += String.fromCharCode(bytes[i]);
+  return ret;
+}
+
+Buffer.prototype.binarySlice = Buffer.prototype.asciiSlice;
+
+Buffer.prototype.inspect = function() {
+  var out = [],
+      len = this.length;
+  for (var i = 0; i < len; i++) {
+    out[i] = toHex(this[i]);
+    if (i == exports.INSPECT_MAX_BYTES) {
+      out[i + 1] = '...';
+      break;
+    }
+  }
+  return '<Buffer ' + out.join(' ') + '>';
+};
+
+
+Buffer.prototype.hexSlice = function(start, end) {
+  var len = this.length;
+
+  if (!start || start < 0) start = 0;
+  if (!end || end < 0 || end > len) end = len;
+
+  var out = '';
+  for (var i = start; i < end; i++) {
+    out += toHex(this[i]);
+  }
+  return out;
+};
+
+
+Buffer.prototype.toString = function(encoding, start, end) {
+  encoding = String(encoding || 'utf8').toLowerCase();
+  start = +start || 0;
+  if (typeof end == 'undefined') end = this.length;
+
+  // Fastpath empty strings
+  if (+end == start) {
+    return '';
+  }
+
+  switch (encoding) {
+    case 'hex':
+      return this.hexSlice(start, end);
+
+    case 'utf8':
+    case 'utf-8':
+      return this.utf8Slice(start, end);
+
+    case 'ascii':
+      return this.asciiSlice(start, end);
+
+    case 'binary':
+      return this.binarySlice(start, end);
+
+    case 'base64':
+      return this.base64Slice(start, end);
+
+    case 'ucs2':
+    case 'ucs-2':
+      return this.ucs2Slice(start, end);
+
+    default:
+      throw new Error('Unknown encoding');
+  }
+};
+
+
+Buffer.prototype.hexWrite = function(string, offset, length) {
+  offset = +offset || 0;
+  var remaining = this.length - offset;
+  if (!length) {
+    length = remaining;
+  } else {
+    length = +length;
+    if (length > remaining) {
+      length = remaining;
+    }
+  }
+
+  // must be an even number of digits
+  var strLen = string.length;
+  if (strLen % 2) {
+    throw new Error('Invalid hex string');
+  }
+  if (length > strLen / 2) {
+    length = strLen / 2;
+  }
+  for (var i = 0; i < length; i++) {
+    var byte = parseInt(string.substr(i * 2, 2), 16);
+    if (isNaN(byte)) throw new Error('Invalid hex string');
+    this[offset + i] = byte;
+  }
+  Buffer._charsWritten = i * 2;
+  return i;
+};
+
+
+Buffer.prototype.write = function(string, offset, length, encoding) {
+  // Support both (string, offset, length, encoding)
+  // and the legacy (string, encoding, offset, length)
+  if (isFinite(offset)) {
+    if (!isFinite(length)) {
+      encoding = length;
+      length = undefined;
+    }
+  } else {  // legacy
+    var swap = encoding;
+    encoding = offset;
+    offset = length;
+    length = swap;
+  }
+
+  offset = +offset || 0;
+  var remaining = this.length - offset;
+  if (!length) {
+    length = remaining;
+  } else {
+    length = +length;
+    if (length > remaining) {
+      length = remaining;
+    }
+  }
+  encoding = String(encoding || 'utf8').toLowerCase();
+
+  switch (encoding) {
+    case 'hex':
+      return this.hexWrite(string, offset, length);
+
+    case 'utf8':
+    case 'utf-8':
+      return this.utf8Write(string, offset, length);
+
+    case 'ascii':
+      return this.asciiWrite(string, offset, length);
+
+    case 'binary':
+      return this.binaryWrite(string, offset, length);
+
+    case 'base64':
+      return this.base64Write(string, offset, length);
+
+    case 'ucs2':
+    case 'ucs-2':
+      return this.ucs2Write(string, offset, length);
+
+    default:
+      throw new Error('Unknown encoding');
+  }
+};
+
+// slice(start, end)
+function clamp(index, len, defaultValue) {
+  if (typeof index !== 'number') return defaultValue;
+  index = ~~index;  // Coerce to integer.
+  if (index >= len) return len;
+  if (index >= 0) return index;
+  index += len;
+  if (index >= 0) return index;
+  return 0;
+}
+
+Buffer.prototype.slice = function(start, end) {
+  var len = this.length;
+  start = clamp(start, len, 0);
+  end = clamp(end, len, len);
+  return new Buffer(this, end - start, +start);
+};
+
+// copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
+Buffer.prototype.copy = function(target, target_start, start, end) {
+  var source = this;
+  start || (start = 0);
+  if (end === undefined || isNaN(end)) {
+    end = this.length;
+  }
+  target_start || (target_start = 0);
+
+  if (end < start) throw new Error('sourceEnd < sourceStart');
+
+  // Copy 0 bytes; we're done
+  if (end === start) return 0;
+  if (target.length == 0 || source.length == 0) return 0;
+
+  if (target_start < 0 || target_start >= target.length) {
+    throw new Error('targetStart out of bounds');
+  }
+
+  if (start < 0 || start >= source.length) {
+    throw new Error('sourceStart out of bounds');
+  }
+
+  if (end < 0 || end > source.length) {
+    throw new Error('sourceEnd out of bounds');
+  }
+
+  // Are we oob?
+  if (end > this.length) {
+    end = this.length;
+  }
+
+  if (target.length - target_start < end - start) {
+    end = target.length - target_start + start;
+  }
+
+  var temp = [];
+  for (var i=start; i<end; i++) {
+    assert.ok(typeof this[i] !== 'undefined', "copying undefined buffer bytes!");
+    temp.push(this[i]);
+  }
+
+  for (var i=target_start; i<target_start+temp.length; i++) {
+    target[i] = temp[i-target_start];
+  }
+};
+
+// fill(value, start=0, end=buffer.length)
+Buffer.prototype.fill = function fill(value, start, end) {
+  value || (value = 0);
+  start || (start = 0);
+  end || (end = this.length);
+
+  if (typeof value === 'string') {
+    value = value.charCodeAt(0);
+  }
+  if (!(typeof value === 'number') || isNaN(value)) {
+    throw new Error('value is not a number');
+  }
+
+  if (end < start) throw new Error('end < start');
+
+  // Fill 0 bytes; we're done
+  if (end === start) return 0;
+  if (this.length == 0) return 0;
+
+  if (start < 0 || start >= this.length) {
+    throw new Error('start out of bounds');
+  }
+
+  if (end < 0 || end > this.length) {
+    throw new Error('end out of bounds');
+  }
+
+  for (var i = start; i < end; i++) {
+    this[i] = value;
+  }
+}
+
+// Static methods
+Buffer.isBuffer = function isBuffer(b) {
+  return b instanceof Buffer || b instanceof Buffer;
+};
+
+Buffer.concat = function (list, totalLength) {
+  if (!isArray(list)) {
+    throw new Error("Usage: Buffer.concat(list, [totalLength])\n \
+      list should be an Array.");
+  }
+
+  if (list.length === 0) {
+    return new Buffer(0);
+  } else if (list.length === 1) {
+    return list[0];
+  }
+
+  if (typeof totalLength !== 'number') {
+    totalLength = 0;
+    for (var i = 0; i < list.length; i++) {
+      var buf = list[i];
+      totalLength += buf.length;
+    }
+  }
+
+  var buffer = new Buffer(totalLength);
+  var pos = 0;
+  for (var i = 0; i < list.length; i++) {
+    var buf = list[i];
+    buf.copy(buffer, pos);
+    pos += buf.length;
+  }
+  return buffer;
+};
+
+Buffer.isEncoding = function(encoding) {
+  switch ((encoding + '').toLowerCase()) {
+    case 'hex':
+    case 'utf8':
+    case 'utf-8':
+    case 'ascii':
+    case 'binary':
+    case 'base64':
+    case 'ucs2':
+    case 'ucs-2':
+    case 'utf16le':
+    case 'utf-16le':
+    case 'raw':
+      return true;
+
+    default:
+      return false;
+  }
+};
+
+// helpers
+
+function coerce(length) {
+  // Coerce length to a number (possibly NaN), round up
+  // in case it's fractional (e.g. 123.456) then do a
+  // double negate to coerce a NaN to 0. Easy, right?
+  length = ~~Math.ceil(+length);
+  return length < 0 ? 0 : length;
+}
+
+function isArray(subject) {
+  return (Array.isArray ||
+    function(subject){
+      return {}.toString.apply(subject) == '[object Array]'
+    })
+    (subject)
+}
+
+function isArrayIsh(subject) {
+  return isArray(subject) || Buffer.isBuffer(subject) ||
+         subject && typeof subject === 'object' &&
+         typeof subject.length === 'number';
+}
+
+function toHex(n) {
+  if (n < 16) return '0' + n.toString(16);
+  return n.toString(16);
+}
+
+function utf8ToBytes(str) {
+  var byteArray = [];
+  for (var i = 0; i < str.length; i++)
+    if (str.charCodeAt(i) <= 0x7F)
+      byteArray.push(str.charCodeAt(i));
+    else {
+      var h = encodeURIComponent(str.charAt(i)).substr(1).split('%');
+      for (var j = 0; j < h.length; j++)
+        byteArray.push(parseInt(h[j], 16));
+    }
+
+  return byteArray;
+}
+
+function asciiToBytes(str) {
+  var byteArray = []
+  for (var i = 0; i < str.length; i++ )
+    // Node's code seems to be doing this and not & 0x7F..
+    byteArray.push( str.charCodeAt(i) & 0xFF );
+
+  return byteArray;
+}
+
+function base64ToBytes(str) {
+  return require("base64-js").toByteArray(str);
+}
+
+function blitBuffer(src, dst, offset, length) {
+  var pos, i = 0;
+  while (i < length) {
+    if ((i+offset >= dst.length) || (i >= src.length))
+      break;
+
+    dst[i + offset] = src[i];
+    i++;
+  }
+  return i;
+}
+
+function decodeUtf8Char(str) {
+  try {
+    return decodeURIComponent(str);
+  } catch (err) {
+    return String.fromCharCode(0xFFFD); // UTF 8 invalid char
+  }
+}
+
+// read/write bit-twiddling
+
+Buffer.prototype.readUInt8 = function(offset, noAssert) {
+  var buffer = this;
+
+  if (!noAssert) {
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  if (offset >= buffer.length) return;
+
+  return buffer[offset];
+};
+
+function readUInt16(buffer, offset, isBigEndian, noAssert) {
+  var val = 0;
+
+
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 1 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  if (offset >= buffer.length) return 0;
+
+  if (isBigEndian) {
+    val = buffer[offset] << 8;
+    if (offset + 1 < buffer.length) {
+      val |= buffer[offset + 1];
+    }
+  } else {
+    val = buffer[offset];
+    if (offset + 1 < buffer.length) {
+      val |= buffer[offset + 1] << 8;
+    }
+  }
+
+  return val;
+}
+
+Buffer.prototype.readUInt16LE = function(offset, noAssert) {
+  return readUInt16(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readUInt16BE = function(offset, noAssert) {
+  return readUInt16(this, offset, true, noAssert);
+};
+
+function readUInt32(buffer, offset, isBigEndian, noAssert) {
+  var val = 0;
+
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 3 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  if (offset >= buffer.length) return 0;
+
+  if (isBigEndian) {
+    if (offset + 1 < buffer.length)
+      val = buffer[offset + 1] << 16;
+    if (offset + 2 < buffer.length)
+      val |= buffer[offset + 2] << 8;
+    if (offset + 3 < buffer.length)
+      val |= buffer[offset + 3];
+    val = val + (buffer[offset] << 24 >>> 0);
+  } else {
+    if (offset + 2 < buffer.length)
+      val = buffer[offset + 2] << 16;
+    if (offset + 1 < buffer.length)
+      val |= buffer[offset + 1] << 8;
+    val |= buffer[offset];
+    if (offset + 3 < buffer.length)
+      val = val + (buffer[offset + 3] << 24 >>> 0);
+  }
+
+  return val;
+}
+
+Buffer.prototype.readUInt32LE = function(offset, noAssert) {
+  return readUInt32(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readUInt32BE = function(offset, noAssert) {
+  return readUInt32(this, offset, true, noAssert);
+};
+
+
+/*
+ * Signed integer types, yay team! A reminder on how two's complement actually
+ * works. The first bit is the signed bit, i.e. tells us whether or not the
+ * number should be positive or negative. If the two's complement value is
+ * positive, then we're done, as it's equivalent to the unsigned representation.
+ *
+ * Now if the number is positive, you're pretty much done, you can just leverage
+ * the unsigned translations and return those. Unfortunately, negative numbers
+ * aren't quite that straightforward.
+ *
+ * At first glance, one might be inclined to use the traditional formula to
+ * translate binary numbers between the positive and negative values in two's
+ * complement. (Though it doesn't quite work for the most negative value)
+ * Mainly:
+ *  - invert all the bits
+ *  - add one to the result
+ *
+ * Of course, this doesn't quite work in Javascript. Take for example the value
+ * of -128. This could be represented in 16 bits (big-endian) as 0xff80. But of
+ * course, Javascript will do the following:
+ *
+ * > ~0xff80
+ * -65409
+ *
+ * Whoh there, Javascript, that's not quite right. But wait, according to
+ * Javascript that's perfectly correct. When Javascript ends up seeing the
+ * constant 0xff80, it has no notion that it is actually a signed number. It
+ * assumes that we've input the unsigned value 0xff80. Thus, when it does the
+ * binary negation, it casts it into a signed value, (positive 0xff80). Then
+ * when you perform binary negation on that, it turns it into a negative number.
+ *
+ * Instead, we're going to have to use the following general formula, that works
+ * in a rather Javascript friendly way. I'm glad we don't support this kind of
+ * weird numbering scheme in the kernel.
+ *
+ * (BIT-MAX - (unsigned)val + 1) * -1
+ *
+ * The astute observer, may think that this doesn't make sense for 8-bit numbers
+ * (really it isn't necessary for them). However, when you get 16-bit numbers,
+ * you do. Let's go back to our prior example and see how this will look:
+ *
+ * (0xffff - 0xff80 + 1) * -1
+ * (0x007f + 1) * -1
+ * (0x0080) * -1
+ */
+Buffer.prototype.readInt8 = function(offset, noAssert) {
+  var buffer = this;
+  var neg;
+
+  if (!noAssert) {
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  if (offset >= buffer.length) return;
+
+  neg = buffer[offset] & 0x80;
+  if (!neg) {
+    return (buffer[offset]);
+  }
+
+  return ((0xff - buffer[offset] + 1) * -1);
+};
+
+function readInt16(buffer, offset, isBigEndian, noAssert) {
+  var neg, val;
+
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 1 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  val = readUInt16(buffer, offset, isBigEndian, noAssert);
+  neg = val & 0x8000;
+  if (!neg) {
+    return val;
+  }
+
+  return (0xffff - val + 1) * -1;
+}
+
+Buffer.prototype.readInt16LE = function(offset, noAssert) {
+  return readInt16(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readInt16BE = function(offset, noAssert) {
+  return readInt16(this, offset, true, noAssert);
+};
+
+function readInt32(buffer, offset, isBigEndian, noAssert) {
+  var neg, val;
+
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 3 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  val = readUInt32(buffer, offset, isBigEndian, noAssert);
+  neg = val & 0x80000000;
+  if (!neg) {
+    return (val);
+  }
+
+  return (0xffffffff - val + 1) * -1;
+}
+
+Buffer.prototype.readInt32LE = function(offset, noAssert) {
+  return readInt32(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readInt32BE = function(offset, noAssert) {
+  return readInt32(this, offset, true, noAssert);
+};
+
+function readFloat(buffer, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset + 3 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  return require('./buffer_ieee754').readIEEE754(buffer, offset, isBigEndian,
+      23, 4);
+}
+
+Buffer.prototype.readFloatLE = function(offset, noAssert) {
+  return readFloat(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readFloatBE = function(offset, noAssert) {
+  return readFloat(this, offset, true, noAssert);
+};
+
+function readDouble(buffer, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset + 7 < buffer.length,
+        'Trying to read beyond buffer length');
+  }
+
+  return require('./buffer_ieee754').readIEEE754(buffer, offset, isBigEndian,
+      52, 8);
+}
+
+Buffer.prototype.readDoubleLE = function(offset, noAssert) {
+  return readDouble(this, offset, false, noAssert);
+};
+
+Buffer.prototype.readDoubleBE = function(offset, noAssert) {
+  return readDouble(this, offset, true, noAssert);
+};
+
+
+/*
+ * We have to make sure that the value is a valid integer. This means that it is
+ * non-negative. It has no fractional component and that it does not exceed the
+ * maximum allowed value.
+ *
+ *      value           The number to check for validity
+ *
+ *      max             The maximum value
+ */
+function verifuint(value, max) {
+  assert.ok(typeof (value) == 'number',
+      'cannot write a non-number as a number');
+
+  assert.ok(value >= 0,
+      'specified a negative value for writing an unsigned value');
+
+  assert.ok(value <= max, 'value is larger than maximum value for type');
+
+  assert.ok(Math.floor(value) === value, 'value has a fractional component');
+}
+
+Buffer.prototype.writeUInt8 = function(value, offset, noAssert) {
+  var buffer = this;
+
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset < buffer.length,
+        'trying to write beyond buffer length');
+
+    verifuint(value, 0xff);
+  }
+
+  if (offset < buffer.length) {
+    buffer[offset] = value;
+  }
+};
+
+function writeUInt16(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 1 < buffer.length,
+        'trying to write beyond buffer length');
+
+    verifuint(value, 0xffff);
+  }
+
+  for (var i = 0; i < Math.min(buffer.length - offset, 2); i++) {
+    buffer[offset + i] =
+        (value & (0xff << (8 * (isBigEndian ? 1 - i : i)))) >>>
+            (isBigEndian ? 1 - i : i) * 8;
+  }
+
+}
+
+Buffer.prototype.writeUInt16LE = function(value, offset, noAssert) {
+  writeUInt16(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeUInt16BE = function(value, offset, noAssert) {
+  writeUInt16(this, value, offset, true, noAssert);
+};
+
+function writeUInt32(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 3 < buffer.length,
+        'trying to write beyond buffer length');
+
+    verifuint(value, 0xffffffff);
+  }
+
+  for (var i = 0; i < Math.min(buffer.length - offset, 4); i++) {
+    buffer[offset + i] =
+        (value >>> (isBigEndian ? 3 - i : i) * 8) & 0xff;
+  }
+}
+
+Buffer.prototype.writeUInt32LE = function(value, offset, noAssert) {
+  writeUInt32(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeUInt32BE = function(value, offset, noAssert) {
+  writeUInt32(this, value, offset, true, noAssert);
+};
+
+
+/*
+ * We now move onto our friends in the signed number category. Unlike unsigned
+ * numbers, we're going to have to worry a bit more about how we put values into
+ * arrays. Since we are only worrying about signed 32-bit values, we're in
+ * slightly better shape. Unfortunately, we really can't do our favorite binary
+ * & in this system. It really seems to do the wrong thing. For example:
+ *
+ * > -32 & 0xff
+ * 224
+ *
+ * What's happening above is really: 0xe0 & 0xff = 0xe0. However, the results of
+ * this aren't treated as a signed number. Ultimately a bad thing.
+ *
+ * What we're going to want to do is basically create the unsigned equivalent of
+ * our representation and pass that off to the wuint* functions. To do that
+ * we're going to do the following:
+ *
+ *  - if the value is positive
+ *      we can pass it directly off to the equivalent wuint
+ *  - if the value is negative
+ *      we do the following computation:
+ *         mb + val + 1, where
+ *         mb   is the maximum unsigned value in that byte size
+ *         val  is the Javascript negative integer
+ *
+ *
+ * As a concrete value, take -128. In signed 16 bits this would be 0xff80. If
+ * you do out the computations:
+ *
+ * 0xffff - 128 + 1
+ * 0xffff - 127
+ * 0xff80
+ *
+ * You can then encode this value as the signed version. This is really rather
+ * hacky, but it should work and get the job done which is our goal here.
+ */
+
+/*
+ * A series of checks to make sure we actually have a signed 32-bit number
+ */
+function verifsint(value, max, min) {
+  assert.ok(typeof (value) == 'number',
+      'cannot write a non-number as a number');
+
+  assert.ok(value <= max, 'value larger than maximum allowed value');
+
+  assert.ok(value >= min, 'value smaller than minimum allowed value');
+
+  assert.ok(Math.floor(value) === value, 'value has a fractional component');
+}
+
+function verifIEEE754(value, max, min) {
+  assert.ok(typeof (value) == 'number',
+      'cannot write a non-number as a number');
+
+  assert.ok(value <= max, 'value larger than maximum allowed value');
+
+  assert.ok(value >= min, 'value smaller than minimum allowed value');
+}
+
+Buffer.prototype.writeInt8 = function(value, offset, noAssert) {
+  var buffer = this;
+
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset < buffer.length,
+        'Trying to write beyond buffer length');
+
+    verifsint(value, 0x7f, -0x80);
+  }
+
+  if (value >= 0) {
+    buffer.writeUInt8(value, offset, noAssert);
+  } else {
+    buffer.writeUInt8(0xff + value + 1, offset, noAssert);
+  }
+};
+
+function writeInt16(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 1 < buffer.length,
+        'Trying to write beyond buffer length');
+
+    verifsint(value, 0x7fff, -0x8000);
+  }
+
+  if (value >= 0) {
+    writeUInt16(buffer, value, offset, isBigEndian, noAssert);
+  } else {
+    writeUInt16(buffer, 0xffff + value + 1, offset, isBigEndian, noAssert);
+  }
+}
+
+Buffer.prototype.writeInt16LE = function(value, offset, noAssert) {
+  writeInt16(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeInt16BE = function(value, offset, noAssert) {
+  writeInt16(this, value, offset, true, noAssert);
+};
+
+function writeInt32(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 3 < buffer.length,
+        'Trying to write beyond buffer length');
+
+    verifsint(value, 0x7fffffff, -0x80000000);
+  }
+
+  if (value >= 0) {
+    writeUInt32(buffer, value, offset, isBigEndian, noAssert);
+  } else {
+    writeUInt32(buffer, 0xffffffff + value + 1, offset, isBigEndian, noAssert);
+  }
+}
+
+Buffer.prototype.writeInt32LE = function(value, offset, noAssert) {
+  writeInt32(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeInt32BE = function(value, offset, noAssert) {
+  writeInt32(this, value, offset, true, noAssert);
+};
+
+function writeFloat(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 3 < buffer.length,
+        'Trying to write beyond buffer length');
+
+    verifIEEE754(value, 3.4028234663852886e+38, -3.4028234663852886e+38);
+  }
+
+  require('./buffer_ieee754').writeIEEE754(buffer, value, offset, isBigEndian,
+      23, 4);
+}
+
+Buffer.prototype.writeFloatLE = function(value, offset, noAssert) {
+  writeFloat(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeFloatBE = function(value, offset, noAssert) {
+  writeFloat(this, value, offset, true, noAssert);
+};
+
+function writeDouble(buffer, value, offset, isBigEndian, noAssert) {
+  if (!noAssert) {
+    assert.ok(value !== undefined && value !== null,
+        'missing value');
+
+    assert.ok(typeof (isBigEndian) === 'boolean',
+        'missing or invalid endian');
+
+    assert.ok(offset !== undefined && offset !== null,
+        'missing offset');
+
+    assert.ok(offset + 7 < buffer.length,
+        'Trying to write beyond buffer length');
+
+    verifIEEE754(value, 1.7976931348623157E+308, -1.7976931348623157E+308);
+  }
+
+  require('./buffer_ieee754').writeIEEE754(buffer, value, offset, isBigEndian,
+      52, 8);
+}
+
+Buffer.prototype.writeDoubleLE = function(value, offset, noAssert) {
+  writeDouble(this, value, offset, false, noAssert);
+};
+
+Buffer.prototype.writeDoubleBE = function(value, offset, noAssert) {
+  writeDouble(this, value, offset, true, noAssert);
+};
+
+},{"./buffer_ieee754":1,"assert":6,"base64-js":4}],"buffer-browserify":[function(require,module,exports){
+module.exports=require('q9TxCC');
+},{}],4:[function(require,module,exports){
+(function (exports) {
+	'use strict';
+
+	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+	function b64ToByteArray(b64) {
+		var i, j, l, tmp, placeHolders, arr;
+	
+		if (b64.length % 4 > 0) {
+			throw 'Invalid string. Length must be a multiple of 4';
+		}
+
+		// the number of equal signs (place holders)
+		// if there are two placeholders, than the two characters before it
+		// represent one byte
+		// if there is only one, then the three characters before it represent 2 bytes
+		// this is just a cheap hack to not do indexOf twice
+		placeHolders = b64.indexOf('=');
+		placeHolders = placeHolders > 0 ? b64.length - placeHolders : 0;
+
+		// base64 is 4/3 + up to two characters of the original data
+		arr = [];//new Uint8Array(b64.length * 3 / 4 - placeHolders);
+
+		// if there are placeholders, only get up to the last complete 4 chars
+		l = placeHolders > 0 ? b64.length - 4 : b64.length;
+
+		for (i = 0, j = 0; i < l; i += 4, j += 3) {
+			tmp = (lookup.indexOf(b64[i]) << 18) | (lookup.indexOf(b64[i + 1]) << 12) | (lookup.indexOf(b64[i + 2]) << 6) | lookup.indexOf(b64[i + 3]);
+			arr.push((tmp & 0xFF0000) >> 16);
+			arr.push((tmp & 0xFF00) >> 8);
+			arr.push(tmp & 0xFF);
+		}
+
+		if (placeHolders === 2) {
+			tmp = (lookup.indexOf(b64[i]) << 2) | (lookup.indexOf(b64[i + 1]) >> 4);
+			arr.push(tmp & 0xFF);
+		} else if (placeHolders === 1) {
+			tmp = (lookup.indexOf(b64[i]) << 10) | (lookup.indexOf(b64[i + 1]) << 4) | (lookup.indexOf(b64[i + 2]) >> 2);
+			arr.push((tmp >> 8) & 0xFF);
+			arr.push(tmp & 0xFF);
+		}
+
+		return arr;
+	}
+
+	function uint8ToBase64(uint8) {
+		var i,
+			extraBytes = uint8.length % 3, // if we have 1 byte left, pad 2 bytes
+			output = "",
+			temp, length;
+
+		function tripletToBase64 (num) {
+			return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F];
+		};
+
+		// go through the array every three bytes, we'll deal with trailing stuff later
+		for (i = 0, length = uint8.length - extraBytes; i < length; i += 3) {
+			temp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2]);
+			output += tripletToBase64(temp);
+		}
+
+		// pad the end with zeros, but make sure to not forget the extra bytes
+		switch (extraBytes) {
+			case 1:
+				temp = uint8[uint8.length - 1];
+				output += lookup[temp >> 2];
+				output += lookup[(temp << 4) & 0x3F];
+				output += '==';
+				break;
+			case 2:
+				temp = (uint8[uint8.length - 2] << 8) + (uint8[uint8.length - 1]);
+				output += lookup[temp >> 10];
+				output += lookup[(temp >> 4) & 0x3F];
+				output += lookup[(temp << 2) & 0x3F];
+				output += '=';
+				break;
+		}
+
+		return output;
+	}
+
+	module.exports.toByteArray = b64ToByteArray;
+	module.exports.fromByteArray = uint8ToBase64;
+}());
+
+},{}],5:[function(require,module,exports){
+
+
+//
+// The shims in this file are not fully implemented shims for the ES5
+// features, but do work for the particular usecases there is in
+// the other modules.
+//
+
+var toString = Object.prototype.toString;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+// Array.isArray is supported in IE9
+function isArray(xs) {
+  return toString.call(xs) === '[object Array]';
+}
+exports.isArray = typeof Array.isArray === 'function' ? Array.isArray : isArray;
+
+// Array.prototype.indexOf is supported in IE9
+exports.indexOf = function indexOf(xs, x) {
+  if (xs.indexOf) return xs.indexOf(x);
+  for (var i = 0; i < xs.length; i++) {
+    if (x === xs[i]) return i;
+  }
+  return -1;
+};
+
+// Array.prototype.filter is supported in IE9
+exports.filter = function filter(xs, fn) {
+  if (xs.filter) return xs.filter(fn);
+  var res = [];
+  for (var i = 0; i < xs.length; i++) {
+    if (fn(xs[i], i, xs)) res.push(xs[i]);
+  }
+  return res;
+};
+
+// Array.prototype.forEach is supported in IE9
+exports.forEach = function forEach(xs, fn, self) {
+  if (xs.forEach) return xs.forEach(fn, self);
+  for (var i = 0; i < xs.length; i++) {
+    fn.call(self, xs[i], i, xs);
+  }
+};
+
+// Array.prototype.map is supported in IE9
+exports.map = function map(xs, fn) {
+  if (xs.map) return xs.map(fn);
+  var out = new Array(xs.length);
+  for (var i = 0; i < xs.length; i++) {
+    out[i] = fn(xs[i], i, xs);
+  }
+  return out;
+};
+
+// Array.prototype.reduce is supported in IE9
+exports.reduce = function reduce(array, callback, opt_initialValue) {
+  if (array.reduce) return array.reduce(callback, opt_initialValue);
+  var value, isValueSet = false;
+
+  if (2 < arguments.length) {
+    value = opt_initialValue;
+    isValueSet = true;
+  }
+  for (var i = 0, l = array.length; l > i; ++i) {
+    if (array.hasOwnProperty(i)) {
+      if (isValueSet) {
+        value = callback(value, array[i], i, array);
+      }
+      else {
+        value = array[i];
+        isValueSet = true;
+      }
+    }
+  }
+
+  return value;
+};
+
+// String.prototype.substr - negative index don't work in IE8
+if ('ab'.substr(-1) !== 'b') {
+  exports.substr = function (str, start, length) {
+    // did we get a negative start, calculate how much it is from the beginning of the string
+    if (start < 0) start = str.length + start;
+
+    // call the original function
+    return str.substr(start, length);
+  };
+} else {
+  exports.substr = function (str, start, length) {
+    return str.substr(start, length);
+  };
+}
+
+// String.prototype.trim is supported in IE9
+exports.trim = function (str) {
+  if (str.trim) return str.trim();
+  return str.replace(/^\s+|\s+$/g, '');
+};
+
+// Function.prototype.bind is supported in IE9
+exports.bind = function () {
+  var args = Array.prototype.slice.call(arguments);
+  var fn = args.shift();
+  if (fn.bind) return fn.bind.apply(fn, args);
+  var self = args.shift();
+  return function () {
+    fn.apply(self, args.concat([Array.prototype.slice.call(arguments)]));
+  };
+};
+
+// Object.create is supported in IE9
+function create(prototype, properties) {
+  var object;
+  if (prototype === null) {
+    object = { '__proto__' : null };
+  }
+  else {
+    if (typeof prototype !== 'object') {
+      throw new TypeError(
+        'typeof prototype[' + (typeof prototype) + '] != \'object\''
+      );
+    }
+    var Type = function () {};
+    Type.prototype = prototype;
+    object = new Type();
+    object.__proto__ = prototype;
+  }
+  if (typeof properties !== 'undefined' && Object.defineProperties) {
+    Object.defineProperties(object, properties);
+  }
+  return object;
+}
+exports.create = typeof Object.create === 'function' ? Object.create : create;
+
+// Object.keys and Object.getOwnPropertyNames is supported in IE9 however
+// they do show a description and number property on Error objects
+function notObject(object) {
+  return ((typeof object != "object" && typeof object != "function") || object === null);
+}
+
+function keysShim(object) {
+  if (notObject(object)) {
+    throw new TypeError("Object.keys called on a non-object");
+  }
+
+  var result = [];
+  for (var name in object) {
+    if (hasOwnProperty.call(object, name)) {
+      result.push(name);
+    }
+  }
+  return result;
+}
+
+// getOwnPropertyNames is almost the same as Object.keys one key feature
+//  is that it returns hidden properties, since that can't be implemented,
+//  this feature gets reduced so it just shows the length property on arrays
+function propertyShim(object) {
+  if (notObject(object)) {
+    throw new TypeError("Object.getOwnPropertyNames called on a non-object");
+  }
+
+  var result = keysShim(object);
+  if (exports.isArray(object) && exports.indexOf(object, 'length') === -1) {
+    result.push('length');
+  }
+  return result;
+}
+
+var keys = typeof Object.keys === 'function' ? Object.keys : keysShim;
+var getOwnPropertyNames = typeof Object.getOwnPropertyNames === 'function' ?
+  Object.getOwnPropertyNames : propertyShim;
+
+if (new Error().hasOwnProperty('description')) {
+  var ERROR_PROPERTY_FILTER = function (obj, array) {
+    if (toString.call(obj) === '[object Error]') {
+      array = exports.filter(array, function (name) {
+        return name !== 'description' && name !== 'number' && name !== 'message';
+      });
+    }
+    return array;
+  };
+
+  exports.keys = function (object) {
+    return ERROR_PROPERTY_FILTER(object, keys(object));
+  };
+  exports.getOwnPropertyNames = function (object) {
+    return ERROR_PROPERTY_FILTER(object, getOwnPropertyNames(object));
+  };
+} else {
+  exports.keys = keys;
+  exports.getOwnPropertyNames = getOwnPropertyNames;
+}
+
+// Object.getOwnPropertyDescriptor - supported in IE8 but only on dom elements
+function valueObject(value, key) {
+  return { value: value[key] };
+}
+
+if (typeof Object.getOwnPropertyDescriptor === 'function') {
+  try {
+    Object.getOwnPropertyDescriptor({'a': 1}, 'a');
+    exports.getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+  } catch (e) {
+    // IE8 dom element issue - use a try catch and default to valueObject
+    exports.getOwnPropertyDescriptor = function (value, key) {
+      try {
+        return Object.getOwnPropertyDescriptor(value, key);
+      } catch (e) {
+        return valueObject(value, key);
+      }
+    };
+  }
+} else {
+  exports.getOwnPropertyDescriptor = valueObject;
+}
+
+},{}],6:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// UTILITY
+var util = require('util');
+var shims = require('_shims');
+var pSlice = Array.prototype.slice;
+
+// 1. The assert module provides functions that throw
+// AssertionError's when particular conditions are not met. The
+// assert module must conform to the following interface.
+
+var assert = module.exports = ok;
+
+// 2. The AssertionError is defined in assert.
+// new assert.AssertionError({ message: message,
+//                             actual: actual,
+//                             expected: expected })
+
+assert.AssertionError = function AssertionError(options) {
+  this.name = 'AssertionError';
+  this.actual = options.actual;
+  this.expected = options.expected;
+  this.operator = options.operator;
+  this.message = options.message || getMessage(this);
+};
+
+// assert.AssertionError instanceof Error
+util.inherits(assert.AssertionError, Error);
+
+function replacer(key, value) {
+  if (util.isUndefined(value)) {
+    return '' + value;
+  }
+  if (util.isNumber(value) && (isNaN(value) || !isFinite(value))) {
+    return value.toString();
+  }
+  if (util.isFunction(value) || util.isRegExp(value)) {
+    return value.toString();
+  }
+  return value;
+}
+
+function truncate(s, n) {
+  if (util.isString(s)) {
+    return s.length < n ? s : s.slice(0, n);
+  } else {
+    return s;
+  }
+}
+
+function getMessage(self) {
+  return truncate(JSON.stringify(self.actual, replacer), 128) + ' ' +
+         self.operator + ' ' +
+         truncate(JSON.stringify(self.expected, replacer), 128);
+}
+
+// At present only the three keys mentioned above are used and
+// understood by the spec. Implementations or sub modules can pass
+// other keys to the AssertionError's constructor - they will be
+// ignored.
+
+// 3. All of the following functions must throw an AssertionError
+// when a corresponding condition is not met, with a message that
+// may be undefined if not provided.  All assertion methods provide
+// both the actual and expected values to the assertion error for
+// display purposes.
+
+function fail(actual, expected, message, operator, stackStartFunction) {
+  throw new assert.AssertionError({
+    message: message,
+    actual: actual,
+    expected: expected,
+    operator: operator,
+    stackStartFunction: stackStartFunction
+  });
+}
+
+// EXTENSION! allows for well behaved errors defined elsewhere.
+assert.fail = fail;
+
+// 4. Pure assertion tests whether a value is truthy, as determined
+// by !!guard.
+// assert.ok(guard, message_opt);
+// This statement is equivalent to assert.equal(true, !!guard,
+// message_opt);. To test strictly for the value true, use
+// assert.strictEqual(true, guard, message_opt);.
+
+function ok(value, message) {
+  if (!value) fail(value, true, message, '==', assert.ok);
+}
+assert.ok = ok;
+
+// 5. The equality assertion tests shallow, coercive equality with
+// ==.
+// assert.equal(actual, expected, message_opt);
+
+assert.equal = function equal(actual, expected, message) {
+  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
+};
+
+// 6. The non-equality assertion tests for whether two objects are not equal
+// with != assert.notEqual(actual, expected, message_opt);
+
+assert.notEqual = function notEqual(actual, expected, message) {
+  if (actual == expected) {
+    fail(actual, expected, message, '!=', assert.notEqual);
+  }
+};
+
+// 7. The equivalence assertion tests a deep equality relation.
+// assert.deepEqual(actual, expected, message_opt);
+
+assert.deepEqual = function deepEqual(actual, expected, message) {
+  if (!_deepEqual(actual, expected)) {
+    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
+  }
+};
+
+function _deepEqual(actual, expected) {
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+
+  } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
+    if (actual.length != expected.length) return false;
+
+    for (var i = 0; i < actual.length; i++) {
+      if (actual[i] !== expected[i]) return false;
+    }
+
+    return true;
+
+  // 7.2. If the expected value is a Date object, the actual value is
+  // equivalent if it is also a Date object that refers to the same time.
+  } else if (util.isDate(actual) && util.isDate(expected)) {
+    return actual.getTime() === expected.getTime();
+
+  // 7.3 If the expected value is a RegExp object, the actual value is
+  // equivalent if it is also a RegExp object with the same source and
+  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
+  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
+    return actual.source === expected.source &&
+           actual.global === expected.global &&
+           actual.multiline === expected.multiline &&
+           actual.lastIndex === expected.lastIndex &&
+           actual.ignoreCase === expected.ignoreCase;
+
+  // 7.4. Other pairs that do not both pass typeof value == 'object',
+  // equivalence is determined by ==.
+  } else if (!util.isObject(actual) && !util.isObject(expected)) {
+    return actual == expected;
+
+  // 7.5 For all other Object pairs, including Array objects, equivalence is
+  // determined by having the same number of owned properties (as verified
+  // with Object.prototype.hasOwnProperty.call), the same set of keys
+  // (although not necessarily the same order), equivalent values for every
+  // corresponding key, and an identical 'prototype' property. Note: this
+  // accounts for both named and indexed properties on Arrays.
+  } else {
+    return objEquiv(actual, expected);
+  }
+}
+
+function isArguments(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+}
+
+function objEquiv(a, b) {
+  if (util.isNullOrUndefined(a) || util.isNullOrUndefined(b))
+    return false;
+  // an identical 'prototype' property.
+  if (a.prototype !== b.prototype) return false;
+  //~~~I've managed to break Object.keys through screwy arguments passing.
+  //   Converting to array solves the problem.
+  if (isArguments(a)) {
+    if (!isArguments(b)) {
+      return false;
+    }
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return _deepEqual(a, b);
+  }
+  try {
+    var ka = shims.keys(a),
+        kb = shims.keys(b),
+        key, i;
+  } catch (e) {//happens when one is a string literal and the other isn't
+    return false;
+  }
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length != kb.length)
+    return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i])
+      return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!_deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+// 8. The non-equivalence assertion tests for any deep inequality.
+// assert.notDeepEqual(actual, expected, message_opt);
+
+assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
+  if (_deepEqual(actual, expected)) {
+    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
+  }
+};
+
+// 9. The strict equality assertion tests strict equality, as determined by ===.
+// assert.strictEqual(actual, expected, message_opt);
+
+assert.strictEqual = function strictEqual(actual, expected, message) {
+  if (actual !== expected) {
+    fail(actual, expected, message, '===', assert.strictEqual);
+  }
+};
+
+// 10. The strict non-equality assertion tests for strict inequality, as
+// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
+
+assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
+  if (actual === expected) {
+    fail(actual, expected, message, '!==', assert.notStrictEqual);
+  }
+};
+
+function expectedException(actual, expected) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
+    return expected.test(actual);
+  } else if (actual instanceof expected) {
+    return true;
+  } else if (expected.call({}, actual) === true) {
+    return true;
+  }
+
+  return false;
+}
+
+function _throws(shouldThrow, block, expected, message) {
+  var actual;
+
+  if (util.isString(expected)) {
+    message = expected;
+    expected = null;
+  }
+
+  try {
+    block();
+  } catch (e) {
+    actual = e;
+  }
+
+  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
+            (message ? ' ' + message : '.');
+
+  if (shouldThrow && !actual) {
+    fail(actual, expected, 'Missing expected exception' + message);
+  }
+
+  if (!shouldThrow && expectedException(actual, expected)) {
+    fail(actual, expected, 'Got unwanted exception' + message);
+  }
+
+  if ((shouldThrow && actual && expected &&
+      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
+    throw actual;
+  }
+}
+
+// 11. Expected to throw an error:
+// assert.throws(block, Error_opt, message_opt);
+
+assert.throws = function(block, /*optional*/error, /*optional*/message) {
+  _throws.apply(this, [true].concat(pSlice.call(arguments)));
+};
+
+// EXTENSION! This is annoying to write outside this module.
+assert.doesNotThrow = function(block, /*optional*/message) {
+  _throws.apply(this, [false].concat(pSlice.call(arguments)));
+};
+
+assert.ifError = function(err) { if (err) {throw err;}};
+},{"_shims":5,"util":7}],7:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var shims = require('_shims');
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  shims.forEach(array, function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = shims.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = shims.getOwnPropertyNames(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+
+  shims.forEach(keys, function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = shims.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (shims.indexOf(ctx.seen, desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = shims.reduce(output, function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return shims.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) && objectToString(e) === '[object Error]';
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+function isBuffer(arg) {
+  return arg instanceof Buffer;
+}
+exports.isBuffer = isBuffer;
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = function(ctor, superCtor) {
+  ctor.super_ = superCtor;
+  ctor.prototype = shims.create(superCtor.prototype, {
+    constructor: {
+      value: ctor,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+};
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = shims.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+},{"_shims":5}]},{},[])
+;;module.exports=require("buffer-browserify")
+
+},{}],13:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3834,31 +6214,6 @@ process.cwd = function () { return '/' };
 process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
-
-},{}],13:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
 
 },{}],14:[function(require,module,exports){
 var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/**
@@ -11407,17 +13762,18 @@ define(function (require) {
 });
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }, this);
 
-},{"__browserify_process":12}],16:[function(require,module,exports){
+},{"__browserify_process":13}],16:[function(require,module,exports){
 var es = {
   Client: require('./lib/client'),
-  errors: require('./lib/errors'),
   ConnectionPool: require('./lib/connection_pool'),
-  Transport: require('./lib/transport')
+  Transport: require('./lib/transport'),
+
+  errors: require('./lib/errors')
 };
 
 module.exports = es;
 
-},{"./lib/client":18,"./lib/connection_pool":21,"./lib/errors":24,"./lib/transport":34}],17:[function(require,module,exports){
+},{"./lib/client":18,"./lib/connection_pool":21,"./lib/errors":24,"./lib/transport":35}],17:[function(require,module,exports){
 /* jshint maxlen: false */
 
 var ca = require('./client_action');
@@ -11433,6 +13789,7 @@ api._namespaces = ['cluster', 'indices'];
  * @param {Boolean} params.refresh - Refresh the index after performing the operation
  * @param {String} [params.replication=sync] - Explicitely set the replication type
  * @param {String} params.type - Default document type for items which don't provide one
+ * @param {Date, Number} params.timeout - Explicit operation timeout
  * @param {String} params.index - Default index for items which don't provide one
  */
 api.bulk = ca({
@@ -11458,6 +13815,9 @@ api.bulk = ca({
     },
     type: {
       type: 'string'
+    },
+    timeout: {
+      type: 'time'
     }
   },
   urls: [
@@ -11488,12 +13848,11 @@ api.bulk = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [clearScroll](http://www.elasticsearch.org/guide/reference/api/search/scroll/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.scrollId - A comma-separated list of scroll IDs to clear
+ * @param {String, String[], Boolean} params.scrollId - A comma-separated list of scroll IDs to clear
  */
 api.clearScroll = ca({
   url: {
@@ -11507,7 +13866,6 @@ api.clearScroll = ca({
   },
   method: 'DELETE'
 });
-
 
 api.cluster = function ClusterNS(transport) {
   this.transport = transport;
@@ -11524,15 +13882,14 @@ api.cluster.prototype.getSettings = ca({
   }
 });
 
-
 /**
  * Perform a [cluster.health](http://elasticsearch.org/guide/reference/api/admin-cluster-health/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.level=cluster] - Specify the level of detail for returned information
  * @param {Boolean} params.local - Return local information, do not retrieve the state from master node (default: false)
- * @param {Date or Number} params.masterTimeout - Explicit operation timeout for connection to master node
- * @param {Date or Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Explicit operation timeout for connection to master node
+ * @param {Date, Number} params.timeout - Explicit operation timeout
  * @param {Number} params.waitForActiveShards - Wait until the specified number of shards is active
  * @param {String} params.waitForNodes - Wait until the specified number of nodes is available
  * @param {Number} params.waitForRelocatingShards - Wait until the specified number of relocating shards is finished
@@ -11598,16 +13955,15 @@ api.cluster.prototype.health = ca({
   ]
 });
 
-
 /**
  * Perform a [cluster.nodeHotThreads](http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.interval - The interval for the second sampling of threads
+ * @param {Date, Number} params.interval - The interval for the second sampling of threads
  * @param {Number} params.snapshots - Number of samples of thread stacktrace (default: 10)
  * @param {Number} params.threads - Specify the number of threads to provide information for (default: 3)
  * @param {String} params.type - The type to sample (default: cpu)
- * @param {String or String[] or Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
+ * @param {String, String[], Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
  */
 api.cluster.prototype.nodeHotThreads = ca({
   params: {
@@ -11644,7 +14000,6 @@ api.cluster.prototype.nodeHotThreads = ca({
   ]
 });
 
-
 /**
  * Perform a [cluster.nodeInfo](http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/) request
  *
@@ -11659,9 +14014,9 @@ api.cluster.prototype.nodeHotThreads = ca({
  * @param {Boolean} params.process - Return information about the Elasticsearch process
  * @param {Boolean} params.settings - Return information about node settings
  * @param {Boolean} params.threadPool - Return information about the thread pool
- * @param {Date or Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timeout - Explicit operation timeout
  * @param {Boolean} params.transport - Return information about transport
- * @param {String or String[] or Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
+ * @param {String, String[], Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
  */
 api.cluster.prototype.nodeInfo = ca({
   params: {
@@ -11718,14 +14073,13 @@ api.cluster.prototype.nodeInfo = ca({
   ]
 });
 
-
 /**
  * Perform a [cluster.nodeShutdown](http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.delay - Set the delay for the operation (default: 1s)
+ * @param {Date, Number} params.delay - Set the delay for the operation (default: 1s)
  * @param {Boolean} params.exit - Exit the JVM as well (default: true)
- * @param {String or String[] or Boolean} params.nodeId - A comma-separated list of node IDs or names to perform the operation on; use `_local` to perform the operation on the node you're connected to, leave empty to perform the operation on all nodes
+ * @param {String, String[], Boolean} params.nodeId - A comma-separated list of node IDs or names to perform the operation on; use `_local` to perform the operation on the node you're connected to, leave empty to perform the operation on all nodes
  */
 api.cluster.prototype.nodeShutdown = ca({
   params: {
@@ -11752,14 +14106,13 @@ api.cluster.prototype.nodeShutdown = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [cluster.nodeStats](http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.all - Return all available information
  * @param {Boolean} params.clear - Reset the default level of detail
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return detailed information for, when returning the `indices` metric family (supports wildcards)
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return detailed information for, when returning the `indices` metric family (supports wildcards)
  * @param {Boolean} params.fs - Return information about the filesystem
  * @param {Boolean} params.http - Return information about HTTP
  * @param {Boolean} params.indices - Return information about indices
@@ -11771,7 +14124,7 @@ api.cluster.prototype.nodeShutdown = ca({
  * @param {Boolean} params.transport - Return information about transport
  * @param {String} params.metricFamily - Limit the information returned to a certain metric family
  * @param {String} params.metric - Limit the information returned for `indices` family to a specific metric
- * @param {String or String[] or Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
+ * @param {String, String[], Boolean} params.nodeId - A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
  */
 api.cluster.prototype.nodeStats = ca({
   params: {
@@ -11828,7 +14181,6 @@ api.cluster.prototype.nodeStats = ca({
   ]
 });
 
-
 /**
  * Perform a [cluster.putSettings](http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/) request
  *
@@ -11840,7 +14192,6 @@ api.cluster.prototype.putSettings = ca({
   },
   method: 'PUT'
 });
-
 
 /**
  * Perform a [cluster.reroute](http://elasticsearch.org/guide/reference/api/admin-cluster-reroute/) request
@@ -11866,19 +14217,18 @@ api.cluster.prototype.reroute = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [cluster.state](http://elasticsearch.org/guide/reference/api/admin-cluster-state/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.filterBlocks - Do not return information about blocks
  * @param {Boolean} params.filterIndexTemplates - Do not return information about index templates
- * @param {String or String[] or Boolean} params.filterIndices - Limit returned metadata information to specific indices
+ * @param {String, String[], Boolean} params.filterIndices - Limit returned metadata information to specific indices
  * @param {Boolean} params.filterMetadata - Do not return information about indices metadata
  * @param {Boolean} params.filterNodes - Do not return information about nodes
  * @param {Boolean} params.filterRoutingTable - Do not return information about shard allocation (`routing_table` and `routing_nodes`)
  * @param {Boolean} params.local - Return local information, do not retrieve the state from master node (default: false)
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  */
 api.cluster.prototype.state = ca({
   params: {
@@ -11919,7 +14269,6 @@ api.cluster.prototype.state = ca({
   }
 });
 
-
 /**
  * Perform a [count](http://elasticsearch.org/guide/reference/api/count/) request
  *
@@ -11929,8 +14278,8 @@ api.cluster.prototype.state = ca({
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {String} params.routing - Specific routing value
  * @param {String} params.source - The URL-encoded query definition (instead of using the request body)
- * @param {String or String[] or Boolean} params.index - A comma-separated list of indices to restrict the results
- * @param {String or String[] or Boolean} params.type - A comma-separated list of types to restrict the results
+ * @param {String, String[], Boolean} params.index - A comma-separated list of indices to restrict the results
+ * @param {String, String[], Boolean} params.type - A comma-separated list of types to restrict the results
  */
 api.count = ca({
   params: {
@@ -11984,7 +14333,6 @@ api.count = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [delete](http://elasticsearch.org/guide/reference/api/delete/) request
  *
@@ -11994,7 +14342,7 @@ api.count = ca({
  * @param {Boolean} params.refresh - Refresh the index after performing the operation
  * @param {String} [params.replication=sync] - Specific replication type
  * @param {String} params.routing - Specific routing value
- * @param {Date or Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timeout - Explicit operation timeout
  * @param {Number} params.version - Explicit version number for concurrency control
  * @param {String} params.versionType - Specific version type
  * @param {String} params.id - The document ID
@@ -12061,7 +14409,6 @@ api['delete'] = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [deleteByQuery](http://www.elasticsearch.org/guide/reference/api/delete-by-query/) request
  *
@@ -12075,9 +14422,9 @@ api['delete'] = ca({
  * @param {String} params.q - Query in the Lucene query string syntax
  * @param {String} params.routing - Specific routing value
  * @param {String} params.source - The URL-encoded query definition (instead of using the request body)
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {String or String[] or Boolean} params.index - A comma-separated list of indices to restrict the operation; use `_all` to perform the operation on all indices
- * @param {String or String[] or Boolean} params.type - A comma-separated list of types to restrict the operation
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {String, String[], Boolean} params.index - A comma-separated list of indices to restrict the operation; use `_all` to perform the operation on all indices
+ * @param {String, String[], Boolean} params.type - A comma-separated list of types to restrict the operation
  */
 api.deleteByQuery = ca({
   params: {
@@ -12158,7 +14505,6 @@ api.deleteByQuery = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [exists](http://elasticsearch.org/guide/reference/api/get/) request
  *
@@ -12212,7 +14558,6 @@ api.exists = ca({
   method: 'HEAD'
 });
 
-
 /**
  * Perform a [explain](http://elasticsearch.org/guide/reference/api/explain/) request
  *
@@ -12221,16 +14566,17 @@ api.exists = ca({
  * @param {String} params.analyzer - The analyzer for the query string query
  * @param {String} [params.defaultOperator=OR] - The default operator for query string query (AND or OR)
  * @param {String} params.df - The default field for query string query (default: _all)
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return in the response
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return in the response
  * @param {Boolean} params.lenient - Specify whether format-based query failures (such as providing text to a numeric field) should be ignored
  * @param {Boolean} params.lowercaseExpandedTerms - Specify whether query terms should be lowercased
  * @param {String} params.parent - The ID of the parent document
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {String} params.q - Query in the Lucene query string syntax
  * @param {String} params.routing - Specific routing value
- * @param {String or String[] or Boolean} params.source - True or false to return the _source field or not, or a list of fields to return
- * @param {String or String[] or Boolean} params.sourceExclude - A list of fields to exclude from the returned _source field
- * @param {String or String[] or Boolean} params.sourceInclude - A list of fields to extract and return from the _source field
+ * @param {String} params.source - The URL-encoded query definition (instead of using the request body)
+ * @param {String, String[], Boolean} params._source - True or false to return the _source field or not, or a list of fields to return
+ * @param {String, String[], Boolean} params._sourceExclude - A list of fields to exclude from the returned _source field
+ * @param {String, String[], Boolean} params._sourceInclude - A list of fields to extract and return from the _source field
  * @param {String} params.id - The document ID
  * @param {String} params.index - The name of the index
  * @param {String} params.type - The type of the document
@@ -12279,14 +14625,16 @@ api.explain = ca({
       type: 'string'
     },
     source: {
-      type: 'list',
-      name: '_source'
+      type: 'string'
     },
-    sourceExclude: {
+    _source: {
+      type: 'list'
+    },
+    _sourceExclude: {
       type: 'list',
       name: '_source_exclude'
     },
-    sourceInclude: {
+    _sourceInclude: {
       type: 'list',
       name: '_source_include'
     }
@@ -12309,20 +14657,19 @@ api.explain = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [get](http://elasticsearch.org/guide/reference/api/get/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return in the response
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return in the response
  * @param {String} params.parent - The ID of the parent document
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {Boolean} params.realtime - Specify whether to perform the operation in realtime or search mode
  * @param {Boolean} params.refresh - Refresh the shard containing the document before performing the operation
  * @param {String} params.routing - Specific routing value
- * @param {String or String[] or Boolean} params.source - True or false to return the _source field or not, or a list of fields to return
- * @param {String or String[] or Boolean} params.sourceExclude - A list of fields to exclude from the returned _source field
- * @param {String or String[] or Boolean} params.sourceInclude - A list of fields to extract and return from the _source field
+ * @param {String, String[], Boolean} params._source - True or false to return the _source field or not, or a list of fields to return
+ * @param {String, String[], Boolean} params._sourceExclude - A list of fields to exclude from the returned _source field
+ * @param {String, String[], Boolean} params._sourceInclude - A list of fields to extract and return from the _source field
  * @param {String} params.id - The document ID
  * @param {String} params.index - The name of the index
  * @param {String} [params.type=_all] - The type of the document (use `_all` to fetch the first document matching the ID across all types)
@@ -12347,15 +14694,14 @@ api.get = ca({
     routing: {
       type: 'string'
     },
-    source: {
-      type: 'list',
-      name: '_source'
+    _source: {
+      type: 'list'
     },
-    sourceExclude: {
+    _sourceExclude: {
       type: 'list',
       name: '_source_exclude'
     },
-    sourceInclude: {
+    _sourceInclude: {
       type: 'list',
       name: '_source_include'
     }
@@ -12380,13 +14726,12 @@ api.get = ca({
   }
 });
 
-
 /**
  * Perform a [getSource](http://elasticsearch.org/guide/reference/api/get/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.exclude - A list of fields to exclude from the returned _source field
- * @param {String or String[] or Boolean} params.include - A list of fields to extract and return from the _source field
+ * @param {String, String[], Boolean} params.exclude - A list of fields to exclude from the returned _source field
+ * @param {String, String[], Boolean} params.include - A list of fields to extract and return from the _source field
  * @param {String} params.parent - The ID of the parent document
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {Boolean} params.realtime - Specify whether to perform the operation in realtime or search mode
@@ -12440,7 +14785,6 @@ api.getSource = ca({
   }
 });
 
-
 /**
  * Perform a [index](http://elasticsearch.org/guide/reference/api/index_/) request
  *
@@ -12452,8 +14796,8 @@ api.getSource = ca({
  * @param {Boolean} params.refresh - Refresh the index after performing the operation
  * @param {String} [params.replication=sync] - Specific replication type
  * @param {String} params.routing - Specific routing value
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.timestamp - Explicit timestamp for the document
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timestamp - Explicit timestamp for the document
  * @param {Duration} params.ttl - Expiration time for the document
  * @param {Number} params.version - Explicit version number for concurrency control
  * @param {String} params.versionType - Specific version type
@@ -12551,7 +14895,6 @@ api.index = ca({
   method: 'POST'
 });
 
-
 api.indices = function IndicesNS(transport) {
   this.transport = transport;
 };
@@ -12562,7 +14905,7 @@ api.indices = function IndicesNS(transport) {
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} params.analyzer - The name of the analyzer to use
  * @param {String} params.field - Use the analyzer configured for this field (instead of passing the analyzer name)
- * @param {String or String[] or Boolean} params.filters - A comma-separated list of filters to use for the analysis
+ * @param {String, String[], Boolean} params.filters - A comma-separated list of filters to use for the analysis
  * @param {String} params.index - The name of the index to scope the operation
  * @param {Boolean} params.preferLocal - With `true`, specify that a local shard should be used if available, with `false`, use a random shard (default: true)
  * @param {String} params.text - The text on which the analysis should be performed (when request body is not used)
@@ -12618,21 +14961,20 @@ api.indices.prototype.analyze = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.clearCache](http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.fieldData - Clear field data
  * @param {Boolean} params.fielddata - Clear field data
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to clear when using the `field_data` parameter (default: all)
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to clear when using the `field_data` parameter (default: all)
  * @param {Boolean} params.filter - Clear filter caches
  * @param {Boolean} params.filterCache - Clear filter caches
  * @param {Boolean} params.filterKeys - A comma-separated list of keys to clear when using the `filter_cache` parameter (default: all)
  * @param {Boolean} params.id - Clear ID caches for parent/child
  * @param {Boolean} params.idCache - Clear ID caches for parent/child
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index name to limit the operation
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index name to limit the operation
  * @param {Boolean} params.recycler - Clear the recycler cache
  */
 api.indices.prototype.clearCache = ca({
@@ -12697,13 +15039,12 @@ api.indices.prototype.clearCache = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.close](http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.index - The name of the index
  */
 api.indices.prototype.close = ca({
@@ -12728,13 +15069,12 @@ api.indices.prototype.close = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.create](http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.index - The name of the index
  */
 api.indices.prototype.create = ca({
@@ -12759,14 +15099,13 @@ api.indices.prototype.create = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.delete](http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of indices to delete; use `_all` or empty string to delete all indices
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of indices to delete; use `_all` or empty string to delete all indices
  */
 api.indices.prototype['delete'] = ca({
   params: {
@@ -12794,13 +15133,12 @@ api.indices.prototype['delete'] = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [indices.deleteAlias](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit timestamp for the document
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit timestamp for the document
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.index - The name of the index with an alias
  * @param {String} params.name - The name of the alias to be deleted
  */
@@ -12829,13 +15167,12 @@ api.indices.prototype.deleteAlias = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [indices.deleteMapping](http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` for all indices
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` for all indices
  * @param {String} params.type - The name of the document type to delete
  */
 api.indices.prototype.deleteMapping = ca({
@@ -12860,13 +15197,12 @@ api.indices.prototype.deleteMapping = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [indices.deleteTemplate](http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.name - The name of the template
  */
 api.indices.prototype.deleteTemplate = ca({
@@ -12891,15 +15227,14 @@ api.indices.prototype.deleteTemplate = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [indices.deleteWarmer](http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to register warmer for; use `_all` or empty string to perform the operation on all indices
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to register warmer for; use `_all` or empty string to perform the operation on all indices
  * @param {String} params.name - The name of the warmer (supports wildcards); leave empty to delete all warmers
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to register warmer for; use `_all` or empty string to perform the operation on all types
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to register warmer for; use `_all` or empty string to perform the operation on all types
  */
 api.indices.prototype.deleteWarmer = ca({
   params: {
@@ -12946,12 +15281,11 @@ api.indices.prototype.deleteWarmer = ca({
   method: 'DELETE'
 });
 
-
 /**
  * Perform a [indices.exists](http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.index - A comma-separated list of indices to check
+ * @param {String, String[], Boolean} params.index - A comma-separated list of indices to check
  */
 api.indices.prototype.exists = ca({
   url: {
@@ -12967,14 +15301,13 @@ api.indices.prototype.exists = ca({
   method: 'HEAD'
 });
 
-
 /**
  * Perform a [indices.existsAlias](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to filter aliases
- * @param {String or String[] or Boolean} params.name - A comma-separated list of alias names to return
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to filter aliases
+ * @param {String, String[], Boolean} params.name - A comma-separated list of alias names to return
  */
 api.indices.prototype.existsAlias = ca({
   params: {
@@ -13013,14 +15346,13 @@ api.indices.prototype.existsAlias = ca({
   method: 'HEAD'
 });
 
-
 /**
  * Perform a [indices.existsType](http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` to check the types across all indices
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to check
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` to check the types across all indices
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to check
  */
 api.indices.prototype.existsType = ca({
   params: {
@@ -13050,7 +15382,6 @@ api.indices.prototype.existsType = ca({
   method: 'HEAD'
 });
 
-
 /**
  * Perform a [indices.flush](http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/) request
  *
@@ -13059,7 +15390,7 @@ api.indices.prototype.existsType = ca({
  * @param {Boolean} params.full - TODO: ?
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
  * @param {Boolean} params.refresh - Refresh the index after performing the operation
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string for all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string for all indices
  */
 api.indices.prototype.flush = ca({
   params: {
@@ -13098,14 +15429,13 @@ api.indices.prototype.flush = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.getAlias](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to filter aliases
- * @param {String or String[] or Boolean} params.name - A comma-separated list of alias names to return
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to filter aliases
+ * @param {String, String[], Boolean} params.name - A comma-separated list of alias names to return
  */
 api.indices.prototype.getAlias = ca({
   params: {
@@ -13142,13 +15472,12 @@ api.indices.prototype.getAlias = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.getAliases](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to filter aliases
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to filter aliases
  */
 api.indices.prototype.getAliases = ca({
   params: {
@@ -13171,15 +15500,14 @@ api.indices.prototype.getAliases = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.getFieldMapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.includeDefaults - Whether the default mapping values should be returned as well
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types
- * @param {String or String[] or Boolean} params.field - A comma-separated list of fields
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types
+ * @param {String, String[], Boolean} params.field - A comma-separated list of fields
  */
 api.indices.prototype.getFieldMapping = ca({
   params: {
@@ -13225,13 +15553,12 @@ api.indices.prototype.getFieldMapping = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.getMapping](http://www.elasticsearch.org/guide/reference/api/admin-indices-get-mapping/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types
  */
 api.indices.prototype.getMapping = ca({
   urls: [
@@ -13260,12 +15587,11 @@ api.indices.prototype.getMapping = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.getSettings](http://www.elasticsearch.org/guide/reference/api/admin-indices-get-settings/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.getSettings = ca({
   urls: [
@@ -13282,7 +15608,6 @@ api.indices.prototype.getSettings = ca({
     }
   ]
 });
-
 
 /**
  * Perform a [indices.getTemplate](http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/) request
@@ -13306,14 +15631,13 @@ api.indices.prototype.getTemplate = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.getWarmer](http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` to perform the operation on all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` to perform the operation on all indices
  * @param {String} params.name - The name of the warmer (supports wildcards); leave empty to get all warmers
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
  */
 api.indices.prototype.getWarmer = ca({
   urls: [
@@ -13353,13 +15677,12 @@ api.indices.prototype.getWarmer = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.open](http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.index - The name of the index
  */
 api.indices.prototype.open = ca({
@@ -13384,7 +15707,6 @@ api.indices.prototype.open = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.optimize](http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/) request
  *
@@ -13393,10 +15715,10 @@ api.indices.prototype.open = ca({
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
  * @param {Number} params.maxNumSegments - The number of segments the index should be merged into (default: dynamic)
  * @param {Boolean} params.onlyExpungeDeletes - Specify whether the operation should only expunge deleted documents
- * @param {*} params.operationThreading - TODO: ?
+ * @param {Anything} params.operationThreading - TODO: ?
  * @param {Boolean} params.refresh - Specify whether the index should be refreshed after performing the operation (default: true)
  * @param {Boolean} params.waitForMerge - Specify whether the request should block until the merge process is finished (default: true)
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.optimize = ca({
   params: {
@@ -13447,13 +15769,12 @@ api.indices.prototype.optimize = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.putAlias](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Explicit timestamp for the document
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit timestamp for the document
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.index - The name of the index with an alias
  * @param {String} params.name - The name of the alias to be created or updated
  */
@@ -13502,15 +15823,14 @@ api.indices.prototype.putAlias = ca({
   method: 'PUT'
 });
 
-
 /**
  * Perform a [indices.putMapping](http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.ignoreConflicts - Specify whether to ignore conflicts while updating the mapping (default: false)
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` to perform the operation on all indices
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` to perform the operation on all indices
  * @param {String} params.type - The name of the document type
  */
 api.indices.prototype.putMapping = ca({
@@ -13539,16 +15859,15 @@ api.indices.prototype.putMapping = ca({
     },
     sortOrder: -2
   },
-  method: 'POST'
+  method: 'PUT'
 });
-
 
 /**
  * Perform a [indices.putSettings](http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.putSettings = ca({
   params: {
@@ -13573,14 +15892,13 @@ api.indices.prototype.putSettings = ca({
   method: 'PUT'
 });
 
-
 /**
  * Perform a [indices.putTemplate](http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Number} params.order - The order for this template when merging multiple matching ones (higher numbers are merged later, overriding the lower numbers)
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
  * @param {String} params.name - The name of the template
  */
 api.indices.prototype.putTemplate = ca({
@@ -13605,18 +15923,17 @@ api.indices.prototype.putTemplate = ca({
     },
     sortOrder: -1
   },
-  method: 'POST'
+  method: 'PUT'
 });
-
 
 /**
  * Perform a [indices.putWarmer](http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to register the warmer for; use `_all` or empty string to perform the operation on all indices
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to register the warmer for; use `_all` or empty string to perform the operation on all indices
  * @param {String} params.name - The name of the warmer
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to register the warmer for; leave empty to perform the operation on all types
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to register the warmer for; leave empty to perform the operation on all types
  */
 api.indices.prototype.putWarmer = ca({
   params: {
@@ -13655,14 +15972,13 @@ api.indices.prototype.putWarmer = ca({
   method: 'PUT'
 });
 
-
 /**
  * Perform a [indices.refresh](http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {*} params.operationThreading - TODO: ?
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {Anything} params.operationThreading - TODO: ?
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.refresh = ca({
   params: {
@@ -13695,14 +16011,13 @@ api.indices.prototype.refresh = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.segments](http://elasticsearch.org/guide/reference/api/admin-indices-segments/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {*} params.operationThreading - TODO: ?
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {Anything} params.operationThreading - TODO: ?
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.segments = ca({
   params: {
@@ -13734,13 +16049,12 @@ api.indices.prototype.segments = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.snapshotIndex](http://www.elasticsearch.org/guide/reference/api/admin-indices-gateway-snapshot/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string for all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string for all indices
  */
 api.indices.prototype.snapshotIndex = ca({
   params: {
@@ -13770,7 +16084,6 @@ api.indices.prototype.snapshotIndex = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.stats](http://elasticsearch.org/guide/reference/api/admin-indices-stats/) request
  *
@@ -13778,11 +16091,11 @@ api.indices.prototype.snapshotIndex = ca({
  * @param {Boolean} params.all - Return all available information
  * @param {Boolean} params.clear - Reset the default level of detail
  * @param {Boolean} params.completion - Return information about completion suggester stats
- * @param {String or String[] or Boolean} params.completionFields - A comma-separated list of fields for `completion` metric (supports wildcards)
+ * @param {String, String[], Boolean} params.completionFields - A comma-separated list of fields for `completion` metric (supports wildcards)
  * @param {Boolean} params.docs - Return information about indexed and deleted documents
  * @param {Boolean} params.fielddata - Return information about field data
- * @param {String or String[] or Boolean} params.fielddataFields - A comma-separated list of fields for `fielddata` metric (supports wildcards)
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return detailed information for, when returning the `search` statistics
+ * @param {String, String[], Boolean} params.fielddataFields - A comma-separated list of fields for `fielddata` metric (supports wildcards)
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return detailed information for, when returning the `search` statistics
  * @param {Boolean} params.filterCache - Return information about filter cache
  * @param {Boolean} params.flush - Return information about flush operations
  * @param {Boolean} params.get - Return information about get operations
@@ -13795,10 +16108,10 @@ api.indices.prototype.snapshotIndex = ca({
  * @param {Boolean} params.search - Return information about search operations; use the `groups` parameter to include information for specific search groups
  * @param {Boolean} params.store - Return information about the size of the index
  * @param {Boolean} params.warmer - Return information about warmers
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
- * @param {String or String[] or Boolean} params.indexingTypes - A comma-separated list of document types to include in the `indexing` statistics
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.indexingTypes - A comma-separated list of document types to include in the `indexing` statistics
  * @param {String} params.metricFamily - Limit the information returned to a specific metric
- * @param {String or String[] or Boolean} params.searchGroups - A comma-separated list of search groups to include in the `search` statistics
+ * @param {String, String[], Boolean} params.searchGroups - A comma-separated list of search groups to include in the `search` statistics
  */
 api.indices.prototype.stats = ca({
   params: {
@@ -13888,16 +16201,15 @@ api.indices.prototype.stats = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.status](http://elasticsearch.org/guide/reference/api/admin-indices-status/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {*} params.operationThreading - TODO: ?
+ * @param {Anything} params.operationThreading - TODO: ?
  * @param {Boolean} params.recovery - Return information about shard recovery
  * @param {Boolean} params.snapshot - TODO: ?
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
  */
 api.indices.prototype.status = ca({
   params: {
@@ -13935,14 +16247,13 @@ api.indices.prototype.status = ca({
   ]
 });
 
-
 /**
  * Perform a [indices.updateAliases](http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {Date or Number} params.timeout - Request timeout
- * @param {Date or Number} params.masterTimeout - Specify timeout for connection to master
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to filter aliases
+ * @param {Date, Number} params.timeout - Request timeout
+ * @param {Date, Number} params.masterTimeout - Specify timeout for connection to master
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to filter aliases
  */
 api.indices.prototype.updateAliases = ca({
   params: {
@@ -13960,18 +16271,17 @@ api.indices.prototype.updateAliases = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [indices.validateQuery](http://www.elasticsearch.org/guide/reference/api/validate/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {Boolean} params.explain - Return detailed information about the error
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {*} params.operationThreading - TODO: ?
+ * @param {Anything} params.operationThreading - TODO: ?
  * @param {String} params.source - The URL-encoded query definition (instead of using the request body)
  * @param {String} params.q - Query in the Lucene query string syntax
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
  */
 api.indices.prototype.validateQuery = ca({
   params: {
@@ -14024,7 +16334,6 @@ api.indices.prototype.validateQuery = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [info](http://elasticsearch.org/guide/) request
  *
@@ -14036,18 +16345,17 @@ api.info = ca({
   }
 });
 
-
 /**
  * Perform a [mget](http://elasticsearch.org/guide/reference/api/multi-get/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return in the response
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return in the response
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {Boolean} params.realtime - Specify whether to perform the operation in realtime or search mode
  * @param {Boolean} params.refresh - Refresh the shard containing the document before performing the operation
- * @param {String or String[] or Boolean} params.source - True or false to return the _source field or not, or a list of fields to return
- * @param {String or String[] or Boolean} params.sourceExclude - A list of fields to exclude from the returned _source field
- * @param {String or String[] or Boolean} params.sourceInclude - A list of fields to extract and return from the _source field
+ * @param {String, String[], Boolean} params._source - True or false to return the _source field or not, or a list of fields to return
+ * @param {String, String[], Boolean} params._sourceExclude - A list of fields to exclude from the returned _source field
+ * @param {String, String[], Boolean} params._sourceInclude - A list of fields to extract and return from the _source field
  * @param {String} params.index - The name of the index
  * @param {String} params.type - The type of the document
  */
@@ -14065,15 +16373,14 @@ api.mget = ca({
     refresh: {
       type: 'boolean'
     },
-    source: {
-      type: 'list',
-      name: '_source'
+    _source: {
+      type: 'list'
     },
-    sourceExclude: {
+    _sourceExclude: {
       type: 'list',
       name: '_source_exclude'
     },
-    sourceInclude: {
+    _sourceInclude: {
       type: 'list',
       name: '_source_include'
     }
@@ -14105,7 +16412,6 @@ api.mget = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [mlt](http://elasticsearch.org/guide/reference/api/more-like-this/) request
  *
@@ -14117,18 +16423,18 @@ api.mget = ca({
  * @param {Number} params.minDocFreq - The word occurrence frequency as count: words with lower occurrence in the corpus will be ignored
  * @param {Number} params.minTermFreq - The term frequency as percent: terms with lower occurence in the source document will be ignored
  * @param {Number} params.minWordLen - The minimum length of the word: shorter words will be ignored
- * @param {String or String[] or Boolean} params.mltFields - Specific fields to perform the query against
+ * @param {String, String[], Boolean} params.mltFields - Specific fields to perform the query against
  * @param {Number} params.percentTermsToMatch - How many terms have to match in order to consider the document a match (default: 0.3)
  * @param {String} params.routing - Specific routing value
  * @param {Number} params.searchFrom - The offset from which to return results
- * @param {String or String[] or Boolean} params.searchIndices - A comma-separated list of indices to perform the query against (default: the index containing the document)
+ * @param {String, String[], Boolean} params.searchIndices - A comma-separated list of indices to perform the query against (default: the index containing the document)
  * @param {String} params.searchQueryHint - The search query hint
  * @param {String} params.searchScroll - A scroll search request definition
  * @param {Number} params.searchSize - The number of documents to return (default: 10)
  * @param {String} params.searchSource - A specific search request definition (instead of using the request body)
  * @param {String} params.searchType - Specific search type (eg. `dfs_then_fetch`, `count`, etc)
- * @param {String or String[] or Boolean} params.searchTypes - A comma-separated list of types to perform the query against (default: the same type as the document)
- * @param {String or String[] or Boolean} params.stopWords - A list of stop words to be ignored
+ * @param {String, String[], Boolean} params.searchTypes - A comma-separated list of types to perform the query against (default: the same type as the document)
+ * @param {String, String[], Boolean} params.stopWords - A list of stop words to be ignored
  * @param {String} params.id - The document ID
  * @param {String} params.index - The name of the index
  * @param {String} params.type - The type of the document (use `_all` to fetch the first document matching the ID across all types)
@@ -14229,14 +16535,13 @@ api.mlt = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [msearch](http://www.elasticsearch.org/guide/reference/api/multi-search/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} params.searchType - Search operation type
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to use as default
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to use as default
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to use as default
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to use as default
  */
 api.msearch = ca({
   params: {
@@ -14281,7 +16586,6 @@ api.msearch = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [percolate](http://elasticsearch.org/guide/reference/api/percolate/) request
  *
@@ -14311,7 +16615,6 @@ api.percolate = ca({
   },
   method: 'POST'
 });
-
 
 /**
  * Perform a [scroll](http://www.elasticsearch.org/guide/reference/api/search/scroll/) request
@@ -14346,7 +16649,6 @@ api.scroll = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [search](http://www.elasticsearch.org/guide/reference/api/search/) request
  *
@@ -14356,31 +16658,32 @@ api.scroll = ca({
  * @param {String} [params.defaultOperator=OR] - The default operator for query string query (AND or OR)
  * @param {String} params.df - The field to use as default where no field prefix is given in the query string
  * @param {Boolean} params.explain - Specify whether to return detailed information about score computation as part of a hit
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return as part of a hit
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return as part of a hit
  * @param {Number} params.from - Starting offset (default: 0)
  * @param {String} [params.ignoreIndices=none] - When performed on multiple indices, allows to ignore `missing` ones
- * @param {String or String[] or Boolean} params.indicesBoost - Comma-separated list of index boosts
+ * @param {String, String[], Boolean} params.indicesBoost - Comma-separated list of index boosts
  * @param {Boolean} params.lenient - Specify whether format-based query failures (such as providing text to a numeric field) should be ignored
  * @param {Boolean} params.lowercaseExpandedTerms - Specify whether query terms should be lowercased
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {String} params.q - Query in the Lucene query string syntax
- * @param {String or String[] or Boolean} params.routing - A comma-separated list of specific routing values
+ * @param {String, String[], Boolean} params.routing - A comma-separated list of specific routing values
  * @param {Duration} params.scroll - Specify how long a consistent view of the index should be maintained for scrolled search
  * @param {String} params.searchType - Search operation type
  * @param {Number} params.size - Number of hits to return (default: 10)
- * @param {String or String[] or Boolean} params.sort - A comma-separated list of <field>:<direction> pairs
- * @param {String or String[] or Boolean} params.source - True or false to return the _source field or not, or a list of fields to return
- * @param {String or String[] or Boolean} params.sourceExclude - A list of fields to exclude from the returned _source field
- * @param {String or String[] or Boolean} params.sourceInclude - A list of fields to extract and return from the _source field
- * @param {String or String[] or Boolean} params.stats - Specific 'tag' of the request for logging and statistical purposes
+ * @param {String, String[], Boolean} params.sort - A comma-separated list of <field>:<direction> pairs
+ * @param {String} params.source - The URL-encoded request definition using the Query DSL (instead of using request body)
+ * @param {String, String[], Boolean} params._source - True or false to return the _source field or not, or a list of fields to return
+ * @param {String, String[], Boolean} params._sourceExclude - A list of fields to exclude from the returned _source field
+ * @param {String, String[], Boolean} params._sourceInclude - A list of fields to extract and return from the _source field
+ * @param {String, String[], Boolean} params.stats - Specific 'tag' of the request for logging and statistical purposes
  * @param {String} params.suggestField - Specify which field to use for suggestions
  * @param {String} [params.suggestMode=missing] - Specify suggest mode
  * @param {Number} params.suggestSize - How many suggestions to return in response
  * @param {Text} params.suggestText - The source text for which the suggestions should be returned
- * @param {Date or Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timeout - Explicit operation timeout
  * @param {Boolean} params.version - Specify whether to return document version as part of a hit
- * @param {String or String[] or Boolean} [params.index=_all] - A comma-separated list of index names to search; use `_all` or empty string to perform the operation on all indices
- * @param {String or String[] or Boolean} params.type - A comma-separated list of document types to search; leave empty to perform the operation on all types
+ * @param {String, String[], Boolean} [params.index=_all] - A comma-separated list of index names to search; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.type - A comma-separated list of document types to search; leave empty to perform the operation on all types
  */
 api.search = ca({
   params: {
@@ -14463,14 +16766,16 @@ api.search = ca({
       type: 'list'
     },
     source: {
-      type: 'list',
-      name: '_source'
+      type: 'string'
     },
-    sourceExclude: {
+    _source: {
+      type: 'list'
+    },
+    _sourceExclude: {
       type: 'list',
       name: '_source_exclude'
     },
-    sourceInclude: {
+    _sourceInclude: {
       type: 'list',
       name: '_source_include'
     },
@@ -14534,7 +16839,6 @@ api.search = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [suggest](http://elasticsearch.org/guide/reference/api/search/suggest/) request
  *
@@ -14543,7 +16847,7 @@ api.search = ca({
  * @param {String} params.preference - Specify the node or shard the operation should be performed on (default: random)
  * @param {String} params.routing - Specific routing value
  * @param {String} params.source - The URL-encoded request definition (instead of using request body)
- * @param {String or String[] or Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices
+ * @param {String, String[], Boolean} params.index - A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices
  */
 api.suggest = ca({
   params: {
@@ -14582,13 +16886,12 @@ api.suggest = ca({
   method: 'POST'
 });
 
-
 /**
  * Perform a [update](http://elasticsearch.org/guide/reference/api/update/) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {String} params.consistency - Explicit write consistency setting for the operation
- * @param {String or String[] or Boolean} params.fields - A comma-separated list of fields to return in the response
+ * @param {String, String[], Boolean} params.fields - A comma-separated list of fields to return in the response
  * @param {String} params.lang - The script language (default: mvel)
  * @param {String} params.parent - ID of the parent document
  * @param {String} params.percolate - Perform percolation during the operation; use specific registered query name, attribute, or wildcard
@@ -14596,9 +16899,9 @@ api.suggest = ca({
  * @param {String} [params.replication=sync] - Specific replication type
  * @param {Number} params.retryOnConflict - Specify how many times should the operation be retried when a conflict occurs (default: 0)
  * @param {String} params.routing - Specific routing value
- * @param {*} params.script - The URL-encoded script definition (instead of using request body)
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.timestamp - Explicit timestamp for the document
+ * @param {Anything} params.script - The URL-encoded script definition (instead of using request body)
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timestamp - Explicit timestamp for the document
  * @param {Duration} params.ttl - Expiration time for the document
  * @param {Number} params.version - Explicit version number for concurrency control
  * @param {String} params.versionType - Specific version type
@@ -14697,8 +17000,8 @@ api.update = ca({
  * @param {Boolean} params.refresh - Refresh the index after performing the operation
  * @param {String} [params.replication=sync] - Specific replication type
  * @param {String} params.routing - Specific routing value
- * @param {Date or Number} params.timeout - Explicit operation timeout
- * @param {Date or Number} params.timestamp - Explicit timestamp for the document
+ * @param {Date, Number} params.timeout - Explicit operation timeout
+ * @param {Date, Number} params.timestamp - Explicit timestamp for the document
  * @param {Duration} params.ttl - Expiration time for the document
  * @param {Number} params.version - Explicit version number for concurrency control
  * @param {String} params.versionType - Specific version type
@@ -14710,8 +17013,6 @@ api.create = ca.proxy(api.index, {
     params.op_type = 'create';
   }
 });
-
-
 },{"./client_action":19}],18:[function(require,module,exports){
 /**
  * A client that makes requests to Elasticsearch via a {{#crossLink "Transport"}}Transport{{/crossLink}}
@@ -14746,6 +17047,13 @@ var ca = require('./client_action');
 var Transport = require('./transport');
 
 function Client(config) {
+  config = config || {};
+
+  // our client will log minimally by default
+  if (!config.hasOwnProperty('log')) {
+    config.log = 'warning';
+  }
+
   this.transport = new Transport(config);
 
   // instantiate the api's namespaces
@@ -14767,14 +17075,14 @@ Client.prototype.ping = ca({
   url: {
     fmt: '/'
   },
-  timeout: 100
+  requestTimeout: 100
 });
 
 Client.prototype.close = function () {
   this.transport.close();
 };
 
-},{"./api.js":17,"./client_action":19,"./transport":34}],19:[function(require,module,exports){
+},{"./api.js":17,"./client_action":19,"./transport":35}],19:[function(require,module,exports){
 /**
  * Constructs a function that can be called to make a request to ES
  * @type {[type]}
@@ -14822,7 +17130,11 @@ var castType = {
         return param.options[i];
       }
     }
-    throw new TypeError('Invalid ' + name + ': expected one of ' + param.options.join(','));
+    throw new TypeError('Invalid ' + name + ': expected ' + (
+      param.options.length > 1
+      ? 'one of ' + param.options.join(',')
+      : param.options[0]
+    ));
   },
   duration: function (param, val, name) {
     if (_.isNumeric(val) || _.isInterval(val)) {
@@ -14838,7 +17150,8 @@ var castType = {
     switch (typeof val) {
     case 'number':
     case 'string':
-      return val;
+    case 'boolean':
+      return '' + val;
     case 'object':
       if (_.isArray(val)) {
         return val.join(',');
@@ -14948,11 +17261,15 @@ ClientAction.resolveUrl = resolveUrl;
 
 function exec(transport, spec, params, cb) {
   var request = {
-    method: spec.method,
-    timeout: spec.timeout || 10000
+    method: spec.method
   };
   var query = {};
   var i;
+
+  // pass the timeout from the spec
+  if (spec.requestTimeout) {
+    request.requestTimeout = spec.requestTimeout;
+  }
 
   // verify that we have the body if needed
   if (spec.needsBody && !params.body) {
@@ -15000,16 +17317,16 @@ function exec(transport, spec, params, cb) {
     if (params.hasOwnProperty(key) && params[key] != null) {
       switch (key) {
       case 'body':
-        request.body = params.body;
+        request.body = params[key];
         break;
       case 'ignore':
-        request.ignore = _.isArray(params.ignore) ? params.ignore : [params.ignore];
+        request.ignore = _.isArray(params[key]) ? params[key] : [params[key]];
         break;
-      case 'timeout':
-        request.timeout = params.timeout;
+      case 'requestTimeout':
+        request.requestTimeout = params[key];
         break;
       case 'method':
-        request.method = _.toUpperString(params.method);
+        request.method = _.toUpperString(params[key]);
         break;
       default:
         paramSpec = spec.params[key];
@@ -15065,11 +17382,18 @@ ClientAction.proxy = function (fn, spec) {
   };
 };
 
-},{"./utils":35,"when":15}],20:[function(require,module,exports){
+},{"./utils":36,"when":15}],20:[function(require,module,exports){
 module.exports = ConnectionAbstract;
 
 var _ = require('./utils');
 var EventEmitter = require('events').EventEmitter;
+var Log = require('./log');
+var Host = require('./host');
+
+var defaults = {
+  deadTimeout: 30000,
+  requestTimeout: 10000
+};
 
 /**
  * Abstract class used for Connection classes
@@ -15077,16 +17401,19 @@ var EventEmitter = require('events').EventEmitter;
  * @constructor
  */
 function ConnectionAbstract(host, config) {
-  config = _.defaults(config || {}, {
-    deadTimeout: 30000
-  });
   EventEmitter.call(this);
+
+  config = _.defaults(config || {}, defaults);
+
   this.deadTimeout = config.deadTimeout;
+  this.requestTimeout = config.requestTimeout;
   this.requestCount = 0;
+
+  this.log = config.log || new Log();
 
   if (!host) {
     throw new TypeError('Missing host');
-  } else if (host.makeUrl) {
+  } else if (host instanceof Host) {
     this.host = host;
   } else {
     throw new TypeError('Invalid host');
@@ -15103,7 +17430,7 @@ _.inherits(ConnectionAbstract, EventEmitter);
  * @param [params] {Object} - The parameters for the request
  * @param params.path {String} - The path for which you are requesting
  * @param params.method {String} - The HTTP method for the request (GET, HEAD, etc.)
- * @param params.timeout {Integer} - The amount of time in milliseconds that this request should be allowed to run for.
+ * @param params.requestTimeout {Integer} - The amount of time in milliseconds that this request should be allowed to run for.
  * @param cb {Function} - A callback to be called once with `cb(err, responseBody, responseStatus)`
  */
 ConnectionAbstract.prototype.request = function () {
@@ -15118,7 +17445,7 @@ ConnectionAbstract.prototype.ping = function (cb) {
   return this.request({
     path: '/',
     method: 'HEAD',
-    timeout: 100
+    requestTimeout: 100
   }, cb);
 };
 
@@ -15157,7 +17484,7 @@ ConnectionAbstract.prototype.resuscitate = _.scheduled(function () {
   }
 });
 
-},{"./utils":35,"events":4}],21:[function(require,module,exports){
+},{"./host":25,"./log":26,"./utils":36,"events":4}],21:[function(require,module,exports){
 /**
  * Manager of connections to a node(s), capable of ensuring that connections are clear and living
  * before providing them to the application
@@ -15180,8 +17507,11 @@ function ConnectionPool(config) {
     this.log = new Log();
   }
 
+  this._config = config;
+
   // get the selector config var
-  this.selector = _.funcEnum(config, 'selector', ConnectionPool.selectors, ConnectionPool.defaultSelectors);
+  this.selector = _.funcEnum(config, 'selector', ConnectionPool.selectors, ConnectionPool.defaultSelector);
+
   // get the connection class
   this.Connection = _.funcEnum(config, 'connectionClass', ConnectionPool.connectionClasses,
     ConnectionPool.defaultConnectionClass);
@@ -15189,7 +17519,7 @@ function ConnectionPool(config) {
   // a map of connections to their "id" property, used when sniffing
   this.index = {};
 
-  this.connections = {
+  this._conns = {
     alive: [],
     dead: []
   };
@@ -15197,7 +17527,7 @@ function ConnectionPool(config) {
 
 // selector options
 ConnectionPool.selectors = require('./selectors');
-ConnectionPool.defaultSelectors = 'round_robin';
+ConnectionPool.defaultSelector = 'roundRobin';
 
 // get the connection options
 ConnectionPool.connectionClasses = require('./connectors');
@@ -15216,18 +17546,18 @@ delete ConnectionPool.connectionClasses._default;
  * @return {[type]}      [description]
  */
 ConnectionPool.prototype.select = function (cb) {
-  if (this.connections.alive.length) {
+  if (this._conns.alive.length) {
     if (this.selector.length > 1) {
-      this.selector(this.connections.alive, cb);
+      this.selector(this._conns.alive, cb);
     } else {
       try {
-        _.nextTick(cb, null, this.selector(this.connections.alive));
+        _.nextTick(cb, null, this.selector(this._conns.alive));
       } catch (e) {
         cb(e);
       }
     }
   } else {
-    _.nextTick(cb, null, this.connections.dead[0]);
+    _.nextTick(cb, null, this.getConnection());
   }
 };
 
@@ -15245,19 +17575,19 @@ ConnectionPool.prototype.onStatusSet = _.handler(function (status, oldStatus, co
 
   switch (status) {
   case 'alive':
-    from = this.connections.dead;
-    to = this.connections.alive;
+    from = this._conns.dead;
+    to = this._conns.alive;
     break;
   case 'dead':
-    from = this.connections.alive;
-    to = this.connections.dead;
+    from = this._conns.alive;
+    to = this._conns.dead;
     break;
   case 'redead':
-    from = this.connections.dead;
-    to = this.connections.dead;
+    from = this._conns.dead;
+    to = this._conns.dead;
     break;
   case 'closed':
-    from = this.connections[oldStatus];
+    from = this._conns[oldStatus];
     break;
   }
 
@@ -15275,6 +17605,23 @@ ConnectionPool.prototype.onStatusSet = _.handler(function (status, oldStatus, co
     }
   }
 });
+
+/**
+ * Fetches the first active connection, falls back to dead connections
+ * This is really only here for testing purposes
+ *
+ * @private
+ * @return {Connection} - Some connection
+ */
+ConnectionPool.prototype.getConnection = function () {
+  if (this._conns.alive.length) {
+    return this._conns.alive[0];
+  }
+
+  if (this._conns.dead.length) {
+    return this._conns.dead[0];
+  }
+};
 
 ConnectionPool.prototype.addConnection = function (connection) {
   if (!connection.id) {
@@ -15314,7 +17661,7 @@ ConnectionPool.prototype.setHosts = function (hosts) {
     if (this.index[id]) {
       delete toRemove[id];
     } else {
-      connection = new this.Connection(host);
+      connection = new this.Connection(host, this._config);
       connection.id = id;
       this.addConnection(connection);
     }
@@ -15331,7 +17678,7 @@ ConnectionPool.prototype.close = function () {
 };
 ConnectionPool.prototype.empty = ConnectionPool.prototype.close;
 
-},{"./connectors":22,"./log":26,"./selectors":30,"./utils":35}],22:[function(require,module,exports){
+},{"./connectors":22,"./log":26,"./selectors":31,"./utils":36}],22:[function(require,module,exports){
 var opts = {
   xhr: require('./xhr'),
   jquery: require('./jquery'),
@@ -15346,7 +17693,7 @@ _.each(opts, function (conn, name) {
   }
 });
 
-// custom __default specification
+// custom _default specification
 if (opts.xhr) {
   opts._default = 'xhr';
 } else if (opts.angular) {
@@ -15357,7 +17704,7 @@ if (opts.xhr) {
 
 module.exports = opts;
 
-},{"../utils":35,"./angular":1,"./jquery":1,"./xhr":23}],23:[function(require,module,exports){
+},{"../utils":36,"./angular":1,"./jquery":1,"./xhr":23}],23:[function(require,module,exports){
 /**
  * Generic Transport for the browser, using the XmlHttpRequest object
  *
@@ -15370,7 +17717,6 @@ module.exports = XhrConnector;
 var _ = require('../utils');
 var ConnectionAbstract = require('../connection');
 var ConnectionFault = require('../errors').ConnectionFault;
-var TimeoutError = require('../errors').RequestTimeout;
 var asyncDefault = !(navigator && /PhantomJS/i.test(navigator.userAgent));
 
 function XhrConnector(host, config) {
@@ -15410,16 +17756,15 @@ if (!getXhr) {
 
 XhrConnector.prototype.request = function (params, cb) {
   var xhr = getXhr();
-  var timeout = params.timeout ? params.timeout : 10000;
   var timeoutId;
   var url = this.host.makeUrl(params);
-  var log = this.config.log;
+  var log = this.log;
   var async = params.async === false ? false : asyncDefault;
 
   if (params.auth) {
-    xhr.open(params.method, url, async, params.auth.user, params.auth.pass);
+    xhr.open(params.method || 'GET', url, async, params.auth.user, params.auth.pass);
   } else {
-    xhr.open(params.method, url, async);
+    xhr.open(params.method || 'GET', url, async);
   }
 
   xhr.onreadystatechange = function () {
@@ -15431,18 +17776,14 @@ XhrConnector.prototype.request = function (params, cb) {
     }
   };
 
-  if (timeout !== Infinity) {
-    timeoutId = setTimeout(function () {
-      xhr.onreadystatechange = _.noop;
-      xhr.abort();
-      cb(new TimeoutError());
-    }, timeout);
-  }
-
   xhr.send(params.body || void 0);
+
+  return function () {
+    xhr.abort();
+  };
 };
 
-},{"../connection":20,"../errors":24,"../utils":35}],24:[function(require,module,exports){
+},{"../connection":20,"../errors":24,"../utils":36}],24:[function(require,module,exports){
 var process=require("__browserify_process");var _ = require('./utils');
 var errors = module.exports;
 
@@ -15569,7 +17910,7 @@ _.each(statusCodes, function (name, status) {
   errors[status] = StatusCodeError;
 });
 
-},{"./utils":35,"__browserify_process":12}],25:[function(require,module,exports){
+},{"./utils":36,"__browserify_process":13}],25:[function(require,module,exports){
 /**
  * Class to wrap URLS, formatting them and maintaining their separate details
  * @type {[type]}
@@ -15582,17 +17923,18 @@ var _ = require('./utils');
 
 var startsWithProtocolRE = /^([a-z]+:)?\/\//;
 
-// simple reference used when formatting as a url
-var defaultPort = {
-  http: 80,
-  https: 443
-};
-
 var urlParseFields = [
   'protocol', 'hostname', 'pathname', 'port', 'auth', 'query'
 ];
 
 var simplify = ['host', 'path'];
+
+// simple reference used when formatting as a url
+// and defines when parsing from a string
+Host.defaultPorts = {
+  http: 80,
+  https: 443
+};
 
 function Host(config) {
   config = config || {};
@@ -15600,6 +17942,7 @@ function Host(config) {
   // defaults
   this.protocol = 'http';
   this.host = 'localhost';
+  this.path = '';
   this.port = 9200;
   this.auth = null;
   this.query = null;
@@ -15609,6 +17952,17 @@ function Host(config) {
       config = 'http://' + config;
     }
     config = _.pick(url.parse(config, false, true), urlParseFields);
+    // default logic for the port is to use 9200 for the default. When a string is specified though,
+    // we will use the default from the protocol of the string.
+    if (!config.port) {
+      var proto = config.protocol || 'http';
+      if (proto.charAt(proto.length - 1) === ':') {
+        proto = proto.substring(0, proto.length - 1);
+      }
+      if (Host.defaultPorts[proto]) {
+        config.port = Host.defaultPorts[proto];
+      }
+    }
   }
 
   if (_.isObject(config)) {
@@ -15639,16 +17993,16 @@ function Host(config) {
   }
 
   // make sure that the port is a number
-  if (typeof this.port !== 'number') {
+  if (_.isNumeric(this.port)) {
     this.port = parseInt(this.port, 10);
-    if (isNaN(this.port)) {
-      this.port = 9200;
-    }
+  } else {
+    this.port = 9200;
   }
 
   // make sure the path starts with a leading slash
-  // and that empty paths convert to '/'
-  if (!this.path || this.path.charAt(0) !== '/') {
+  if (this.path === '/') {
+    this.path = '';
+  } else if (this.path && this.path.charAt(0) !== '/') {
     this.path = '/' + (this.path || '');
   }
 
@@ -15662,7 +18016,7 @@ Host.prototype.makeUrl = function (params) {
   params = params || {};
   // build the port
   var port = '';
-  if (this.port !== defaultPort[this.protocol]) {
+  if (this.port !== Host.defaultPorts[this.protocol]) {
     // add an actual port
     port = ':' + this.port;
   }
@@ -15687,14 +18041,21 @@ Host.prototype.makeUrl = function (params) {
     query = qs.stringify(this.query);
   }
 
-  return this.protocol + '://' + this.host + port + path + (query ? '?' + query : '');
+  var auth = '';
+  if (params.auth) {
+    auth = params.auth + '@';
+  } else if (this.auth) {
+    auth = this.auth + '@';
+  }
+
+  return this.protocol + '://' + auth + this.host + port + path + (query ? '?' + query : '');
 };
 
 Host.prototype.toString = function () {
   return this.makeUrl();
 };
 
-},{"./utils":35,"querystring":6,"url":7}],26:[function(require,module,exports){
+},{"./utils":36,"querystring":6,"url":7}],26:[function(require,module,exports){
 var process=require("__browserify_process");var _ = require('./utils');
 var url = require('url');
 var EventEmitter = require('events').EventEmitter;
@@ -15718,6 +18079,10 @@ function Log(config) {
 
   var i;
   var outputs;
+
+  if (config.loggers) {
+    config.log = config.loggers;
+  }
 
   if (config.log) {
     if (_.isArrayOfStrings(config.log)) {
@@ -15998,6 +18363,7 @@ Log.prototype.trace = function (method, requestUrl, body, responseBody, response
 
 function prettyJSON(body) {
   try {
+    // TESTME
     return JSON.stringify(JSON.parse(body), null, '  ').replace(/'/g, '\\\'');
   } catch (e) {
     return body || '';
@@ -16006,7 +18372,7 @@ function prettyJSON(body) {
 
 module.exports = Log;
 
-},{"./loggers":28,"./utils":35,"__browserify_process":12,"events":4,"url":7}],27:[function(require,module,exports){
+},{"./loggers":28,"./utils":36,"__browserify_process":13,"events":4,"url":7}],27:[function(require,module,exports){
 var _ = require('./utils');
 
 /**
@@ -16021,7 +18387,7 @@ function LoggerAbstract(log, config) {
   _.makeBoundMethods(this);
 
   // when the log closes, remove our event listeners
-  this.log.on('closing', this.bound.cleanUpListeners);
+  this.log.once('closing', this.bound.cleanUpListeners);
 
   this.setupListeners(config.levels);
 }
@@ -16071,14 +18437,15 @@ LoggerAbstract.prototype.write = function () {
 LoggerAbstract.prototype.setupListeners = function (levels) {
   this.cleanUpListeners();
 
-  this.listeningLevels = levels;
+  this.listeningLevels = [];
 
-  _.each(this.listeningLevels, function (level) {
+  _.each(levels, function (level) {
     var fnName = 'on' + _.ucfirst(level);
     if (this.bound[fnName]) {
+      this.listeningLevels.push(level);
       this.log.on(level, this.bound[fnName]);
     } else {
-      throw new Error(fnName + ' is not a function');
+      throw new Error('Unable to listen for level "' + level + '"');
     }
   }, this);
 };
@@ -16152,14 +18519,14 @@ LoggerAbstract.prototype.onDebug = _.handler(function (msg) {
  * @param  {String} msg - The message to be logged
  * @return {undefined}
  */
-LoggerAbstract.prototype.onTrace = _.handler(function (message) {
-  this.write('TRACE', message);
+LoggerAbstract.prototype.onTrace = _.handler(function (message, curlCall) {
+  this.write('TRACE', curlCall + '\n' + message);
 });
 
 
 module.exports = LoggerAbstract;
 
-},{"./utils":35}],28:[function(require,module,exports){
+},{"./utils":36}],28:[function(require,module,exports){
 module.exports = {
   console: require('./console')
 };
@@ -16183,7 +18550,6 @@ var LoggerAbstract = require('../logger');
 var _ = require('../utils');
 
 function Console(log, config) {
-  // call my super
   LoggerAbstract.call(this, log, config);
 
   // config/state
@@ -16197,16 +18563,14 @@ _.inherits(Console, LoggerAbstract);
  * @param  {Array} levels - The levels that we should be listeneing for
  */
 Console.prototype.setupListeners = function (levels) {
-  // since some of our functions are bound a bit differently (to the console)
-  // create some of the bound properties manually
-  this.bound.onError = this.onError;
-  this.bound.onWarning = this.onWarning;
-  this.bound.onInfo = this.onInfo;
-  this.bound.onDebug = this.onDebug;
-  this.bound.onTrace = this.onTrace;
-
   // call the super method
   LoggerAbstract.prototype.setupListeners.call(this, levels);
+};
+
+Console.prototype.write = function (label, message, to) {
+  if (console[to]) {
+    console[to](this.format(label, message));
+  }
 };
 
 /**
@@ -16217,13 +18581,10 @@ Console.prototype.setupListeners = function (levels) {
  * @param  {Error} e - The Error object to log
  * @return {undefined}
  */
-Console.prototype.onError = function (e) {
-  if (console.error && console.trace) {
-    console.error(e.name === 'Error' ? 'ERROR' : e.name, e.stack || e.message);
-  } else {
-    console.log(e.name === 'Error' ? 'ERROR' : e.name, e.stack || e.message);
-  }
-};
+Console.prototype.onError = _.handler(function (e) {
+  var to = console.error ? 'error' : 'log';
+  this.write(e.name === 'Error' ? 'ERROR' : e.name, e.stack || e.message, to);
+});
 
 /**
  * Handler for the bridges "warning" event
@@ -16233,9 +18594,9 @@ Console.prototype.onError = function (e) {
  * @param  {String} msg - The message to be logged
  * @return {undefined}
  */
-Console.prototype.onWarning = function (msg) {
-  console[console.warn ? 'warn' : 'log']('WARNING', msg);
-};
+Console.prototype.onWarning = _.handler(function (msg) {
+  this.write('WARNING', msg, console.warn ? 'warn' : 'log');
+});
 
 /**
  * Handler for the bridges "info" event
@@ -16245,9 +18606,9 @@ Console.prototype.onWarning = function (msg) {
  * @param  {String} msg - The message to be logged
  * @return {undefined}
  */
-Console.prototype.onInfo = function (msg) {
-  console[console.warn ? 'info' : 'log']('INFO', msg);
-};
+Console.prototype.onInfo = _.handler(function (msg) {
+  this.write('INFO', msg, console.info ? 'info' : 'log');
+});
 
 /**
  * Handler for the bridges "debug" event
@@ -16257,9 +18618,9 @@ Console.prototype.onInfo = function (msg) {
  * @param  {String} msg - The message to be logged
  * @return {undefined}
  */
-Console.prototype.onDebug = function (msg) {
-  console[console.debug ? 'debug' : 'log']('DEBUG', msg);
-};
+Console.prototype.onDebug = _.handler(function (msg) {
+  this.write('DEBUG', msg, console.debug ? 'debug' : 'log');
+});
 /**
  * Handler for the bridges "trace" event
  *
@@ -16267,17 +18628,44 @@ Console.prototype.onDebug = function (msg) {
  * @private
  * @return {undefined}
  */
-Console.prototype.onTrace = function (message, curlCall) {
-  console.log('TRACE:\n' + curlCall + '\n' + message);
-};
+Console.prototype.onTrace = _.handler(function (msg, curlCall) {
+  this.write('TRACE', curlCall + '\n' + msg, 'log');
+});
 
-},{"../logger":27,"../utils":35}],30:[function(require,module,exports){
+},{"../logger":27,"../utils":36}],30:[function(require,module,exports){
+var _ = require('./utils');
+var extractHostPartsRE = /\[\/*([^:]+):(\d+)\]/;
+
+function makeNodeParser(hostProp) {
+  return function (nodes) {
+    var hosts = [];
+    _.each(nodes, function (node, id) {
+      var hostnameMatches = extractHostPartsRE.exec(node[hostProp]);
+      hosts.push({
+        host: hostnameMatches[1],
+        port: parseInt(hostnameMatches[2], 10),
+        _meta: {
+          id: id,
+          name: node.name,
+          hostname: node.hostname,
+          version: node.version
+        }
+      });
+    });
+    return hosts;
+  };
+}
+
+module.exports = makeNodeParser('http_address');
+module.exports.thrift = makeNodeParser('transport_address');
+
+},{"./utils":36}],31:[function(require,module,exports){
 module.exports = {
   random: require('./random'),
   roundRobin: require('./round_robin')
 };
 
-},{"./random":31,"./round_robin":32}],31:[function(require,module,exports){
+},{"./random":32,"./round_robin":33}],32:[function(require,module,exports){
 /**
  * Selects a connection randomly
  *
@@ -16290,7 +18678,7 @@ module.exports = function RandomSelector(connections) {
   return connections[Math.floor(Math.random() * connections.length)];
 };
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Selects a connection the simplest way possible, Round Robin
  *
@@ -16305,7 +18693,7 @@ module.exports = function (connections) {
   return connection;
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * Simple JSON serializer
  * @type {[type]}
@@ -16316,26 +18704,36 @@ var _ = require('../utils');
 
 function Json() {}
 
+/**
+ * Converts a value into a string, or an error
+ * @param  {*} val - Any value, methods are stripped and
+ * see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify about other params
+ * @return {String|Error} - A string is always returned, unless an error occured. then it will be that error.
+ */
 Json.prototype.serialize = function (val, replacer, spaces) {
-  if (val == null) {
-    return;
-  }
-  else if (typeof val === 'string') {
+  switch (typeof val) {
+  case 'string':
     return val;
-  } else {
-    return JSON.stringify(val, replacer, spaces);
+  case 'object':
+    if (val) {
+      return JSON.stringify(val, replacer, spaces);
+    }
+    /* falls through */
+  default:
+    return;
   }
 };
 
-Json.prototype.unserialize = function (str) {
+/**
+ * Parse a JSON string, if it is already parsed it is ignored
+ * @param  {String} str - the string to parse
+ * @return {[type]}
+ */
+Json.prototype.deserialize = function (str) {
   if (typeof str === 'string') {
     try {
       return JSON.parse(str);
-    } catch (e) {
-      return;
-    }
-  } else {
-    return str;
+    } catch (e) {}
   }
 };
 
@@ -16356,7 +18754,7 @@ Json.prototype.bulkBody = function (val) {
   return body;
 };
 
-},{"../utils":35}],34:[function(require,module,exports){
+},{"../utils":36}],35:[function(require,module,exports){
 /**
  * Class that manages making request, called by all of the API methods.
  * @type {[type]}
@@ -16366,25 +18764,12 @@ module.exports = Transport;
 var _ = require('./utils');
 var errors = require('./errors');
 var Host = require('./host');
-var Log = require('./log');
 var when = require('when');
 
 function Transport(config) {
   config = config || {};
 
-  var LogClass;
-  // setup the log
-  switch (typeof config.log) {
-  case 'function':
-    LogClass = config.log;
-    break;
-  case 'undefined':
-    config.log = 'warning';
-    /* fall through */
-  default:
-    LogClass = Log;
-  }
-
+  var LogClass = (typeof config.log === 'function') ? config.log : require('./log');
   config.log = this.log = new LogClass(config);
 
   // overwrite the createDefer method if a new implementation is provided
@@ -16396,25 +18781,47 @@ function Transport(config) {
   var ConnectionPool = _.funcEnum(config, 'connectionPool', Transport.connectionPools, 'main');
   this.connectionPool = new ConnectionPool(config);
 
-  if (config.hosts) {
-    var hosts = _.createArray(config.hosts, function (val) {
-      if (_.isPlainObject(val) || _.isString(val)) {
-        return val;
-      }
-    });
-    if (!hosts) {
-      throw new Error('Invalid hosts config. Expected a URL, an array of urls, a host config object, or an array of ' +
-        'host config objects.');
-    }
-
-    this.connectionPool.setHosts(_.map(hosts, function (conf) {
-      return new Host(conf);
-    }));
-  }
-
   // setup the serializer
   var Serializer = _.funcEnum(config, 'serializer', Transport.serializers, 'json');
   this.serializer = new Serializer(config);
+
+  // setup the nodesToHostCallback
+  this.nodesToHostCallback = _.funcEnum(config, 'nodesToHostCallback', Transport.nodesToHostCallbacks, 'main');
+
+  // setup max retries
+  this.maxRetries = config.hasOwnProperty('maxRetries') ? config.maxRetries : 3;
+
+  // setup requestTimeout default
+  this.requestTimeout = config.hasOwnProperty('requestTimeout') ? config.requestTimeout : 30000;
+
+  // randomizeHosts option
+  var randomizeHosts = config.hasOwnProperty('randomizeHosts') ? !!config.randomizeHosts : true;
+
+  if (config.host) {
+    config.hosts = config.host;
+  }
+
+  if (config.hosts) {
+    var hostsConfig = _.createArray(config.hosts, function (val) {
+      if (_.isPlainObject(val) || _.isString(val) || val instanceof Host) {
+        return val;
+      }
+    });
+    if (!hostsConfig) {
+      throw new TypeError('Invalid hosts config. Expected a URL, an array of urls, a host config object, ' +
+        'or an array of host config objects.');
+    }
+
+    var hosts = _.map(hostsConfig, function (conf) {
+      return (conf instanceof Host) ? conf : new Host(conf);
+    });
+
+    if (randomizeHosts) {
+      hosts = _.shuffle(hosts);
+    }
+
+    this.connectionPool.setHosts(hosts);
+  }
 }
 
 Transport.connectionPools = {
@@ -16423,6 +18830,10 @@ Transport.connectionPools = {
 
 Transport.serializers = {
   json: require('./serializers/json')
+};
+
+Transport.nodesToHostCallbacks = {
+  main: require('./nodes_to_host')
 };
 
 /**
@@ -16443,8 +18854,12 @@ Transport.prototype.request = function (params, cb) {
   var self = this;
   var remainingRetries = this.maxRetries;
   var connection; // set in sendReqWithConnection
-  var connectionReq; // an object with an abort method, set in sendReqWithConnection
-  var request; // the object returned to the user, might be a deferred
+  var aborted = false; // several connector will respond with an error when the request is aborted
+  var requestAborter; // an abort function, returned by connection#request()
+  var requestTimeout; // the general timeout for the total request (inculding all retries)
+  var requestTimeoutId; // the id of the ^timeout
+  var request; // the object returned to the user, might be a promise
+  var defer; // the defer object, will be set when we are using promises.
 
   self.log.debug('starting request', params);
 
@@ -16459,65 +18874,84 @@ Transport.prototype.request = function (params, cb) {
   }
 
   params.req = {
-    timeout: params.timeout,
     method: params.method,
-    path: params.path,
+    path: params.path || '/',
     query: params.query,
     body: params.body,
   };
 
-  self.connectionPool.select(sendReqWithConnection);
-
-  function abortRequest() {
-    remainingRetries = 0;
-    connectionReq.abort();
-  }
-
   function sendReqWithConnection(err, _connection) {
+    if (aborted) {
+      return;
+    }
+
     if (err) {
       respond(err);
     } else if (_connection) {
       connection = _connection;
-      connectionReq = connection.request(params.req, checkRespForFailure);
+      requestAborter = connection.request(params.req, checkRespForFailure);
     } else {
       self.log.warning('No living connections');
       respond(new errors.NoConnections());
     }
   }
 
-  function checkRespForFailure(err, body, status) {
-    if (err && remainingRetries) {
-      remainingRetries--;
-      self.log.error(err.message, '-- retrying');
-      self.connectionPool.select(sendReqWithConnection);
+  function checkRespForFailure(err, body, status, headers) {
+    if (aborted) {
+      return;
+    }
+
+    requestAborter = void 0;
+
+    if (err) {
+      connection.setStatus('dead');
+      if (remainingRetries) {
+        remainingRetries--;
+        self.log.error('Request error, retrying --', err.message);
+        self.connectionPool.select(sendReqWithConnection);
+      } else {
+        self.log.error('Request complete with error --', err.message);
+        respond(new errors.ConnectionFault(err));
+      }
     } else {
       self.log.info('Request complete');
-      respond(err, body, status);
+      respond(void 0, body, status, headers);
     }
   }
 
-  function respond(err, body, status) {
+  function respond(err, body, status, headers) {
+    if (aborted) {
+      return;
+    }
+
+    clearTimeout(requestTimeoutId);
     var parsedBody;
 
     if (!err && body) {
-      parsedBody = self.serializer.unserialize(body);
-      if (parsedBody == null) {
-        err = new errors.Serialization();
-      }
-    }
-
-    if (!err) {
-      if ((status < 200 || status >= 300)
-          && (!params.ignore || !_.contains(params.ignore, status))
-      ) {
-        if (errors[status]) {
-          err = new errors[status](parsedBody && parsedBody.error);
-        } else {
-          err = new errors.Generic('unknown error');
+      if (!headers || headers['content-type'] === 'application/json') {
+        parsedBody = self.serializer.deserialize(body);
+        if (parsedBody == null) {
+          err = new errors.Serialization();
         }
+      } else {
+        parsedBody = body;
       }
     }
 
+    // does the response represent an error?
+    if (
+      (!err || err instanceof errors.Serialization)
+      && (status < 200 || status >= 300)
+      && (!params.ignore || !_.contains(params.ignore, status))
+    ) {
+      if (errors[status]) {
+        err = new errors[status](parsedBody && parsedBody.error);
+      } else {
+        err = new errors.Generic('unknown error');
+      }
+    }
+
+    // how do we parse the body?
     if (params.castExists) {
       if (err && err instanceof errors.NotFound) {
         parsedBody = false;
@@ -16527,28 +18961,58 @@ Transport.prototype.request = function (params, cb) {
       }
     }
 
+    // how do we send the response?
     if (typeof cb === 'function') {
-      cb(err, parsedBody, status);
+      if (err) {
+        cb(err);
+      } else {
+        cb(void 0, parsedBody, status);
+      }
     } else if (err) {
-      request.reject(err);
+      defer.reject(err);
     } else {
-      request.resolve({
+      defer.resolve({
         body: parsedBody,
         status: status
       });
     }
   }
 
-  // determine the API based on the presense of a callback
+  function abortRequest() {
+    if (aborted) {
+      return;
+    }
+
+    aborted = true;
+    remainingRetries = 0;
+    clearTimeout(requestTimeoutId);
+    if (typeof requestAborter === 'function') {
+      requestAborter();
+    }
+  }
+
+  // set the requestTimeout
+  requestTimeout = params.hasOwnProperty('requestTimeout') ? params.requestTimeout : this.requestTimeout;
+
+  if (requestTimeout && requestTimeout !== Infinity) {
+    requestTimeoutId = setTimeout(function () {
+      respond(new errors.RequestTimeout());
+      abortRequest();
+    }, requestTimeout);
+  }
+
+  // determine the response based on the presense of a callback
   if (typeof cb === 'function') {
     request = {
       abort: abortRequest
     };
   } else {
-    var defer = this.createDefer();
-    defer.promise.abort = abortRequest;
+    defer = this.createDefer();
     request = defer.promise;
+    request.abort = abortRequest;
   }
+
+  self.connectionPool.select(sendReqWithConnection);
 
   return request;
 };
@@ -16564,7 +19028,8 @@ Transport.prototype.createDefer = function () {
  * @param  {Function} cb - Function to call back once complete
  */
 Transport.prototype.sniff = function (cb) {
-  var self = this;
+  var connectionPool = this.connectionPool;
+  var nodesToHostCallback = this.nodesToHostCallback;
 
   // make cb a function if it isn't
   cb = typeof cb === 'function' ? cb : _.noop;
@@ -16572,24 +19037,28 @@ Transport.prototype.sniff = function (cb) {
   this.request({
     path: '/_cluster/nodes',
     method: 'GET'
-  }, function (err, resp) {
+  }, function (err, resp, status) {
     if (!err && resp && resp.nodes) {
-      var hosts = _.map(self.nodesToHostCallback(resp.nodes), function (hostConfig) {
+      var hosts = _.map(nodesToHostCallback(resp.nodes), function (hostConfig) {
         return new Host(hostConfig);
       });
-      this.connectionPool.setHosts(hosts);
+      connectionPool.setHosts(hosts);
     }
-    cb(err, resp);
+    cb(err, resp, status);
   });
 };
 
+/**
+ * Close the Transport, which closes the logs and connection pool
+ * @return {[type]} [description]
+ */
 Transport.prototype.close = function () {
   this.log.close();
   this.connectionPool.close();
 };
 
-},{"./connection_pool":21,"./errors":24,"./host":25,"./log":26,"./serializers/json":33,"./utils":35,"when":15}],35:[function(require,module,exports){
-var process=require("__browserify_process");var path = require('path');
+},{"./connection_pool":21,"./errors":24,"./host":25,"./log":26,"./nodes_to_host":30,"./serializers/json":34,"./utils":36,"when":15}],36:[function(require,module,exports){
+var process=require("__browserify_process"),Buffer=require("__browserify_Buffer").Buffer;var path = require('path');
 var _ = require('lodash');
 var nodeUtils = require('util');
 
@@ -16611,32 +19080,6 @@ _ = utils;
  * @type {function}
  */
 utils.joinPath = path.join;
-
-/**
- * Recursively re-key an object, applying "transform" to each key
- * @param  {Object} obj - The object to re-key
- * @param  {Function} transform - The transformation function to apply to each key
- * @param  {Boolean} [recursive=true] - Should this act recursively?
- * @param  {Object} out - used primarily for recursion, allows you to specify the object which new keys will be written to
- * @return {Object}
- */
-utils.reKey = function (obj, transform, recursive) {
-  // defaults
-  if (recursive === void 0) { recursive = true; }
-  if (typeof transform !== 'function') { throw new TypeError('invalid transform function'); }
-
-  var out = {};
-
-  _.each(obj, function (prop, name) {
-    if (recursive && _.isPlainObject(prop)) {
-      out[transform(name)] = utils.reKey(prop, transform, recursive);
-    } else {
-      out[transform(name)] = prop;
-    }
-  });
-
-  return out;
-};
 
 /**
  * Recursively merge two objects, walking into each object and concating arrays. If both to and from have a value at a
@@ -16737,7 +19180,7 @@ function adjustWordCase(firstWordCap, otherWordsCap, sep) {
       words.push(word);
     }
     // add the leading underscore back to strings the had it originally
-    if (words.lenth && string.charAt(0) === '_') {
+    if (words.length && string.charAt(0) === '_') {
       words[0] = '_' + words[0];
     }
     return words.join(sep);
@@ -16844,42 +19287,6 @@ utils.repeat = function (what, times) {
 };
 
 /**
- * Override node's util.inherits function, providing a browser safe version thanks to lodash
- *
- * @param constructor {Function} - the constructor that should subClass superConstructor
- * @param superConstructor {Function} - The parent constructor
- */
-if (process.browser) {
-  utils.inherits = require('inherits');
-}
-
-/**
- *
- */
-
-/**
- * Remove leading/trailing spaces from a string
- *
- * @param str {String} - Any string
- * @returns {String}
- */
-utils.trim = function (str) {
-  return typeof str === 'string' ? str.replace(/^\s+|\s+$/g, '') : '';
-};
-
-utils.collectMatches = function (text, regExp) {
-  var matches = [], match;
-  while (match = regExp.exec(text)) {
-    matches.push(match);
-    if (regExp.global !== true) {
-      // would loop forever if not true
-      break;
-    }
-  }
-  return matches;
-};
-
-/**
  * Call a function, applying the arguments object to it in an optimized way, rather than always turning it into an array
  *
  * @param func {Function} - The function to execute
@@ -16955,22 +19362,14 @@ _.scheduled = _.handler;
  * ```
  *
  * @param {Object} obj - The object to bind the methods to
- * @param {Array} [methods] - The methods to bind, false values === bind all flagged with _provideBound
  */
-_.makeBoundMethods = function (obj, methods) {
+_.makeBoundMethods = function (obj) {
   obj.bound = {};
-  if (!methods) {
-    methods = [];
-    for (var prop in obj) {
-      // dearest maintainer, we want to look through the prototype
-      if (typeof obj[prop] === 'function' && obj[prop]._provideBound === true) {
-        obj.bound[prop] = _.bind(obj[prop], obj);
-      }
+  for (var prop in obj) {
+    // dearest maintainer, we want to look through the prototype
+    if (typeof obj[prop] === 'function' && obj[prop]._provideBound === true) {
+      obj.bound[prop] = _.bind(obj[prop], obj);
     }
-  } else {
-    _.each(methods, function (method) {
-      obj.bound[method] = _.bindKey(obj, method);
-    });
   }
 };
 
@@ -16990,13 +19389,23 @@ _.funcEnum = function (config, name, opts, def) {
   case 'function':
     return val;
   case 'string':
-    if (opts[val]) {
+    if (opts.hasOwnProperty(val)) {
       return opts[val];
     }
     /* falls through */
   default:
-    throw new TypeError('Invalid ' + name + ' "' + val + '", expected a function or one of ' +
-      _.keys(opts).join(', '));
+    var err = 'Invalid ' + name + ' "' + val + '", expected a function';
+    switch (_.size(opts)) {
+    case 0:
+      break;
+    case 1:
+      err += ' or ' + _.keys(opts)[0];
+      break;
+    default:
+      err += ' or one of ' + _.keys(opts).join(', ');
+      break;
+    }
+    throw new TypeError(err);
   }
 };
 
@@ -17031,9 +19440,39 @@ _.createArray = function (input, transform) {
   return output;
 };
 
+/**
+ * Takes a WritableStream, and returns the chunks that have not successfully written, returning them as a string.
+ *
+ * ONLY WORKS FOR TEXT STREAMS
+ *
+ * @param  {WritableStream} stream - an instance of stream.Writable
+ * @return {string} - the remaining test to be written to the stream
+ */
+_.getUnwrittenFromStream = function (stream) {
+  if (stream && stream._writableState && stream._writableState.buffer) {
+    // flush the write buffer to disk
+    var writeBuffer = stream._writableState.buffer;
+    var out = '';
+    if (writeBuffer.length) {
+      _.each(writeBuffer, function (writeReq) {
+        if (writeReq.chunk) {
+          // 0.9.12+ uses WriteReq objects with a chunk prop
+          out += '' + writeReq.chunk;
+        } else if (_.isArray(writeReq) && (typeof writeReq[0] === 'string' || Buffer.isBuffer(writeReq[0]))) {
+          // 0.9.4 - 0.9.9 buffers are arrays of arrays like [[chunk, cb], [chunk, undef], ...].
+          out += '' + writeReq[0];
+        } else {
+          return false;
+        }
+      });
+    }
+    return out;
+  }
+};
+
 module.exports = utils;
 
-},{"__browserify_process":12,"inherits":13,"lodash":14,"path":5,"util":8}]},{},[16])
+},{"__browserify_Buffer":12,"__browserify_process":13,"lodash":14,"path":5,"util":8}]},{},[16])
 (16)
 });
 ;
