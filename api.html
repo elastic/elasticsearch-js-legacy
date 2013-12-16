@@ -50,7 +50,7 @@ Wait until the specified number of nodes is available</dd><dt><dfn><code>waitFor
 Wait until the specified number of relocating shards is finished</dd><dt><dfn><code>waitForStatus</code></dfn></dt><dd><span class="types">String</span>
 Wait until cluster is in a specific state</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 Limit the information returned to a specific index
-</dd></dl><h2 id="cluster-nodehotthreads" class="fn"><span class="name">cluster.nodeHotThreads</span><span class="args">(params, [callback])</span></h2><p class="tight">Retrieve one or more (or all) of the cluster nodes’ information.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/" title="cluster.nodeHotThreads at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/</a><p class="tight">The default method is <code>GET</code> and
+</dd></dl><h2 id="cluster-nodehotthreads" class="fn"><span class="name">cluster.nodeHotThreads</span><span class="args">(params, [callback])</span></h2><p class="tight">Retrieve one or more (or all) of the cluster nodes' information.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/" title="cluster.nodeHotThreads at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/</a><p class="tight">The default method is <code>GET</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
 
 </p><h3>Params:</h3><dl class="params api"><dt><dfn><code>interval</code></dfn></dt><dd><span class="types">Date, Number</span>
@@ -59,7 +59,7 @@ Number of samples of thread stacktrace (default: 10)</dd><dt><dfn><code>threads<
 Specify the number of threads to provide information for (default: 3)</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type to sample (default: cpu)</dd><dt><dfn><code>nodeId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
-</dd></dl><h2 id="cluster-nodeinfo" class="fn"><span class="name">cluster.nodeInfo</span><span class="args">(params, [callback])</span></h2><p class="tight">Retrieve one or more (or all) of the cluster nodes’ information.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/" title="cluster.nodeInfo at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/</a><p class="tight">The default method is <code>GET</code> and
+</dd></dl><h2 id="cluster-nodeinfo" class="fn"><span class="name">cluster.nodeInfo</span><span class="args">(params, [callback])</span></h2><p class="tight">Retrieve one or more (or all) of the cluster nodes' information.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/" title="cluster.nodeInfo at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/</a><p class="tight">The default method is <code>GET</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
 
 </p><h3>Params:</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -179,7 +179,7 @@ The name of the index</dd><dt><dfn><code>[type=_all]</code></dfn></dt><dd><span 
 The type of the document (use `_all` to fetch the first document matching the ID across all types)
 </dd></dl><h2 id="explain" class="fn"><span class="name">explain</span><span class="args">(params, [callback])</span></h2><p class="tight">The explain api computes a score explanation for a query and a specific
 document. This can give useful feedback whether a document matches or
-didn’t match a specific query.</p><a href="http://elasticsearch.org/guide/reference/api/explain/" title="explain at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/explain/</a><p class="tight">The default method is <code>POST</code> and
+didn't match a specific query.</p><a href="http://elasticsearch.org/guide/reference/api/explain/" title="explain at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/explain/</a><p class="tight">The default method is <code>POST</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
 
 </p><h3>Params:</h3><dl class="params api"><dt><dfn><code>analyzeWildcard</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -217,7 +217,7 @@ A list of fields to extract and return from the _source field</dd><dt><dfn><code
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>[type=_all]</code></dfn></dt><dd><span class="types">String</span>
 The type of the document (use `_all` to fetch the first document matching the ID across all types)
-</dd></dl><h2 id="getsource" class="fn"><span class="name">getSource</span><span class="args">(params, [callback])</span></h2><p class="tight">Get the source of a document by it’s index, type and id.</p><a href="http://elasticsearch.org/guide/reference/api/get/" title="getSource at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/get/</a><p class="tight">The default method is <code>GET</code> and
+</dd></dl><h2 id="getsource" class="fn"><span class="name">getSource</span><span class="args">(params, [callback])</span></h2><p class="tight">Get the source of a document by it's index, type and id.</p><a href="http://elasticsearch.org/guide/reference/api/get/" title="getSource at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/get/</a><p class="tight">The default method is <code>GET</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
 
 </p><h3>Params:</h3><dl class="params api"><dt><dfn><code>exclude</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
@@ -277,7 +277,7 @@ Clear ID caches for parent/child</dd><dt><dfn><code>[ignoreIndices=none]</code><
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index name to limit the operation</dd><dt><dfn><code>recycler</code></dfn></dt><dd><span class="types">Boolean</span>
 Clear the recycler cache
-</dd></dl><h2 id="indices-close" class="fn"><span class="name">indices.close</span><span class="args">(params, [callback])</span></h2><p class="tight">Close an index to remove it’s overhead from the cluster. Closed index is
+</dd></dl><h2 id="indices-close" class="fn"><span class="name">indices.close</span><span class="args">(params, [callback])</span></h2><p class="tight">Close an index to remove it's overhead from the cluster. Closed index is
 blocked for read/write operations.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/" title="indices.close at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/</a><p class="tight">The default method is <code>POST</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
 
