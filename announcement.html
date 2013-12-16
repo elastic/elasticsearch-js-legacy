@@ -3,15 +3,15 @@
 <p>This client aims to solve the same problems that the others did, namely: provide access to the entire Elasticsearch REST API, play nice with clusters, automatically discover nodes when desired, and intelligently handle node failure. It is also designed to be opinion free, and easily extended, so that you can really have it behave just the way you want it to.</p>
 <p>If you didn&#39;t know we were developing our own clients you should check out <a href="http://www.elasticsearch.org/blog/unleash-the-clients-ruby-python-php-perl/">this post</a> from the first round of releases. There Clint explains why we decided to go down this road, as well as some of the goals of the project.</p>
 <h3>Introduction to the JavaScript client</h3>
-<p>Just like the other clients, Elasticsearch.js is licenced under Apache 2.0 and hosted on <a href="https://github.com/elasticsearch/elasticsearch-js">Github</a>.</p>
+<p>Just like the other clients, Elasticsearch.js is licensed under Apache 2.0 and hosted on <a href="https://github.com/elasticsearch/elasticsearch-js">Github</a>.</p>
 <ul>
-<li><a href="https://github.com/elasticsearch/elasticsearch">Github Repo</a></li>
+<li><a href="https://github.com/elasticsearch/elasticsearch-js">Github Repo</a></li>
 <li><a href="https://github.com/elasticsearch/elasticsearch-js/issues">Issue Tracker</a></li>
 <li><a href="http://spenceralger.github.io/elasticsearch-js">Documentation</a></li>
 </ul>
 <p>Getting started with Elasticsearch.js is almost easier than getting started with Elasticsearch itself. To install the module into an existing Node.js project use npm:</p>
 <pre><code>npm install elasticsearch</code></pre>
-<p>For a browser-based projects, download the builds availble from <a href="http://spenceralger.github.io/elasticsearch-js#browser-builds">here</a>, extract the archive, and include one of the .js files in your HTML.</p>
+<p>For a browser-based projects, download the builds available from <a href="http://spenceralger.github.io/elasticsearch-js#browser-builds">here</a>, extract the archive, and include one of the .js files in your HTML.</p>
 <p>Now you can use it within your application and get busy indexing!</p>
 <h3>Examples</h3>
 <pre><code>// Connect to localhost:9200 in Node
@@ -50,7 +50,7 @@ module.serivce(&#39;es&#39;, function (esFactory) {
   return esFactory(config);
 });
 
-// use the cleint to index a document
+// use the client to index a document
 es.index({
   index: &#39;blog&#39;,
   type: &#39;post&#39;,
@@ -92,6 +92,6 @@ es.search({
 });</code></pre>
 <h3>Entering Construction Zone</h3>
 <p>This release of Elasticsearch.js should be considered beta. Please install it, try it out and give us feedback. What doesn&#39;t work? What is missing? What can we do better?</p>
-<p>We will be actively working to make it better, and are excited to receive issue reports and pull requests! For more information abourt contrubuting, check out <a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+<p>We will be actively working to make it better, and are excited to receive issue reports and pull requests! For more information about contributing, check out <a href="https://github.com/elasticsearch/elasticsearch-js/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
 <h3>Happy searching!</h3>
 <script type="text/javascript" src="elasticsearch.js"></script><script type="text/javascript" src="js/prism.js"></script></body></html>
