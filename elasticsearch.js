@@ -1,4 +1,4 @@
-/*! elasticsearch - v0.0.1 - 2013-12-15
+/*! elasticsearch - v0.0.1 - 2013-12-16
  * https://github.com/elasticsearch/elasticsearch-js
  * Copyright (c) 2013 Elasticsearch BV; Licensed Apache 2.0 */
 !function(e){"object"==typeof exports?module.exports=e():"function"==typeof define&&define.amd?define(e):"undefined"!=typeof window?window.elasticsearch=e():"undefined"!=typeof global?global.elasticsearch=e():"undefined"!=typeof self&&(self.elasticsearch=e())}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -13761,13 +13761,19 @@ define(function (require) {
 })(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }, this);
 
 },{"__browserify_process":13}],16:[function(require,module,exports){
-var es = {
-  Client: require('./lib/client'),
-  ConnectionPool: require('./lib/connection_pool'),
-  Transport: require('./lib/transport'),
+// In order to help people who were accidentally upgraded to this ES client,
+// throw an error when they try to instanciate the exported function.
+// previous "elasticsearch" module -> https://github.com/ncb000gt/node-es
+function es() {
+  throw new Error('Looks like you are expecting the previous "elasticsearch" module. ' +
+    'It is now the "es" module. To create a client with this module use ' +
+    '`new es.Client(params)`.');
+}
 
-  errors: require('./lib/errors')
-};
+es.Client = require('./lib/client');
+es.ConnectionPool = require('./lib/connection_pool');
+es.Transport = require('./lib/transport');
+es.errors = require('./lib/errors');
 
 module.exports = es;
 
@@ -17045,6 +17051,9 @@ var ca = require('./client_action');
 var Transport = require('./transport');
 
 function Client(config) {
+  if (!(this instanceof Client)) {
+    return new Client(config);
+  }
   config = config || {};
 
   // our client will log minimally by default
@@ -17315,13 +17324,12 @@ function exec(transport, spec, params, cb) {
     if (params.hasOwnProperty(key) && params[key] != null) {
       switch (key) {
       case 'body':
-        request.body = params[key];
+      case 'requestTimeout':
+      case 'maxRetries':
+        request[key] = params[key];
         break;
       case 'ignore':
         request.ignore = _.isArray(params[key]) ? params[key] : [params[key]];
-        break;
-      case 'requestTimeout':
-        request.requestTimeout = params[key];
         break;
       case 'method':
         request.method = _.toUpperString(params[key]);
@@ -17387,11 +17395,7 @@ var _ = require('./utils');
 var EventEmitter = require('events').EventEmitter;
 var Log = require('./log');
 var Host = require('./host');
-
-var defaults = {
-  deadTimeout: 30000,
-  requestTimeout: 10000
-};
+var errors = require('./errors');
 
 /**
  * Abstract class used for Connection classes
@@ -17399,14 +17403,10 @@ var defaults = {
  * @constructor
  */
 function ConnectionAbstract(host, config) {
+  config = config || {};
   EventEmitter.call(this);
 
-  config = _.defaults(config || {}, defaults);
-
-  this.deadTimeout = config.deadTimeout;
-  this.requestTimeout = config.requestTimeout;
-  this.requestCount = 0;
-
+  this.requestTimeout = config.hasOwnProperty('requestTimeout') ? config.requestTimeout : 30000;
   this.log = config.log || new Log();
 
   if (!host) {
@@ -17435,31 +17435,52 @@ ConnectionAbstract.prototype.request = function () {
   throw new Error('Connection#request must be overwritten by the Connector');
 };
 
-ConnectionAbstract.prototype.ping = function (cb) {
-  if (typeof cb !== 'function') {
-    throw new TypeError('Callback must be a function');
+ConnectionAbstract.prototype.ping = function (params, cb) {
+  if (typeof params === 'function') {
+    cb = params;
+    params = null;
+  } else {
+    cb = typeof cb === 'function' ? cb : null;
   }
 
-  return this.request({
+  var requestTimeout = 100;
+  var requestTimeoutId;
+  var aborted;
+  var abort;
+
+  if (params && params.hasOwnProperty('requestTimeout')) {
+    requestTimeout = params.requestTimeout;
+  }
+
+  abort = this.request(_.defaults(params || {}, {
     path: '/',
-    method: 'HEAD',
-    requestTimeout: 100
-  }, cb);
+    method: 'HEAD'
+  }), function (err) {
+    if (aborted) {
+      return;
+    }
+    clearTimeout(requestTimeoutId);
+    if (cb) {
+      cb(err);
+    }
+  });
+
+  if (requestTimeout) {
+    requestTimeoutId = setTimeout(function () {
+      if (abort) {
+        abort();
+      }
+      aborted = true;
+      if (cb) {
+        cb(new errors.RequestTimeout('Ping Timeout after ' + requestTimeout + 'ms'));
+      }
+    }, requestTimeout);
+  }
 };
 
 ConnectionAbstract.prototype.setStatus = function (status) {
   var origStatus = this.status;
-
   this.status = status;
-
-  if (this._deadTimeoutId) {
-    clearTimeout(this._deadTimeoutId);
-    this._deadTimeoutId = null;
-  }
-
-  if (status === 'dead') {
-    this._deadTimeoutId = setTimeout(this.bound.resuscitate, this.deadTimeout);
-  }
 
   this.emit('status set', status, origStatus, this);
 
@@ -17467,23 +17488,8 @@ ConnectionAbstract.prototype.setStatus = function (status) {
     this.removeAllListeners();
   }
 };
-
-ConnectionAbstract.prototype.resuscitate = _.scheduled(function () {
-  var self = this;
-
-  if (self.status === 'dead') {
-    self.ping(function (err) {
-      if (!err) {
-        self.setStatus('alive');
-      } else {
-        self.setStatus('dead');
-      }
-    });
-  }
-});
-
-},{"./host":25,"./log":26,"./utils":36,"events":4}],21:[function(require,module,exports){
-/**
+},{"./errors":24,"./host":25,"./log":26,"./utils":36,"events":4}],21:[function(require,module,exports){
+var process=require("__browserify_process");/**
  * Manager of connections to a node(s), capable of ensuring that connections are clear and living
  * before providing them to the application
  *
@@ -17498,13 +17504,17 @@ var _ = require('./utils');
 var Log = require('./log');
 
 function ConnectionPool(config) {
+  config = config || {};
   _.makeBoundMethods(this);
 
-  this.log = config.log;
-  if (!this.log) {
+  if (!config.log) {
     this.log = new Log();
+    config.log = this.log;
+  } else {
+    this.log = config.log;
   }
 
+  // we will need this when we create connections down the road
   this._config = config;
 
   // get the selector config var
@@ -17514,6 +17524,11 @@ function ConnectionPool(config) {
   this.Connection = _.funcEnum(config, 'connectionClass', ConnectionPool.connectionClasses,
     ConnectionPool.defaultConnectionClass);
 
+  // time that connections will wait before being revived
+  this.deadTimeout = config.hasOwnProperty('deadTimeout') ? config.deadTimeout : 60000;
+  this.maxDeadTimeout = config.hasOwnProperty('maxDeadTimeout') ? config.maxDeadTimeout : 18e5;
+  this.calcDeadTimeout = _.funcEnum(config, 'calcDeadTimeout', ConnectionPool.calcDeadTimeoutOptions, 'exponential');
+
   // a map of connections to their "id" property, used when sniffing
   this.index = {};
 
@@ -17521,6 +17536,9 @@ function ConnectionPool(config) {
     alive: [],
     dead: []
   };
+
+  // information about timeouts for dead connections
+  this._timeouts = [];
 }
 
 // selector options
@@ -17531,6 +17549,16 @@ ConnectionPool.defaultSelector = 'roundRobin';
 ConnectionPool.connectionClasses = require('./connectors');
 ConnectionPool.defaultConnectionClass = ConnectionPool.connectionClasses._default;
 delete ConnectionPool.connectionClasses._default;
+
+// the function that calculates timeouts based on attempts
+ConnectionPool.calcDeadTimeoutOptions = {
+  flat: function (attempt, baseTimeout) {
+    return baseTimeout;
+  },
+  exponential: function (attempt, baseTimeout) {
+    return Math.min(baseTimeout * 2 * Math.pow(2, (attempt * 0.5 - 1)), this.maxDeadTimeout);
+  }
+};
 
 /**
  * Selects a connection from the list using the this.selector
@@ -17554,73 +17582,177 @@ ConnectionPool.prototype.select = function (cb) {
         cb(e);
       }
     }
+  } else if (this._timeouts.length) {
+    this._selectDeadConnection(cb);
   } else {
-    _.nextTick(cb, null, this.getConnection());
+    _.nextTick(cb, null);
   }
 };
 
+/**
+ * Handler for the "set status" event emitted but the connections. It will move
+ * the connection to it's proper connection list (unless it was closed).
+ *
+ * @param  {String} status - the connection's new status
+ * @param  {String} oldStatus - the connection's old status
+ * @param  {ConnectionAbstract} connection - the connection object itself
+ */
 ConnectionPool.prototype.onStatusSet = _.handler(function (status, oldStatus, connection) {
-  var from, to, index;
+  var index;
 
-  if (oldStatus === status) {
-    if (status === 'dead') {
-      // we want to remove the connection from it's current possition and move it to the end
-      status = 'redead';
-    } else {
-      return true;
+  var died = (status === 'dead');
+  var wasAlreadyDead = (died && oldStatus === 'dead');
+  var revived = (!died && oldStatus === 'dead');
+  var noChange = (oldStatus === status);
+  var from = this._conns[oldStatus];
+  var to = this._conns[status];
+
+  if (noChange && !died) {
+    return true;
+  }
+
+  if (from !== to) {
+    if (_.isArray(from)) {
+      index = from.indexOf(connection);
+      if (index !== -1) {
+        from.splice(index, 1);
+      }
+    }
+
+    if (_.isArray(to)) {
+      index = to.indexOf(connection);
+      if (index === -1) {
+        to.push(connection);
+      }
     }
   }
 
-  switch (status) {
-  case 'alive':
-    from = this._conns.dead;
-    to = this._conns.alive;
-    break;
-  case 'dead':
-    from = this._conns.alive;
-    to = this._conns.dead;
-    break;
-  case 'redead':
-    from = this._conns.dead;
-    to = this._conns.dead;
-    break;
-  case 'closed':
-    from = this._conns[oldStatus];
-    break;
+  if (died) {
+    this._onConnectionDied(connection, wasAlreadyDead);
   }
 
-  if (from && from.indexOf) {
-    index = from.indexOf(connection);
-    if (~index) {
-      from.splice(index, 1);
-    }
-  }
-
-  if (to && to.indexOf) {
-    index = to.indexOf(connection);
-    if (!~index) {
-      to.push(connection);
-    }
+  if (revived) {
+    this._onConnectionRevived(connection);
   }
 });
 
 /**
- * Fetches the first active connection, falls back to dead connections
- * This is really only here for testing purposes
- *
- * @private
- * @return {Connection} - Some connection
+ * Handler used to clear the times created when a connection dies
+ * @param  {ConnectionAbstract} connection
  */
-ConnectionPool.prototype.getConnection = function () {
-  if (this._conns.alive.length) {
-    return this._conns.alive[0];
-  }
-
-  if (this._conns.dead.length) {
-    return this._conns.dead[0];
+ConnectionPool.prototype._onConnectionRevived = function (connection) {
+  var timeout;
+  for (var i = 0; i < this._timeouts.length; i++)  {
+    if (this._timeouts[i].conn === connection) {
+      timeout = this._timeouts[i];
+      if (timeout.id) {
+        clearTimeout(timeout.id);
+      }
+      this._timeouts.splice(i, 1);
+      break;
+    }
   }
 };
 
+/**
+ * Handler used to update or create a timeout for the connection which has died
+ * @param  {ConnectionAbstract} connection
+ * @param  {Boolean} alreadyWasDead - If the connection was preivously dead this must be set to true
+ */
+ConnectionPool.prototype._onConnectionDied = function (connection, alreadyWasDead) {
+  var timeout;
+  if (alreadyWasDead) {
+    for (var i = 0; i < this._timeouts.length; i++)  {
+      if (this._timeouts[i].conn === connection) {
+        timeout = this._timeouts[i];
+        break;
+      }
+    }
+  } else {
+    timeout = {
+      conn: connection,
+      attempt: 0,
+      revive: function (cb) {
+        timeout.attempt++;
+        connection.ping(function (err) {
+          connection.setStatus(err ? 'dead' : 'alive');
+          if (cb && typeof cb === 'function') {
+            cb(err);
+          }
+        });
+      }
+    };
+    this._timeouts.push(timeout);
+  }
+
+  if (timeout.id) {
+    clearTimeout(timeout.id);
+  }
+
+  var ms = this.calcDeadTimeout(timeout.attempt, this.deadTimeout);
+  timeout.id = setTimeout(timeout.revive, ms);
+  timeout.runAt = Date.now() + ms;
+};
+
+ConnectionPool.prototype._selectDeadConnection = function (cb) {
+  var orderedTimeouts = _.sortBy(this._timeouts, 'runAt');
+  var log = this.log;
+
+  process.nextTick(function next() {
+    var timeout = orderedTimeouts.shift();
+    if (!timeout) {
+      cb(null);
+      return;
+    }
+
+    if (!timeout.conn) {
+      next();
+      return;
+    }
+
+    if (timeout.conn.status === 'dead') {
+      timeout.revive(function (err) {
+        if (err) {
+          log.warning('Unable to revive connection: ' + timeout.conn.id);
+          process.nextTick(next);
+        } else {
+          cb(null, timeout.conn);
+        }
+      });
+    } else {
+      cb(null, timeout.conn);
+    }
+  });
+};
+
+/**
+ * Returns a random list of nodes from the living connections up to the limit.
+ * If there are no living connections it will fall back to the dead connections.
+ * If there are no dead connections it will return nothing.
+ *
+ * This is used for testing (when we just want the one existing node)
+ * and sniffing, where using the selector to get all of the living connections
+ * is not reasonable.
+ *
+ * @param {Number} limit - Max number to return
+ */
+ConnectionPool.prototype.getConnections = function (status, limit) {
+  var list;
+  if (status) {
+    list = this._conns[status];
+  } else {
+    list = this._conns[this._conns.alive.length ? 'alive' : 'dead'];
+  }
+
+  return _.shuffle(list).slice(0, typeof limit === 'undefined' ? list.length : limit);
+};
+
+/**
+ * Add a single connection to the pool and change it's status to "alive".
+ * The connection should inherit from ConnectionAbstract
+ *
+ * @param {ConnectionAbstract} connection - The connection to add
+ */
 ConnectionPool.prototype.addConnection = function (connection) {
   if (!connection.id) {
     connection.id = connection.host.toString();
@@ -17634,6 +17766,11 @@ ConnectionPool.prototype.addConnection = function (connection) {
   }
 };
 
+/**
+ * Remove a connection from the pool, and set it's status to "closed".
+ *
+ * @param  {ConnectionAbstract} connection - The connection to remove/close
+ */
 ConnectionPool.prototype.removeConnection = function (connection) {
   if (!connection.id) {
     connection.id = connection.host.toString();
@@ -17646,6 +17783,12 @@ ConnectionPool.prototype.removeConnection = function (connection) {
   }
 };
 
+/**
+ * Override the internal node list. All connections that are not in the new host
+ * list are closed and removed. Non-unique hosts are ignored.
+ *
+ * @param {Host[]} hosts - An array of Host instances.
+ */
 ConnectionPool.prototype.setHosts = function (hosts) {
   var connection;
   var i;
@@ -17671,12 +17814,14 @@ ConnectionPool.prototype.setHosts = function (hosts) {
   }
 };
 
+/**
+ * Close the conncetion pool, as well as all of it's connections
+ */
 ConnectionPool.prototype.close = function () {
   this.setHosts([]);
 };
 ConnectionPool.prototype.empty = ConnectionPool.prototype.close;
-
-},{"./connectors":22,"./log":26,"./selectors":31,"./utils":36}],22:[function(require,module,exports){
+},{"./connectors":22,"./log":26,"./selectors":31,"./utils":36,"__browserify_process":13}],22:[function(require,module,exports){
 var opts = {
   xhr: require('./xhr'),
   jquery: require('./jquery'),
@@ -18357,7 +18502,6 @@ Log.prototype.trace = function (method, requestUrl, body, responseBody, response
 
 function prettyJSON(body) {
   try {
-    // TESTME
     return JSON.stringify(JSON.parse(body), null, '  ').replace(/'/g, '\\u0027');
   } catch (e) {
     return body || '';
@@ -18851,6 +18995,9 @@ Transport.createDefer = function () {
  * @todo abort
  * @todo access to custom headers, modifying of request in general
  * @param {object} params
+ * @param {Number} params.requestTimeout - timeout for the entire request (inculding all retries)
+ * @param {Number} params.maxRetries - number of times the request will be re-run in
+ *   the original node chosen can not be connected to.
  * @param {String} params.url - The url for the request
  * @param {String} params.method - The HTTP method for the request
  * @param {String} params.body - The body of the HTTP request
@@ -18860,12 +19007,13 @@ Transport.prototype.request = function (params, cb) {
 
   var self = this;
   var remainingRetries = this.maxRetries;
+  var requestTimeout = this.requestTimeout;
+
   var connection; // set in sendReqWithConnection
   var aborted = false; // several connector will respond with an error when the request is aborted
   var requestAborter; // an abort function, returned by connection#request()
-  var requestTimeout; // the general timeout for the total request (inculding all retries)
   var requestTimeoutId; // the id of the ^timeout
-  var request; // the object returned to the user, might be a promise
+  var ret; // the object returned to the user, might be a promise
   var defer; // the defer object, will be set when we are using promises.
 
   self.log.debug('starting request', params);
@@ -18878,6 +19026,14 @@ Transport.prototype.request = function (params, cb) {
   // serialize the body
   if (params.body) {
     params.body = self.serializer[params.bulkBody ? 'bulkBody' : 'serialize'](params.body);
+  }
+
+  if (params.hasOwnProperty('maxRetries')) {
+    remainingRetries = params.maxRetries;
+  }
+
+  if (params.hasOwnProperty('requestTimeout')) {
+    requestTimeout = params.requestTimeout;
   }
 
   params.req = {
@@ -19002,30 +19158,32 @@ Transport.prototype.request = function (params, cb) {
     }
   }
 
-  // set the requestTimeout
-  requestTimeout = params.hasOwnProperty('requestTimeout') ? params.requestTimeout : this.requestTimeout;
-
   if (requestTimeout && requestTimeout !== Infinity) {
     requestTimeoutId = setTimeout(function () {
-      respond(new errors.RequestTimeout());
+      respond(new errors.RequestTimeout('Request Timeout after ' + requestTimeout + 'ms'));
       abortRequest();
     }, requestTimeout);
   }
 
   // determine the response based on the presense of a callback
   if (typeof cb === 'function') {
-    request = {
+    ret = {
       abort: abortRequest
     };
   } else {
     defer = Transport.createDefer();
-    request = defer.promise;
-    request.abort = abortRequest;
+    ret = defer.promise;
+    ret.abort = abortRequest;
   }
 
-  self.connectionPool.select(sendReqWithConnection);
 
-  return request;
+  if (connection) {
+    sendReqWithConnection(null, connection);
+  } else {
+    self.connectionPool.select(sendReqWithConnection);
+  }
+
+  return ret;
 };
 
 
