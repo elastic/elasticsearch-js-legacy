@@ -17,40 +17,104 @@ cycles within Angular
 });
 </code></pre><h4>jQuery Build (elasticsearch.jquery.js)</h4><ul><li>Uses jQuery's <code>.ajax()</code> functionality</li><li>Returns jQuery "promises"</li><li>Registers the module at <code>jQuery.es</code></li></ul><h5>Create a client with the jQuery build</h5><pre><code>var es = new $.es.Client({
   hosts: 'localhost:9200'
-});</code></pre><h2 id="quick-start">Quick Start</h2><p>These are just a couple examples of Elasticsearch.js in use. For a more in-depth introduction check out our <a href="tutorial.html">tutorial</a>.</p><h4>Create the client</h4><pre><code>var elasticsearch = require('elasticsearch');
+});</code></pre><h2 id="quick-start">Quick Start</h2><h3>Creating a client</h3><p>The first thing to do after installing Elasticsearch.js is creating an instance of the
+<code>elasticsearch.Client</code> class. The constructor accepts a config object/hash
+where you can define defaults values, or even entire classes, for the client to use.
+For a full list of config options check out the the
+<a href="#configuration">section deicated to configuration</a>.
+</p><pre><code>var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
-  hosts: [
-    'localhost:9200'
-  ],
-  log: 'trace',
-  sniffOnStart: true
+  host: 'localhost:9200',
+  log: 'trace'
 });
-</code></pre><h4>Call an endpoint</h4><pre><code>client.cluster.nodeInfo({
-  clear: true,
-  jvm: true,
-  os: ture
-}, function (err, resp, status) {
-    // do your thing
+</code></pre><h3>Say hello to Elasticsearch</h3><p>Almost all of the methods on the client accept two arguments:
+</p><dl><dt><dfn><code>params</code></dfn></dt><dd>an optional object/hash of parameters</dd><dt><dfn><code>callback</code></dfn></dt><dd>an optional function that will be called with the final result of the method. When omitted, a <a href="https://github.com/cujojs/when/blob/master/docs/api.md#promise">promise</a> is returned.</dd></dl><h4>Perform a ping request to see if the cluster is responding</h4><pre><code>// Send a HEAD request to "/?hello=elasticsearch"
+// and allows up to 1 second for it to complete.
+client.ping({
+  requestTimeout: 1000,
+  // undocumented params are appended to the query string
+  hello: "elasticsearch!"
+}, function (error) {
+  if (error) {
+    console.error('elasticsearch cluster is down!');
+  } else {
+    console.log('All is well');
+  }
 });
 </code></pre><h4>Skip the callback to get a promise back</h4><pre><code>client.search({
   q: 'pants'
-}).then(function (resp) {
-  // use resp.body and resp.status
-}, function (err) {
+}).then(function (response) {
+  // use response.body and response.status
+}, function (error) {
   // freak out!
 });
-</code></pre><h4>Set the HTTP method, and prevent 404 responses from being considered errors</h4><pre><code>client.search({
-  q: '*',
-  method: 'HEAD',
+</code></pre><h4>Prevent 404 responses from being considered errors</h4><pre><code>client.indices.delete({
+  index: 'test_index',
   ignore: [404]
-}).then(function (resp) {
-  // resp.body will be empty
-  if (resp.status === 200) {
-    console.log('searchable');
+}).then(function (response) {
+  // since we told the client to ignore 404 errors, the
+  // promise is resolved when it would normally be rejected
+  
+  if (response.status === 404) {
+    console.log('index did not exist in the first place');
   } else {
-    console.log('not searchable');
+    console.log('index was deleted');
   }
-});</code></pre><h2 id="configuration">Configuration</h2><p>The <code>Client</code> constructor accepts a single object as it's argument, and the following keys
+}, function (error) {
+  // oh no!
+});
+</code></pre><h3>Searching for documents</h3><p>The most common use-case for elasticsearch is to sort through through large collections
+of documents in order to find relevant documents. In most cases you will use the
+client's <code>search()</code> method to accomplish this.
+</p><h4>Elasticsearch Query DSL</h4><p>For many searches you will want to define a search document that tells elasticsearch exactly
+how to find the documents you are looking for. To do this you will use the <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html">elasticsearch query DSL</a>.
+If you are not familiary with Elasticsearch's query DSL is it recommended that you
+research the topic at elasticsearch.org or watch/read one of these introductions:
+</p><ul><li><a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471"><i class="yt-icon"></i></a> <a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471">Clinton Gormley "Getting down and dirty with Elasticsearch"</a></li><li><a href="http://okfnlabs.org/blog/2013/07/01/elasticsearch-query-tutorial.html#query-dsl-overview">Querying ElasticSearch - A Tutorial and Guide</a></li><li><a href="http://exploringelasticsearch.com/book/searching-data/the-query-dsl-and-the-search-api.html">The Query DSL and the Search API - Searching Data - Exploring Elasticsearch
+</a></li></ul><p>Now for some examples using the Query DSL.</p><h5>Simple match query</h5><pre><code>// match tweets that have "elasticsearch"
+// in their body field
+client.search({
+  index: 'twitter',
+  type: 'tweets',
+  body: {
+    query: {
+      match: {
+        body: 'elasticsearch'
+      }
+    }
+  }
+});
+</code></pre><h5>More complex filtered query</h5><p>To power a search form on a public site, you might want to allow the user to specify
+some text but also limit the documents returned by a few criteria. This is a good use-case
+for a filtered query.</p><p><strong>NOTE:</strong> In the example, <code>request</code>
+is an <a href="http://expressjs.com/api.html#request">Express</a> request object,
+which already has session information about the user, and the parameters from
+this request.</p><pre><code>client.search({
+  index: 'posts',
+  body: {
+    filtered: {
+      query: {
+        match: {
+          // find matched using all of the fields in the posts index
+          _all: request.param('search_query')
+        }
+      },
+      filter: {
+        // only allow documents that are public or owned by the current user
+        or: [
+          {
+            term: { privacy: "public" }
+          },
+          {
+            term: { owner: request.session.userId }
+          }
+        ]
+      }
+    }
+  }
+}, function (error, response, status) {
+
+});</code></pre><p>You can find a lot more information about <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-filters.html">filters at elasticsearch.org</a></p><h2 id="configuration">Configuration</h2><p>The <code>Client</code> constructor accepts a single object as it's argument, and the following keys
 can be used to configure that client instance.
 </p><pre><code>var elasticsearch = require('elasticsearch');
 var es = new elasticsearch.Client({
