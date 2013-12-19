@@ -1,5 +1,5 @@
-/*! elasticsearch - v1.0.0 - 2013-12-17
- * https://github.com/elasticsearch/elasticsearch-js
+/*! elasticsearch - v1.0.1 - 2013-12-19
+ * http://elasticsearch.github.io/elasticsearch-js/
  * Copyright (c) 2013 Elasticsearch BV; Licensed Apache 2.0 */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
@@ -16148,6 +16148,7 @@ Client.prototype.ping = ca({
   url: {
     fmt: '/'
   },
+  castExists: true,
   requestTimeout: 100
 });
 
@@ -16174,7 +16175,7 @@ function ClientAction(spec) {
     spec.method = 'GET';
   }
 
-  return function (params, cb) {
+  function action(params, cb) {
     if (typeof params === 'function') {
       cb = params;
       params = {};
@@ -16192,7 +16193,11 @@ function ClientAction(spec) {
         return when.reject(e);
       }
     }
-  };
+  }
+
+  action.spec = spec;
+
+  return action;
 }
 
 var castType = {
@@ -16909,7 +16914,7 @@ _.inherits(AngularConnector, ConnectionAbstract);
 
 AngularConnector.prototype.request = function (params, cb) {
   var abort = this.defer();
-  AngularConnector.$http({
+  this.$http({
     method: params.method,
     url: this.host.makeUrl(params),
     data: params.body,
@@ -17499,12 +17504,15 @@ Log.prototype.trace = function (method, requestUrl, body, responseBody, response
   if (this.listenerCount('trace')) {
     if (typeof requestUrl === 'string') {
       requestUrl = url.parse(requestUrl, true, true);
+    } else if (requestUrl.path) {
+      requestUrl.query = url.parse(requestUrl.path, true, false).query;
     }
+
     requestUrl = _.defaults({
       host: 'localhost:9200',
-      query: _.defaults({
+      query: _.defaults(requestUrl.query || {}, {
         pretty: true
-      }, requestUrl.query)
+      })
     }, requestUrl);
     delete requestUrl.auth;
 
