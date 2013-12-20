@@ -1,21 +1,14 @@
-<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Signika+Negative:300,400"><link rel="stylesheet" type="text/css" href="styles/main.css"><link rel="shortcut icon" href="http://www.elasticsearch.org/content/themes/elasticsearch-org/favicon.ico"><meta name="viewport" content="initial-scale=1"><title>Elasticsearch.js - Official Elasticsearch client for Node.js and the Browser</title></head><body class="language-javascript"><a href="https://github.com/elasticsearch/elasticsearch-js"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" class="ghribbon"></a><header><h1>Elasticsearch.js</h1><p>A low-level Elasticsearch client for Node.js and the Browser</p></header><nav><h1><a href="index.html">Elasticsearch.js</a></h1><ul><li><a href="index.html#about">About/Install</a></li><li><a href="index.html#quick-start">Quick Start</a></li><li><a href="index.html#configuration">Configuration</a></li><li><a href="index.html#extending">Extending Core Components</a></li><li><a href="index.html#logging">Logging</a></li><li><a href="index.html#dev">Development/Contributing</a></li><h2><a href="api.html">Api</a></h2><ul><li><a href="api.html#bulk">bulk</a></li><li><a href="api.html#clearscroll">clearScroll</a></li><li><a href="api.html#count">count</a></li><li><a href="api.html#delete">delete</a></li><li><a href="api.html#deletebyquery">deleteByQuery</a></li><li><a href="api.html#exists">exists</a></li><li><a href="api.html#explain">explain</a></li><li><a href="api.html#get">get</a></li><li><a href="api.html#getsource">getSource</a></li><li><a href="api.html#index">index</a></li><li><a href="api.html#info">info</a></li><li><a href="api.html#mget">mget</a></li><li><a href="api.html#mlt">mlt</a></li><li><a href="api.html#msearch">msearch</a></li><li><a href="api.html#percolate">percolate</a></li><li><a href="api.html#scroll">scroll</a></li><li><a href="api.html#search">search</a></li><li><a href="api.html#suggest">suggest</a></li><li><a href="api.html#update">update</a></li><h3>Cluster</h3><ul><li><a href="api.html#cluster-getsettings">getSettings</a></li><li><a href="api.html#cluster-health">health</a></li><li><a href="api.html#cluster-nodehotthreads">nodeHotThreads</a></li><li><a href="api.html#cluster-nodeinfo">nodeInfo</a></li><li><a href="api.html#cluster-nodeshutdown">nodeShutdown</a></li><li><a href="api.html#cluster-nodestats">nodeStats</a></li><li><a href="api.html#cluster-putsettings">putSettings</a></li><li><a href="api.html#cluster-reroute">reroute</a></li><li><a href="api.html#cluster-state">state</a></li></ul><h3>Indices</h3><ul><li><a href="api.html#indices-analyze">analyze</a></li><li><a href="api.html#indices-clearcache">clearCache</a></li><li><a href="api.html#indices-close">close</a></li><li><a href="api.html#indices-create">create</a></li><li><a href="api.html#indices-delete">delete</a></li><li><a href="api.html#indices-deletealias">deleteAlias</a></li><li><a href="api.html#indices-deletemapping">deleteMapping</a></li><li><a href="api.html#indices-deletetemplate">deleteTemplate</a></li><li><a href="api.html#indices-deletewarmer">deleteWarmer</a></li><li><a href="api.html#indices-exists">exists</a></li><li><a href="api.html#indices-existsalias">existsAlias</a></li><li><a href="api.html#indices-existstype">existsType</a></li><li><a href="api.html#indices-flush">flush</a></li><li><a href="api.html#indices-getalias">getAlias</a></li><li><a href="api.html#indices-getaliases">getAliases</a></li><li><a href="api.html#indices-getfieldmapping">getFieldMapping</a></li><li><a href="api.html#indices-getmapping">getMapping</a></li><li><a href="api.html#indices-getsettings">getSettings</a></li><li><a href="api.html#indices-gettemplate">getTemplate</a></li><li><a href="api.html#indices-getwarmer">getWarmer</a></li><li><a href="api.html#indices-open">open</a></li><li><a href="api.html#indices-optimize">optimize</a></li><li><a href="api.html#indices-putalias">putAlias</a></li><li><a href="api.html#indices-putmapping">putMapping</a></li><li><a href="api.html#indices-putsettings">putSettings</a></li><li><a href="api.html#indices-puttemplate">putTemplate</a></li><li><a href="api.html#indices-putwarmer">putWarmer</a></li><li><a href="api.html#indices-refresh">refresh</a></li><li><a href="api.html#indices-segments">segments</a></li><li><a href="api.html#indices-snapshotindex">snapshotIndex</a></li><li><a href="api.html#indices-stats">stats</a></li><li><a href="api.html#indices-status">status</a></li><li><a href="api.html#indices-updatealiases">updateAliases</a></li><li><a href="api.html#indices-validatequery">validateQuery</a></li></ul></ul><h2>Misc</h2><ul><li><a href="transport.html">Transport</a></li><li><a href="errors.html">Errors</a></li></ul></ul></nav><h2 id="api-conventions">API Conventions</h2><h3 id="api-conventions-params" class="hidden">Parameters</h3><p>By default, all api methods accept the following parameters:</p><dl class="params"><dt><dfn><code>method</code></dfn></dt><dd><span class="types">String</span> The HTTP method to use for this request.
+<!DOCTYPE html><html><head><link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Signika+Negative:300,400"><link rel="stylesheet" type="text/css" href="styles/main.css"><link rel="shortcut icon" href="http://www.elasticsearch.org/content/themes/elasticsearch-org/favicon.ico"><meta name="viewport" content="initial-scale=1"><title>Elasticsearch.js - Official Elasticsearch client for Node.js and the Browser</title></head><body class="language-javascript"><a href="https://github.com/elasticsearch/elasticsearch-js"><img src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" class="ghribbon"></a><header><h1>Elasticsearch.js</h1><p>A low-level Elasticsearch client for Node.js and the Browser</p></header><nav><h1><a href="index.html">Elasticsearch.js</a></h1><ul><li><a href="index.html#about">About/Install</a></li><li><a href="index.html#quick-start">Quick Start</a></li><li><a href="index.html#configuration">Configuration</a></li><li><a href="index.html#extending">Extending Core Components</a></li><li><a href="index.html#logging">Logging</a></li><li><a href="index.html#dev">Development/Contributing</a></li><h2><a href="api.html">Api</a></h2><ul><li><a href="api.html#bulk">bulk</a></li><li><a href="api.html#clearscroll">clearScroll</a></li><li><a href="api.html#count">count</a></li><li><a href="api.html#create">create</a></li><li><a href="api.html#delete">delete</a></li><li><a href="api.html#deletebyquery">deleteByQuery</a></li><li><a href="api.html#exists">exists</a></li><li><a href="api.html#explain">explain</a></li><li><a href="api.html#get">get</a></li><li><a href="api.html#getsource">getSource</a></li><li><a href="api.html#index">index</a></li><li><a href="api.html#info">info</a></li><li><a href="api.html#mget">mget</a></li><li><a href="api.html#mlt">mlt</a></li><li><a href="api.html#msearch">msearch</a></li><li><a href="api.html#percolate">percolate</a></li><li><a href="api.html#scroll">scroll</a></li><li><a href="api.html#search">search</a></li><li><a href="api.html#suggest">suggest</a></li><li><a href="api.html#update">update</a></li><h3>Cluster</h3><ul><li><a href="api.html#cluster-getsettings">getSettings</a></li><li><a href="api.html#cluster-health">health</a></li><li><a href="api.html#cluster-nodehotthreads">nodeHotThreads</a></li><li><a href="api.html#cluster-nodeinfo">nodeInfo</a></li><li><a href="api.html#cluster-nodeshutdown">nodeShutdown</a></li><li><a href="api.html#cluster-nodestats">nodeStats</a></li><li><a href="api.html#cluster-putsettings">putSettings</a></li><li><a href="api.html#cluster-reroute">reroute</a></li><li><a href="api.html#cluster-state">state</a></li></ul><h3>Indices</h3><ul><li><a href="api.html#indices-analyze">analyze</a></li><li><a href="api.html#indices-clearcache">clearCache</a></li><li><a href="api.html#indices-close">close</a></li><li><a href="api.html#indices-create">create</a></li><li><a href="api.html#indices-delete">delete</a></li><li><a href="api.html#indices-deletealias">deleteAlias</a></li><li><a href="api.html#indices-deletemapping">deleteMapping</a></li><li><a href="api.html#indices-deletetemplate">deleteTemplate</a></li><li><a href="api.html#indices-deletewarmer">deleteWarmer</a></li><li><a href="api.html#indices-exists">exists</a></li><li><a href="api.html#indices-existsalias">existsAlias</a></li><li><a href="api.html#indices-existstype">existsType</a></li><li><a href="api.html#indices-flush">flush</a></li><li><a href="api.html#indices-getalias">getAlias</a></li><li><a href="api.html#indices-getaliases">getAliases</a></li><li><a href="api.html#indices-getfieldmapping">getFieldMapping</a></li><li><a href="api.html#indices-getmapping">getMapping</a></li><li><a href="api.html#indices-getsettings">getSettings</a></li><li><a href="api.html#indices-gettemplate">getTemplate</a></li><li><a href="api.html#indices-getwarmer">getWarmer</a></li><li><a href="api.html#indices-open">open</a></li><li><a href="api.html#indices-optimize">optimize</a></li><li><a href="api.html#indices-putalias">putAlias</a></li><li><a href="api.html#indices-putmapping">putMapping</a></li><li><a href="api.html#indices-putsettings">putSettings</a></li><li><a href="api.html#indices-puttemplate">putTemplate</a></li><li><a href="api.html#indices-putwarmer">putWarmer</a></li><li><a href="api.html#indices-refresh">refresh</a></li><li><a href="api.html#indices-segments">segments</a></li><li><a href="api.html#indices-snapshotindex">snapshotIndex</a></li><li><a href="api.html#indices-stats">stats</a></li><li><a href="api.html#indices-status">status</a></li><li><a href="api.html#indices-updatealiases">updateAliases</a></li><li><a href="api.html#indices-validatequery">validateQuery</a></li></ul></ul><h2>Misc</h2><ul><li><a href="transport.html">Transport</a></li><li><a href="errors.html">Errors</a></li></ul></ul></nav><h2 id="api-conventions">API Conventions</h2><h3 id="api-conventions-params" class="hidden">Parameters</h3><p>By default, all api methods accept the following parameters:</p><dl class="params"><dt><dfn><code>method</code></dfn></dt><dd><span class="types">String</span> The HTTP method to use for this request.
 All of the API methods have their own default.
 </dd><dt><dfn><code>body</code></dfn></dt><dd><span class="types">String, Anything</span> The body to send along with this request. If the body is a
 string it will be passed along as is, otherwise it is passed to the serializer and converted
 to either JSON or a newline seperated list of JSON objects based on the API method.
 </dd><dt><dfn><code>ignore</code></dfn></dt><dd><span class="types">Number, Number[]</span> HTTP status codes which should not be considered errors
 for this request.
-</dd></dl><h3>Config values that can be overridden per request</h3><ul><li><code>requestTimeout</code> (<a href="index.html#config-request-timeout">more info</a>)</li><li><code>maxRetries</code> (<a href="index.html#config-max-retires">more info</a>)</li></ul><p>When a callback is passed to any of the API methods, it will be called with <code>(err, response, status)</code>.The methods will also return a simple object with an <code>abort()</code> function. Call this method to end long running requests. Calling abort only ends the HTTP request, not the work Elasticsearch is doing.</p><p>If you prefer to use promises, don't pass a callback and a promise (with an additiional abort method) will be returned.</p><h2>Client API</h2><p><strong>NOTE:</strong> Supporting the entire Elasticsearch API means that there are <em>a lot</em> of methods (65 at last count). We have provided descriptions and examples for many of them here, but for additional information follow the links under the description to see that endpoint's docs at elasticsearch.org.</p><section class="methods client"><h2 id="bulk" class="fn">bulk(params, [callback])</h2><p class="tight">Perform many index/delete operations in a single API call.</p><a href="http://elasticsearch.org/guide/reference/api/bulk/" title="bulk at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/bulk/</a><p class="tight">The default method is <code>POST</code> and
+</dd></dl><h3>Config values that can be overridden per request</h3><ul><li><code>requestTimeout</code> (<a href="index.html#config-request-timeout">more info</a>)</li><li><code>maxRetries</code> (<a href="index.html#config-max-retires">more info</a>)</li></ul><p>When a callback is passed to any of the API methods, it will be called with <code>(err, response, status)</code>.The methods will also return a simple object with an <code>abort()</code> function. Call this method to end long running requests. Calling abort only ends the HTTP request, not the work Elasticsearch is doing.</p><p>If you prefer to use promises, don't pass a callback and a promise (with an additiional abort method) will be returned.</p><h2>Client API</h2><p><strong>NOTE:</strong> Supporting the entire Elasticsearch API means that there are <em>a lot</em> of methods (65 at last count). We have provided descriptions and examples for many of them here, but for additional information follow the links under the description to see that endpoint's docs at elasticsearch.org.</p><section class="methods client"><h2 id="bulk" class="fn">bulk(params, [callback])</h2><p class="tight">Perform many index/delete operations in a single API call.</p><p>The default method is <code>POST</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
-
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
-Explicit write consistency setting for the operation</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
-Refresh the index after performing the operation</dd><dt><dfn><code>[replication=sync]</code></dfn></dt><dd><span class="types">String</span>
-Explicitely set the replication type</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
-Default document type for items which don't provide one</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
-Explicit operation timeout</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
-Default index for items which don't provide one
-</dd></dl><h3>Examples</h3><h4>Perform three operations in a single request</h4><pre><code>client.bulk({
+See <a href="http://elasticsearch.org/guide/reference/api/bulk/" title="bulk
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/bulk/</a> for more about this method.</p><h3>Example</h3><h4>Perform three operations in a single request</h4><pre><code>client.bulk({
   body: [
     { index:  { _index: 'myindex', _type: 'mytype', _id: 1 } }, // action description
     { title: 'foo' }, // the document to index
@@ -24,20 +17,29 @@ Default index for items which don't provide one
     { delete: { _index: 'myindex', _type: 'mytype', _id: 3  },  // action description
     // no document needed for this delete
   ]
-}, function (err, resp, status) {
+}, function (err, resp) {
   // ...
-});</code></pre><h2 id="clearscroll" class="fn">clearScroll(params, [callback])</h2><p class="tight">Clear the scroll request created by specifying the scroll parameter to search.</p><a href="http://www.elasticsearch.org/guide/reference/api/search/scroll/" title="clearScroll at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/search/scroll/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
+Explicit write consistency setting for the operation</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
+Refresh the index after performing the operation</dd><dt><dfn><code>[replication=sync]</code></dfn></dt><dd><span class="types">String</span>
+Explicitely set the replication type</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
+Default document type for items which don't provide one</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+Explicit operation timeout</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
+Default index for items which don't provide one
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>scrollId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="clearscroll" class="fn">clearScroll(params, [callback])</h2><p class="tight">Clear the scroll request created by specifying the scroll parameter to search.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/search/scroll/" title="clearScroll
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/search/scroll/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>scrollId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of scroll IDs to clear
-</dd></dl><h2 id="cluster-getsettings" class="fn">cluster.getSettings(params, [callback])</h2><p class="tight">Get cluster settings.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/" title="cluster.getSettings at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h2 id="cluster-health" class="fn">cluster.health(params, [callback])</h2><p class="tight">Get a very simple status on the health of the cluster.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-health/" title="cluster.health at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-health/</a><p class="tight">The default method is <code>GET</code> and
+</dd></dl><h2 id="cluster-getsettings" class="fn">cluster.getSettings(params, [callback])</h2><p class="tight">Get cluster settings (previously set with <code>putSettings()</code>)</p><p>The default method is <code>GET</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
-
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[level=cluster]</code></dfn></dt><dd><span class="types">String</span>
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/" title="cluster.getSettings
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/</a> for more about this method.</p><h2 id="cluster-health" class="fn">cluster.health(params, [callback])</h2><p class="tight">Get a very simple status on the health of the cluster.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-health/" title="cluster.health
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-health/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[level=cluster]</code></dfn></dt><dd><span class="types">String</span>
 Specify the level of detail for returned information</dd><dt><dfn><code>local</code></dfn></dt><dd><span class="types">Boolean</span>
 Return local information, do not retrieve the state from master node (default: false)</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout for connection to master node</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
@@ -47,19 +49,30 @@ Wait until the specified number of nodes is available</dd><dt><dfn><code>waitFor
 Wait until the specified number of relocating shards is finished</dd><dt><dfn><code>waitForStatus</code></dfn></dt><dd><span class="types">String</span>
 Wait until cluster is in a specific state</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 Limit the information returned to a specific index
-</dd></dl><h2 id="cluster-nodehotthreads" class="fn">cluster.nodeHotThreads(params, [callback])</h2><p class="tight">Retrieve one or more (or all) of the cluster nodes' information.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/" title="cluster.nodeHotThreads at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>interval</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="cluster-nodehotthreads" class="fn">cluster.nodeHotThreads(params, [callback])</h2><p class="tight">Returns information about the hottest threads in the cluster or on a specific node as a String. The information is returned as text, and allows you to understand what are currently the most taxing operations happening in the cluster, for debugging or monitoring purposes.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/" title="cluster.nodeHotThreads
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-cluster-nodes-hot-threads/</a> for more about this method.</p><h3>Examples</h3><h4>Return 10 hottest threads</h4><pre><code>client.cluster.nodeHotThreads({
+  threads: 10
+}, function (error, response) {
+  // WARNING: response is plain text
+})</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>interval</code></dfn></dt><dd><span class="types">Date, Number</span>
 The interval for the second sampling of threads</dd><dt><dfn><code>snapshots</code></dfn></dt><dd><span class="types">Number</span>
 Number of samples of thread stacktrace (default: 10)</dd><dt><dfn><code>threads</code></dfn></dt><dd><span class="types">Number</span>
 Specify the number of threads to provide information for (default: 3)</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type to sample (default: cpu)</dd><dt><dfn><code>nodeId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
-</dd></dl><h2 id="cluster-nodeinfo" class="fn">cluster.nodeInfo(params, [callback])</h2><p class="tight">Retrieve one or more (or all) of the cluster nodes' information.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/" title="cluster.nodeInfo at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="cluster-nodeinfo" class="fn">cluster.nodeInfo(params, [callback])</h2><p class="tight">Retrieve one or more (or all) of the cluster nodes' information.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/" title="cluster.nodeInfo
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-info/</a> for more about this method.</p><h3>Examples</h3><h4>Return information about JVM</h4><pre><code>client.cluster.nodeInfo({ jvm: true })
+  .then(function (response) {
+    // enjoy your sweet info!
+  }, function (error) {
+    // scream!
+  })</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
 Return all available information</dd><dt><dfn><code>clear</code></dfn></dt><dd><span class="types">Boolean</span>
 Reset the default settings</dd><dt><dfn><code>http</code></dfn></dt><dd><span class="types">Boolean</span>
 Return information about HTTP</dd><dt><dfn><code>jvm</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -73,17 +86,19 @@ Return information about the thread pool</dd><dt><dfn><code>timeout</code></dfn>
 Explicit operation timeout</dd><dt><dfn><code>transport</code></dfn></dt><dd><span class="types">Boolean</span>
 Return information about transport</dd><dt><dfn><code>nodeId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
-</dd></dl><h2 id="cluster-nodeshutdown" class="fn">cluster.nodeShutdown(params, [callback])</h2><p class="tight">Shutdown one or more (or all) nodes in the cluster.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/" title="cluster.nodeShutdown at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>delay</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="cluster-nodeshutdown" class="fn">cluster.nodeShutdown(params, [callback])</h2><p class="tight">Shutdown one or more (or all) nodes in the cluster.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/" title="cluster.nodeShutdown
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-shutdown/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>delay</code></dfn></dt><dd><span class="types">Date, Number</span>
 Set the delay for the operation (default: 1s)</dd><dt><dfn><code>exit</code></dfn></dt><dd><span class="types">Boolean</span>
 Exit the JVM as well (default: true)</dd><dt><dfn><code>nodeId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of node IDs or names to perform the operation on; use `_local` to perform the operation on the node you're connected to, leave empty to perform the operation on all nodes
-</dd></dl><h2 id="cluster-nodestats" class="fn">cluster.nodeStats(params, [callback])</h2><p class="tight">Retrieve one or more (or all) of the cluster nodes statistics.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/" title="cluster.nodeStats at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="cluster-nodestats" class="fn">cluster.nodeStats(params, [callback])</h2><p class="tight">Retrieve one or more (or all) of the cluster nodes statistics.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/" title="cluster.nodeStats
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-nodes-stats/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
 Return all available information</dd><dt><dfn><code>clear</code></dfn></dt><dd><span class="types">Boolean</span>
 Reset the default level of detail</dd><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields to return detailed information for, when returning the `indices` metric family (supports wildcards)</dd><dt><dfn><code>fs</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -99,19 +114,21 @@ Return information about transport</dd><dt><dfn><code>metricFamily</code></dfn><
 Limit the information returned to a certain metric family</dd><dt><dfn><code>metric</code></dfn></dt><dd><span class="types">String</span>
 Limit the information returned for `indices` family to a specific metric</dd><dt><dfn><code>nodeId</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
-</dd></dl><h2 id="cluster-putsettings" class="fn">cluster.putSettings(params, [callback])</h2><p class="tight">Update cluster wide specific settings.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/" title="cluster.putSettings at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h2 id="cluster-reroute" class="fn">cluster.reroute(params, [callback])</h2><p class="tight">Explicitly execute a cluster reroute allocation command including specific commands.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-reroute/" title="cluster.reroute at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-reroute/</a><p class="tight">The default method is <code>POST</code> and
+</dd></dl><h2 id="cluster-putsettings" class="fn">cluster.putSettings(params, [callback])</h2><p class="tight">Update cluster wide specific settings.</p><p>The default method is <code>PUT</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
-
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>dryRun</code></dfn></dt><dd><span class="types">Boolean</span>
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/" title="cluster.putSettings
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-update-settings/</a> for more about this method.</p><h2 id="cluster-reroute" class="fn">cluster.reroute(params, [callback])</h2><p class="tight">Explicitly execute a cluster reroute allocation command including specific commands.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-reroute/" title="cluster.reroute
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-reroute/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>dryRun</code></dfn></dt><dd><span class="types">Boolean</span>
 Simulate the operation only and return the resulting state</dd><dt><dfn><code>filterMetadata</code></dfn></dt><dd><span class="types">Boolean</span>
 Don't return cluster state metadata (default: false)
-</dd></dl><h2 id="cluster-state" class="fn">cluster.state(params, [callback])</h2><p class="tight">Get a comprehensive state information of the whole cluster.</p><a href="http://elasticsearch.org/guide/reference/api/admin-cluster-state/" title="cluster.state at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-cluster-state/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>filterBlocks</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="cluster-state" class="fn">cluster.state(params, [callback])</h2><p class="tight">Get comprehensive details about the state of the whole cluster (indices settings, allocations, etc).</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-cluster-state/" title="cluster.state
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-cluster-state/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>filterBlocks</code></dfn></dt><dd><span class="types">Boolean</span>
 Do not return information about blocks</dd><dt><dfn><code>filterIndexTemplates</code></dfn></dt><dd><span class="types">Boolean</span>
 Do not return information about index templates</dd><dt><dfn><code>filterIndices</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 Limit returned metadata information to specific indices</dd><dt><dfn><code>filterMetadata</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -120,18 +137,11 @@ Do not return information about nodes</dd><dt><dfn><code>filterRoutingTable</cod
 Do not return information about shard allocation (`routing_table` and `routing_nodes`)</dd><dt><dfn><code>local</code></dfn></dt><dd><span class="types">Boolean</span>
 Return local information, do not retrieve the state from master node (default: false)</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master
-</dd></dl><h2 id="count" class="fn">count(params, [callback])</h2><p class="tight">Get the number of documents for the cluster, index, type, or a query.</p><a href="http://elasticsearch.org/guide/reference/api/count/" title="count at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/count/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
-When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>minScore</code></dfn></dt><dd><span class="types">Number</span>
-Include only documents with a specific `_score` value in the result</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
-Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>routing</code></dfn></dt><dd><span class="types">String</span>
-Specific routing value</dd><dt><dfn><code>source</code></dfn></dt><dd><span class="types">String</span>
-The URL-encoded query definition (instead of using the request body)</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
-A comma-separated list of indices to restrict the results</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
-A comma-separated list of types to restrict the results
-</dd></dl><h3>Examples</h3><h4>Get the number of all documents in the cluster</h4><pre><code>client.count(function (error, response, status) {
+</dd></dl><h2 id="count" class="fn">count(params, [callback])</h2><p class="tight">Get the number of documents for the cluster, index, type, or a query.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/count/" title="count
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/count/</a> for more about this method.</p><h3>Examples</h3><h4>Get the number of all documents in the cluster</h4><pre><code>client.count(function (error, response, status) {
   // check for and handle error
   var count = response.count;
 });
@@ -153,10 +163,59 @@ A comma-separated list of types to restrict the results
   }
 }, function (err, response) {
   // ...
-});</code></pre><h2 id="delete" class="fn">delete(params, [callback])</h2><p class="tight">Delete a typed JSON document from a specific index based on its id.</p><a href="http://elasticsearch.org/guide/reference/api/delete/" title="delete at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/delete/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>minScore</code></dfn></dt><dd><span class="types">Number</span>
+Include only documents with a specific `_score` value in the result</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
+Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>routing</code></dfn></dt><dd><span class="types">String</span>
+Specific routing value</dd><dt><dfn><code>source</code></dfn></dt><dd><span class="types">String</span>
+The URL-encoded query definition (instead of using the request body)</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+A comma-separated list of indices to restrict the results</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+A comma-separated list of types to restrict the results
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="create" class="fn">create(params, [callback])</h2><p class="tight">Adds a typed JSON document in a specific index, making it searchable. If
+a document with the same <code>index</code>, <code>type</code>, and <code>id</code>
+already exists, an error will occur.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/index_/" title="create
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/index_/</a> for more about this method.</p><h3>Examples</h3><h4>Create a document</h4><pre><code>client.create({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    title: 'Test 1',
+    tags: ['y', 'z'],
+    published: true,
+    published_at: '2013-01-01',
+    counter: 1
+  }
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
+Explicit write consistency setting for the operation</dd><dt><dfn><code>id</code></dfn></dt><dd><span class="types">String</span>
+Document ID</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
+ID of the parent document</dd><dt><dfn><code>percolate</code></dfn></dt><dd><span class="types">String</span>
+Percolator queries to execute while indexing the document</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
+Refresh the index after performing the operation</dd><dt><dfn><code>[replication=sync]</code></dfn></dt><dd><span class="types">String</span>
+Specific replication type</dd><dt><dfn><code>routing</code></dfn></dt><dd><span class="types">String</span>
+Specific routing value</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+Explicit operation timeout</dd><dt><dfn><code>timestamp</code></dfn></dt><dd><span class="types">Date, Number</span>
+Explicit timestamp for the document</dd><dt><dfn><code>ttl</code></dfn></dt><dd><span class="types">Duration</span>
+Expiration time for the document</dd><dt><dfn><code>version</code></dfn></dt><dd><span class="types">Number</span>
+Explicit version number for concurrency control</dd><dt><dfn><code>versionType</code></dfn></dt><dd><span class="types">String</span>
+Specific version type</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
+The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
+The type of the document
+
+</dd></dl><h2 id="delete" class="fn">delete(params, [callback])</h2><p class="tight">Delete a typed JSON document from a specific index based on its id.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/delete/" title="delete
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/delete/</a> for more about this method.</p><h3>Example</h3><pre><code>client.delete({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1'
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
 Specific write consistency setting for the operation</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
 ID of parent document</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
 Refresh the index after performing the operation</dd><dt><dfn><code>[replication=sync]</code></dfn></dt><dd><span class="types">String</span>
@@ -168,10 +227,24 @@ Specific version type</dd><dt><dfn><code>id</code></dfn></dt><dd><span class="ty
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type of the document
-</dd></dl><h2 id="deletebyquery" class="fn">deleteByQuery(params, [callback])</h2><p class="tight">Delete documents from one or more indices and one or more types based on a query.</p><a href="http://www.elasticsearch.org/guide/reference/api/delete-by-query/" title="deleteByQuery at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/delete-by-query/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="deletebyquery" class="fn">deleteByQuery(params, [callback])</h2><p class="tight">Delete documents from one or more indices and one or more types based on a query.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/delete-by-query/" title="deleteByQuery
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/delete-by-query/</a> for more about this method.</p><h3>Examples</h3><h4>Deleting documents with a simple query</h4><pre><code>client.deleteByQuery({
+  index: 'myindex',
+  q: 'test'
+}, function (error, response) {
+  // ...
+});
+</code></pre><h4>Deleting documents using the Query DSL</h4><pre><code>client.delete_by_query({
+  index: 'posts',
+  body: {
+    term: { published: false }
+  }
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
 The analyzer to use for the query string</dd><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
 Specific write consistency setting for the operation</dd><dt><dfn><code>[defaultOperator=OR]</code></dfn></dt><dd><span class="types">String</span>
 The default operator for query string query (AND or OR)</dd><dt><dfn><code>df</code></dfn></dt><dd><span class="types">String</span>
@@ -184,10 +257,21 @@ The URL-encoded query definition (instead of using the request body)</dd><dt><df
 Explicit operation timeout</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of indices to restrict the operation; use `_all` to perform the operation on all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of types to restrict the operation
-</dd></dl><h2 id="exists" class="fn">exists(params, [callback])</h2><p class="tight">Returns a boolean indicating whether or not a given document exists.</p><a href="http://elasticsearch.org/guide/reference/api/get/" title="exists at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/get/</a><p class="tight">The default method is <code>HEAD</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="exists" class="fn">exists(params, [callback])</h2><p class="tight">Returns a boolean indicating whether or not a given document exists.</p><p>The default method is <code>HEAD</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/get/" title="exists
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/get/</a> for more about this method.</p><h3>Example</h3><pre><code>client.exists({
+  index: 'myindex',
+  type: 'mytype',
+  id: 1
+}, function (error, exists) {
+  if (exists === true) {
+    // ...
+  } else {
+    // ...
+  }
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
 The ID of the parent document</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
 Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>realtime</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether to perform the operation in realtime or search mode</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -196,12 +280,35 @@ Specific routing value</dd><dt><dfn><code>id</code></dfn></dt><dd><span class="t
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>[type=_all]</code></dfn></dt><dd><span class="types">String</span>
 The type of the document (use `_all` to fetch the first document matching the ID across all types)
-</dd></dl><h2 id="explain" class="fn">explain(params, [callback])</h2><p class="tight">The explain api computes a score explanation for a query and a specific
-document. This can give useful feedback whether a document matches or
-didn't match a specific query.</p><a href="http://elasticsearch.org/guide/reference/api/explain/" title="explain at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/explain/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>analyzeWildcard</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="explain" class="fn">explain(params, [callback])</h2><p class="tight">Provides details about a specific document's score in relation to a specific
+query. It will also tell you if the document matches the specified query. Related:
+<a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-percolate.html">percolaters</a>.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/explain/" title="explain
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/explain/</a> for more about this method.</p><h3>Examples</h3><h4>See how a document is scored against a simple query</h4><pre><code>client.explain({
+  // the document to test
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  
+  // the query to score it against
+  q: 'field:value'
+}, function (error, response) {
+  // ...
+});
+</code></pre><h4>See how a document is scored against a query written in the Query DSL</h4><pre><code>client.explain({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    query: {
+      match: { title: 'test' }
+    }
+  }
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>analyzeWildcard</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether wildcards and prefix queries in the query string query should be analyzed (default: false)</dd><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
 The analyzer for the query string query</dd><dt><dfn><code>[defaultOperator=OR]</code></dfn></dt><dd><span class="types">String</span>
 The default operator for query string query (AND or OR)</dd><dt><dfn><code>df</code></dfn></dt><dd><span class="types">String</span>
@@ -220,10 +327,17 @@ A list of fields to extract and return from the _source field</dd><dt><dfn><code
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type of the document
-</dd></dl><h2 id="get" class="fn">get(params, [callback])</h2><p class="tight">Get a typed JSON document from the index based on its id.</p><a href="http://elasticsearch.org/guide/reference/api/get/" title="get at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/get/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="get" class="fn">get(params, [callback])</h2><p class="tight">Get a typed JSON document from the index based on its id.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/get/" title="get
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/get/</a> for more about this method.</p><h3>Example</h3><pre><code>client.get({
+  index: 'myindex',
+  type: 'mytype',
+  id: 1
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields to return in the response</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
 The ID of the parent document</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
 Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>realtime</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -236,10 +350,11 @@ A list of fields to extract and return from the _source field</dd><dt><dfn><code
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>[type=_all]</code></dfn></dt><dd><span class="types">String</span>
 The type of the document (use `_all` to fetch the first document matching the ID across all types)
-</dd></dl><h2 id="getsource" class="fn">getSource(params, [callback])</h2><p class="tight">Get the source of a document by it's index, type and id.</p><a href="http://elasticsearch.org/guide/reference/api/get/" title="getSource at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/get/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>exclude</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="getsource" class="fn">getSource(params, [callback])</h2><p class="tight">Get the source of a document by it's index, type and id.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/get/" title="getSource
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/get/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>exclude</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A list of fields to exclude from the returned _source field</dd><dt><dfn><code>include</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A list of fields to extract and return from the _source field</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
 The ID of the parent document</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
@@ -250,10 +365,26 @@ Specific routing value</dd><dt><dfn><code>id</code></dfn></dt><dd><span class="t
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>[type=_all]</code></dfn></dt><dd><span class="types">String</span>
 The type of the document; use `_all` to fetch the first document matching the ID across all types
-</dd></dl><h2 id="index" class="fn">index(params, [callback])</h2><p class="tight">Adds or updates a typed JSON document in a specific index, making it searchable.</p><a href="http://elasticsearch.org/guide/reference/api/index_/" title="index at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/index_/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="index" class="fn">index(params, [callback])</h2><p>Stores a typed JSON document in an index, making it searchable. When the <code>id</code> param is not set, a unique id will be auto-generated. When you specify an <code>id</code> either a new document will be created, or an existing document will be updated. To enforce "put-if-absent" behavior set the <code>opType</code> to <code>"create"</code> or use the <code>create()</code> method.
+</p><p>Optimistic concurrency control is performed, when the `version` argument is specified. By default,
+no version checks are performed.
+</p><p>By default, the document will be available for <code>get()</code> actions immediately, but will only be
+available for searching after an index refresh (which can happen automatically or manually). See <a href="#indices-refresh">indices.reresh</a>.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/index_/" title="index
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/index_/</a> for more about this method.</p><h3>Example</h3><h4>Create or update a document</h4><pre><code>client.index({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    title: 'Test 1',
+    tags: ['y', 'z'],
+    published: true,
+  }
+}, function (error response) {
+
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
 Explicit write consistency setting for the operation</dd><dt><dfn><code>[opType=index]</code></dfn></dt><dd><span class="types">String</span>
 Explicit operation type</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
 ID of the parent document</dd><dt><dfn><code>percolate</code></dfn></dt><dd><span class="types">String</span>
@@ -269,10 +400,11 @@ Specific version type</dd><dt><dfn><code>id</code></dfn></dt><dd><span class="ty
 Document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type of the document
-</dd></dl><h2 id="indices-analyze" class="fn">indices.analyze(params, [callback])</h2><p class="tight">Perform the analysis process on a text and return the tokens breakdown of the text.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-analyze/" title="indices.analyze at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-analyze/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-analyze" class="fn">indices.analyze(params, [callback])</h2><p class="tight">Perform the analysis process on a text and return the tokens breakdown of the text.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-analyze/" title="indices.analyze
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-analyze/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
 The name of the analyzer to use</dd><dt><dfn><code>field</code></dfn></dt><dd><span class="types">String</span>
 Use the analyzer configured for this field (instead of passing the analyzer name)</dd><dt><dfn><code>filters</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of filters to use for the analysis</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
@@ -281,10 +413,11 @@ With `true`, specify that a local shard should be used if available, with `false
 The text on which the analysis should be performed (when request body is not used)</dd><dt><dfn><code>tokenizer</code></dfn></dt><dd><span class="types">String</span>
 The name of the tokenizer to use for the analysis</dd><dt><dfn><code>[format=detailed]</code></dfn></dt><dd><span class="types">String</span>
 Format of the output
-</dd></dl><h2 id="indices-clearcache" class="fn">indices.clearCache(params, [callback])</h2><p class="tight">Clear either all caches or specific cached associated with one ore more indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/" title="indices.clearCache at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>fieldData</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-clearcache" class="fn">indices.clearCache(params, [callback])</h2><p class="tight">Clear either all caches or specific cached associated with one ore more indices.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/" title="indices.clearCache
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-clearcache/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>fieldData</code></dfn></dt><dd><span class="types">Boolean</span>
 Clear field data</dd><dt><dfn><code>fielddata</code></dfn></dt><dd><span class="types">Boolean</span>
 Clear field data</dd><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields to clear when using the `field_data` parameter (default: all)</dd><dt><dfn><code>filter</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -296,141 +429,161 @@ Clear ID caches for parent/child</dd><dt><dfn><code>[ignoreIndices=none]</code><
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index name to limit the operation</dd><dt><dfn><code>recycler</code></dfn></dt><dd><span class="types">Boolean</span>
 Clear the recycler cache
+
 </dd></dl><h2 id="indices-close" class="fn">indices.close(params, [callback])</h2><p class="tight">Close an index to remove it's overhead from the cluster. Closed index is
-blocked for read/write operations.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/" title="indices.close at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/</a><p class="tight">The default method is <code>POST</code> and
+blocked for read/write operations.</p><p>The default method is <code>POST</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
-
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/" title="indices.close
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index
-</dd></dl><h2 id="indices-create" class="fn">indices.create(params, [callback])</h2><p class="tight">Create an index in Elasticsearch.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/" title="indices.create at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-create" class="fn">indices.create(params, [callback])</h2><p class="tight">Create an index in Elasticsearch.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/" title="indices.create
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-create-index/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index
-</dd></dl><h2 id="indices-delete" class="fn">indices.delete(params, [callback])</h2><p class="tight">Delete an index in Elasticsearch</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/" title="indices.delete at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-delete" class="fn">indices.delete(params, [callback])</h2><p class="tight">Delete an index in Elasticsearch</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/" title="indices.delete
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-index/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of indices to delete; use `_all` or empty string to delete all indices
-</dd></dl><h2 id="indices-deletealias" class="fn">indices.deleteAlias(params, [callback])</h2><p class="tight">Delete a specific alias.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.deleteAlias at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-deletealias" class="fn">indices.deleteAlias(params, [callback])</h2><p class="tight">Delete a specific alias.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.deleteAlias
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit timestamp for the document</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index with an alias</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the alias to be deleted
-</dd></dl><h2 id="indices-deletemapping" class="fn">indices.deleteMapping(params, [callback])</h2><p class="tight">Delete a mapping (type definition) along with its data.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/" title="indices.deleteMapping at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-deletemapping" class="fn">indices.deleteMapping(params, [callback])</h2><p class="tight">Delete a mapping (type definition) along with its data.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/" title="indices.deleteMapping
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-delete-mapping/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` for all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The name of the document type to delete
-</dd></dl><h2 id="indices-deletetemplate" class="fn">indices.deleteTemplate(params, [callback])</h2><p class="tight">Delete an index template by its name.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.deleteTemplate at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-deletetemplate" class="fn">indices.deleteTemplate(params, [callback])</h2><p class="tight">Delete an index template by its name.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.deleteTemplate
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the template
-</dd></dl><h2 id="indices-deletewarmer" class="fn">indices.deleteWarmer(params, [callback])</h2><p class="tight">Delete an index warmer.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.deleteWarmer at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a><p class="tight">The default method is <code>DELETE</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-deletewarmer" class="fn">indices.deleteWarmer(params, [callback])</h2><p class="tight">Delete an index warmer.</p><p>The default method is <code>DELETE</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.deleteWarmer
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to register warmer for; use `_all` or empty string to perform the operation on all indices</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the warmer (supports wildcards); leave empty to delete all warmers</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to register warmer for; use `_all` or empty string to perform the operation on all types
-</dd></dl><h2 id="indices-exists" class="fn">indices.exists(params, [callback])</h2><p class="tight">Return a boolean indicating whether given index exists.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists/" title="indices.exists at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists/</a><p class="tight">The default method is <code>HEAD</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="indices-exists" class="fn">indices.exists(params, [callback])</h2><p class="tight">Return a boolean indicating whether given index exists.</p><p>The default method is <code>HEAD</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists/" title="indices.exists
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-indices-exists/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of indices to check
-</dd></dl><h2 id="indices-existsalias" class="fn">indices.existsAlias(params, [callback])</h2><p class="tight">Return a boolean indicating whether given alias exists.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.existsAlias at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>HEAD</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-existsalias" class="fn">indices.existsAlias(params, [callback])</h2><p class="tight">Return a boolean indicating whether given alias exists.</p><p>The default method is <code>HEAD</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.existsAlias
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to filter aliases</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of alias names to return
-</dd></dl><h2 id="indices-existstype" class="fn">indices.existsType(params, [callback])</h2><p class="tight">Check if a type/types exists in an index/indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/" title="indices.existsType at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/</a><p class="tight">The default method is <code>HEAD</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-existstype" class="fn">indices.existsType(params, [callback])</h2><p class="tight">Check if a type/types exists in an index/indices.</p><p>The default method is <code>HEAD</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/" title="indices.existsType
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-types-exists/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` to check the types across all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to check
-</dd></dl><h2 id="indices-flush" class="fn">indices.flush(params, [callback])</h2><p class="tight">Explicitly flush one or more indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/" title="indices.flush at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>force</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-flush" class="fn">indices.flush(params, [callback])</h2><p class="tight">Explicitly flush one or more indices.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/" title="indices.flush
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-flush/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>force</code></dfn></dt><dd><span class="types">Boolean</span>
 TODO: ?</dd><dt><dfn><code>full</code></dfn></dt><dd><span class="types">Boolean</span>
 TODO: ?</dd><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
 Refresh the index after performing the operation</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string for all indices
-</dd></dl><h2 id="indices-getalias" class="fn">indices.getAlias(params, [callback])</h2><p class="tight">Retrieve a specified alias.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.getAlias at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-getalias" class="fn">indices.getAlias(params, [callback])</h2><p class="tight">Retrieve a specified alias.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.getAlias
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to filter aliases</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of alias names to return
-</dd></dl><h2 id="indices-getaliases" class="fn">indices.getAliases(params, [callback])</h2><p class="tight">Retrieve specified aliases</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.getAliases at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-getaliases" class="fn">indices.getAliases(params, [callback])</h2><p class="tight">Retrieve specified aliases</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.getAliases
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to filter aliases
-</dd></dl><h2 id="indices-getfieldmapping" class="fn">indices.getFieldMapping(params, [callback])</h2><p class="tight">Retrieve mapping definition of a specific field.</p><a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html" title="indices.getFieldMapping at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>includeDefaults</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-getfieldmapping" class="fn">indices.getFieldMapping(params, [callback])</h2><p class="tight">Retrieve mapping definition of a specific field.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html" title="indices.getFieldMapping
+at elasticsearch.org">http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-get-field-mapping.html</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>includeDefaults</code></dfn></dt><dd><span class="types">Boolean</span>
 Whether the default mapping values should be returned as well</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types</dd><dt><dfn><code>field</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields
-</dd></dl><h2 id="indices-getmapping" class="fn">indices.getMapping(params, [callback])</h2><p class="tight">Retrieve mapping definition of index or index/type.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-get-mapping/" title="indices.getMapping at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-get-mapping/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="indices-getmapping" class="fn">indices.getMapping(params, [callback])</h2><p class="tight">Retrieve mapping definition of index or index/type.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-get-mapping/" title="indices.getMapping
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-get-mapping/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types
-</dd></dl><h2 id="indices-getsettings" class="fn">indices.getSettings(params, [callback])</h2><p class="tight">Retrieve settings for one or more (or all) indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-get-settings/" title="indices.getSettings at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-get-settings/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="indices-getsettings" class="fn">indices.getSettings(params, [callback])</h2><p class="tight">Retrieve settings for one or more (or all) indices.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-get-settings/" title="indices.getSettings
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-get-settings/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-gettemplate" class="fn">indices.getTemplate(params, [callback])</h2><p class="tight">Retrieve an index template by its name.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.getTemplate at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-gettemplate" class="fn">indices.getTemplate(params, [callback])</h2><p class="tight">Retrieve an index template by its name.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.getTemplate
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the template
-</dd></dl><h2 id="indices-getwarmer" class="fn">indices.getWarmer(params, [callback])</h2><p class="tight">Retreieve an index warmer.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.getWarmer at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+</dd></dl><h2 id="indices-getwarmer" class="fn">indices.getWarmer(params, [callback])</h2><p class="tight">Retreieve an index warmer.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.getWarmer
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to restrict the operation; use `_all` to perform the operation on all indices</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the warmer (supports wildcards); leave empty to get all warmers</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
-</dd></dl><h2 id="indices-open" class="fn">indices.open(params, [callback])</h2><p class="tight">Open a closed index, making it available for search.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/" title="indices.open at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-open" class="fn">indices.open(params, [callback])</h2><p class="tight">Open a closed index, making it available for search.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/" title="indices.open
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-open-close/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index
-</dd></dl><h2 id="indices-optimize" class="fn">indices.optimize(params, [callback])</h2><p class="tight">Explicitly optimize one or more indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/" title="indices.optimize at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>flush</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-optimize" class="fn">indices.optimize(params, [callback])</h2><p class="tight">Explicitly optimize one or more indices.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/" title="indices.optimize
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-optimize/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>flush</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether the index should be flushed after performing the operation (default: true)</dd><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>maxNumSegments</code></dfn></dt><dd><span class="types">Number</span>
 The number of segments the index should be merged into (default: dynamic)</dd><dt><dfn><code>onlyExpungeDeletes</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -439,69 +592,78 @@ TODO: ?</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Bool
 Specify whether the index should be refreshed after performing the operation (default: true)</dd><dt><dfn><code>waitForMerge</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether the request should block until the merge process is finished (default: true)</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-putalias" class="fn">indices.putAlias(params, [callback])</h2><p class="tight">Create an alias for a specific index/indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.putAlias at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-putalias" class="fn">indices.putAlias(params, [callback])</h2><p class="tight">Create an alias for a specific index/indices.</p><p>The default method is <code>PUT</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.putAlias
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit timestamp for the document</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index with an alias</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the alias to be created or updated
-</dd></dl><h2 id="indices-putmapping" class="fn">indices.putMapping(params, [callback])</h2><p class="tight">Register specific mapping definition for a specific type.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/" title="indices.putMapping at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>ignoreConflicts</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-putmapping" class="fn">indices.putMapping(params, [callback])</h2><p class="tight">Register specific mapping definition for a specific type.</p><p>The default method is <code>PUT</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/" title="indices.putMapping
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-put-mapping/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>ignoreConflicts</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether to ignore conflicts while updating the mapping (default: false)</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` to perform the operation on all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The name of the document type
-</dd></dl><h2 id="indices-putsettings" class="fn">indices.putSettings(params, [callback])</h2><p class="tight">Change specific index level settings in real time.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/" title="indices.putSettings at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-putsettings" class="fn">indices.putSettings(params, [callback])</h2><p class="tight">Change specific index level settings in real time.</p><p>The default method is <code>PUT</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/" title="indices.putSettings
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-puttemplate" class="fn">indices.putTemplate(params, [callback])</h2><p class="tight">Create an index template that will automatically be applied to new indices created.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.putTemplate at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>order</code></dfn></dt><dd><span class="types">Number</span>
+</dd></dl><h2 id="indices-puttemplate" class="fn">indices.putTemplate(params, [callback])</h2><p class="tight">Create an index template that will automatically be applied to new indices created.</p><p>The default method is <code>PUT</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/" title="indices.putTemplate
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-templates/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>order</code></dfn></dt><dd><span class="types">Number</span>
 The order for this template when merging multiple matching ones (higher numbers are merged later, overriding the lower numbers)</dd><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Explicit operation timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the template
-</dd></dl><h2 id="indices-putwarmer" class="fn">indices.putWarmer(params, [callback])</h2><p class="tight">Create an index warmer to run registered search requests to warm up the index before it is available for search.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.putWarmer at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a><p class="tight">The default method is <code>PUT</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-putwarmer" class="fn">indices.putWarmer(params, [callback])</h2><p class="tight">Create an index warmer to run registered search requests to warm up the index before it is available for search.</p><p>The default method is <code>PUT</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/" title="indices.putWarmer
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-warmers/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to register the warmer for; use `_all` or empty string to perform the operation on all indices</dd><dt><dfn><code>name</code></dfn></dt><dd><span class="types">String</span>
 The name of the warmer</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to register the warmer for; leave empty to perform the operation on all types
-</dd></dl><h2 id="indices-refresh" class="fn">indices.refresh(params, [callback])</h2><p class="tight">Explicitly refresh one or more index, making all operations performed since the last refresh available for search.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/" title="indices.refresh at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-refresh" class="fn">indices.refresh(params, [callback])</h2><p class="tight">Explicitly refresh one or more index, making all operations performed since the last refresh available for search.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/" title="indices.refresh
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-refresh/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>operationThreading</code></dfn></dt><dd><span class="types">Anything</span>
 TODO: ?</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-segments" class="fn">indices.segments(params, [callback])</h2><p class="tight">Retrieve low level segments information that a Lucene index (shard level) is built with.</p><a href="http://elasticsearch.org/guide/reference/api/admin-indices-segments/" title="indices.segments at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-indices-segments/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-segments" class="fn">indices.segments(params, [callback])</h2><p class="tight">Retrieve low level segments information that a Lucene index (shard level) is built with.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-indices-segments/" title="indices.segments
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-indices-segments/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>operationThreading</code></dfn></dt><dd><span class="types">Anything</span>
 TODO: ?</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-snapshotindex" class="fn">indices.snapshotIndex(params, [callback])</h2><p class="tight">Initiate a snapshot through the gateway of one or more indices.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-gateway-snapshot/" title="indices.snapshotIndex at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-gateway-snapshot/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-snapshotindex" class="fn">indices.snapshotIndex(params, [callback])</h2><p class="tight">Initiate a snapshot through the gateway of one or more indices.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-gateway-snapshot/" title="indices.snapshotIndex
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-gateway-snapshot/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string for all indices
-</dd></dl><h2 id="indices-stats" class="fn">indices.stats(params, [callback])</h2><p class="tight">Retrieve statistics on different operations happening on an index.</p><a href="http://elasticsearch.org/guide/reference/api/admin-indices-stats/" title="indices.stats at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-indices-stats/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-stats" class="fn">indices.stats(params, [callback])</h2><p class="tight">Retrieve statistics on different operations happening on an index.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-indices-stats/" title="indices.stats
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-indices-stats/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>all</code></dfn></dt><dd><span class="types">Boolean</span>
 Return all available information</dd><dt><dfn><code>clear</code></dfn></dt><dd><span class="types">Boolean</span>
 Reset the default level of detail</dd><dt><dfn><code>completion</code></dfn></dt><dd><span class="types">Boolean</span>
 Return information about completion suggester stats</dd><dt><dfn><code>completionFields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
@@ -526,26 +688,29 @@ A comma-separated list of index names; use `_all` or empty string to perform the
 A comma-separated list of document types to include in the `indexing` statistics</dd><dt><dfn><code>metricFamily</code></dfn></dt><dd><span class="types">String</span>
 Limit the information returned to a specific metric</dd><dt><dfn><code>searchGroups</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of search groups to include in the `search` statistics
-</dd></dl><h2 id="indices-status" class="fn">indices.status(params, [callback])</h2><p class="tight">Get a comprehensive status information of one or more indices.</p><a href="http://elasticsearch.org/guide/reference/api/admin-indices-status/" title="indices.status at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/admin-indices-status/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="indices-status" class="fn">indices.status(params, [callback])</h2><p class="tight">Get a comprehensive status information of one or more indices.</p><p>The default method is <code>GET</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/admin-indices-status/" title="indices.status
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/admin-indices-status/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>operationThreading</code></dfn></dt><dd><span class="types">Anything</span>
 TODO: ?</dd><dt><dfn><code>recovery</code></dfn></dt><dd><span class="types">Boolean</span>
 Return information about shard recovery</dd><dt><dfn><code>snapshot</code></dfn></dt><dd><span class="types">Boolean</span>
 TODO: ?</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="indices-updatealiases" class="fn">indices.updateAliases(params, [callback])</h2><p class="tight">Update specified aliases.</p><a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.updateAliases at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
+</dd></dl><h2 id="indices-updatealiases" class="fn">indices.updateAliases(params, [callback])</h2><p class="tight">Update specified aliases.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/" title="indices.updateAliases
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/admin-indices-aliases/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>timeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Request timeout</dd><dt><dfn><code>masterTimeout</code></dfn></dt><dd><span class="types">Date, Number</span>
 Specify timeout for connection to master</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to filter aliases
-</dd></dl><h2 id="indices-validatequery" class="fn">indices.validateQuery(params, [callback])</h2><p class="tight">Validate a potentially expensive query without executing it.</p><a href="http://www.elasticsearch.org/guide/reference/api/validate/" title="indices.validateQuery at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/validate/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>explain</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="indices-validatequery" class="fn">indices.validateQuery(params, [callback])</h2><p class="tight">Validate a potentially expensive query without executing it.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/validate/" title="indices.validateQuery
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/validate/</a> for more about this method.</p><h3>Params</h3><dl class="params api"><dt><dfn><code>explain</code></dfn></dt><dd><span class="types">Boolean</span>
 Return detailed information about the error</dd><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>operationThreading</code></dfn></dt><dd><span class="types">Anything</span>
 TODO: ?</dd><dt><dfn><code>source</code></dfn></dt><dd><span class="types">String</span>
@@ -553,13 +718,35 @@ The URL-encoded query definition (instead of using the request body)</dd><dt><df
 Query in the Lucene query string syntax</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to restrict the operation; leave empty to perform the operation on all types
-</dd></dl><h2 id="info" class="fn">info(params, [callback])</h2><p class="tight">Get basic info from the current cluster.</p><a href="http://elasticsearch.org/guide/" title="info at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/</a><p class="tight">The default method is <code>GET</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h2 id="mget" class="fn">mget(params, [callback])</h2><p class="tight">Get multiple documents based on an index, type (optional) and ids.</p><a href="http://elasticsearch.org/guide/reference/api/multi-get/" title="mget at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/multi-get/</a><p class="tight">The default method is <code>POST</code> and
+</dd></dl><h2 id="info" class="fn">info(params, [callback])</h2><p class="tight">Get basic info from the current cluster.</p><p>The default method is <code>GET</code> and
 the usual <a href="#api-conventions">params and return values</a> apply.
-
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
+See <a href="http://elasticsearch.org/guide/" title="info
+at elasticsearch.org">http://elasticsearch.org/guide/</a> for more about this method.</p><h2 id="mget" class="fn">mget(params, [callback])</h2><p class="tight">Get multiple documents based on an index, type (optional) and ids. The body
+required by mget can take two forms: an array of document locations, or an array
+of document ids.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/multi-get/" title="mget
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/multi-get/</a> for more about this method.</p><h3>Examples</h3><h4>an array of doc locations</h4><p class="tight">Useful for getting documents from different indices.</p><pre><code>client.mget({
+  body: {
+    docs: [
+      { _index: 'indexA', _type: 'typeA', _id: '1' },
+      { _index: 'indexB', _type: 'typeB', _id: '1' },
+      { _index: 'indexC', _type: 'typeC', _id: '1' }
+    ]
+  }
+}, function(error, response){
+  // ...
+});
+</code></pre><h4>an array of ids</h4><p class="tight">You must also specify the <code>index</code> and <code>type</code> that apply to all of the ids.</p><pre><code>client.mget({
+  index: 'myindex',
+  type: 'mytype',
+  body: {
+    ids: [1, 2, 3]
+  }
+}, function(error, response){
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields to return in the response</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
 Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>realtime</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether to perform the operation in realtime or search mode</dd><dt><dfn><code>refresh</code></dfn></dt><dd><span class="types">Boolean</span>
@@ -569,10 +756,18 @@ A list of fields to exclude from the returned _source field</dd><dt><dfn><code>_
 A list of fields to extract and return from the _source field</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type of the document
-</dd></dl><h2 id="mlt" class="fn">mlt(params, [callback])</h2><p class="tight">(more like this) Gets more documents that are “like” another document.</p><a href="http://elasticsearch.org/guide/reference/api/more-like-this/" title="mlt at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/more-like-this/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>boostTerms</code></dfn></dt><dd><span class="types">Number</span>
+</dd></dl><h2 id="mlt" class="fn">mlt(params, [callback])</h2><p class="tight">(more like this) Gets more documents that are “like” the document specified using <code>index</code>, <code>type</code>, and <code>id</code>.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/more-like-this/" title="mlt
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/more-like-this/</a> for more about this method.</p><h4>Search for similar documents using the <code>title</code> property of document <code>myindex/mytype/1</code></h4><pre><code>client.mlt({
+  index: 'myindex',
+  type: 'mytype',
+  id: 1,
+  mlt_fields: 'title'
+}, function (errors, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>boostTerms</code></dfn></dt><dd><span class="types">Number</span>
 The boost factor</dd><dt><dfn><code>maxDocFreq</code></dfn></dt><dd><span class="types">Number</span>
 The word occurrence frequency as count: words with higher occurrence in the corpus will be ignored</dd><dt><dfn><code>maxQueryTerms</code></dfn></dt><dd><span class="types">Number</span>
 The maximum query terms to be included in the generated query</dd><dt><dfn><code>maxWordLen</code></dfn></dt><dd><span class="types">Number</span>
@@ -595,31 +790,153 @@ A list of stop words to be ignored</dd><dt><dfn><code>id</code></dfn></dt><dd><s
 The document ID</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The type of the document (use `_all` to fetch the first document matching the ID across all types)
-</dd></dl><h2 id="msearch" class="fn">msearch(params, [callback])</h2><p class="tight">Execute several search requests within the same request.</p><a href="http://www.elasticsearch.org/guide/reference/api/multi-search/" title="msearch at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/multi-search/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>searchType</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="msearch" class="fn">msearch(params, [callback])</h2><p class="tight">Execute several search requests within the same request.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/multi-search/" title="msearch
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/multi-search/</a> for more about this method.</p><h3>Examples</h3><h4>Perform multiple different searches, the body is made up of meta/data pairs</h4><pre><code>client.msearch({
+  body: [
+    // match all query, on all indices and types
+    {}
+    { query: { match_all: {} } },
+    
+    // query_string query, on index/mytype
+    { index: 'myindex', type: 'mytype' },
+    { query: { query_string: { query: '"Test 1"' } } }
+  ]
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>searchType</code></dfn></dt><dd><span class="types">String</span>
 Search operation type</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to use as default</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to use as default
-</dd></dl><h2 id="percolate" class="fn">percolate(params, [callback])</h2><p class="tight">Send a percolate request which should includes a doc, returns the queries
-that match that doc out of the set of registered percolator queries.</p><a href="http://elasticsearch.org/guide/reference/api/percolate/" title="percolate at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/percolate/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>preferLocal</code></dfn></dt><dd><span class="types">Boolean</span>
+</dd></dl><h2 id="percolate" class="fn">percolate(params, [callback])</h2><p class="tight">Match a document against registered percolator queries.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/percolate/" title="percolate
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/percolate/</a> for more about this method.</p><h3>Example</h3><h4>First, Register queries named “alert-1” and “alert-2” for the “myindex” index</h4><pre><code>client.index({
+  index: '_percolator',
+  type: 'myindex',
+  id: 'alert-1',
+  body: {
+    // This query will be run against documents sent to percolate
+    query: {
+      query_string: {
+        query: 'foo'
+      }
+    }
+  }
+}, function (error, response) {
+  // ...
+});
+
+client.index({
+  index: '_percolator',
+  type: 'myindex',
+  id: 'alert-2',
+  body: {
+    // This query will also be run against documents sent to percolate
+    query: {
+      query_string: {
+        query: 'bar'
+      }
+    }
+  }
+}, function (error, response) {
+  // ...
+});
+</code></pre><h4>Then you can send documents to learn which query <code>_percolator</code> queries they match</h4><pre><code>client.percolate({
+  index: 'myindex',
+  body: {
+    doc: {
+      title: "Foo"
+    }
+  }
+}, function (error, response) {
+  // response would equal
+  // {
+  //   ok:true,
+  //   matches: [ "alert-1" ]
+  // }
+});
+
+client.percolate({
+  index: 'myindex',
+  body: {
+    doc: {
+      title: "Foo Bar"
+    }
+  }
+}, function (error, response) {
+  // response would equal
+  // {
+  //   ok:true,
+  //   matches: [ "alert-1", "alert-2" ]
+  // }
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>preferLocal</code></dfn></dt><dd><span class="types">Boolean</span>
 With `true`, specify that a local shard should be used if available, with `false`, use a random shard (default: true)</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String</span>
 The name of the index with a registered percolator query</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String</span>
 The document type
-</dd></dl><h2 id="scroll" class="fn">scroll(params, [callback])</h2><p class="tight">Scroll a search request created by specifying the scroll parameter.</p><a href="http://www.elasticsearch.org/guide/reference/api/search/scroll/" title="scroll at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/search/scroll/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>scroll</code></dfn></dt><dd><span class="types">Duration</span>
+</dd></dl><h2 id="scroll" class="fn">scroll(params, [callback])</h2><p class="tight">Scroll a search request (retrieve the next set of results) after specifying the
+scroll parameter in a <code>search()</code> call.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/search/scroll/" title="scroll
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/search/scroll/</a> for more about this method.</p><h3>Example</h3><h4>Collect every title in the index that contains the word "test"</h4><pre><code>var allTitles = [];
+
+// first we do a search, and specify a scroll timeout
+client.search({
+  index: 'myindex',
+  // Set to 30 seconds because we are calling right back
+  scroll: '30s',
+  fields: ['title'],
+  q: 'title:test'
+}, function getMoreUntilDone(error, response) {
+  // collect the title from each response
+  response.hits.hists.forEach(function (hit) {
+    allTitles.push(hit.fields.title);
+  });
+  
+  if (response.hits.total !== allTitles.length) {
+    // now we can call scroll over and over
+    client.scroll({
+      scrollId: response._scroll_id,
+      scroll: '30s'
+    }, getMoreUntilDone);
+  } else {
+    console.log('every "test" title', allTitles);
+  }
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>scroll</code></dfn></dt><dd><span class="types">Duration</span>
 Specify how long a consistent view of the index should be maintained for scrolled search</dd><dt><dfn><code>scrollId</code></dfn></dt><dd><span class="types">String</span>
 The scroll ID
-</dd></dl><h2 id="search" class="fn">search(params, [callback])</h2><p class="tight">Execute a search query and get back documents that match the query.</p><a href="http://www.elasticsearch.org/guide/reference/api/search/" title="search at elasticsearch.org" class="esdoc">http://www.elasticsearch.org/guide/reference/api/search/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="search" class="fn">search(params, [callback])</h2><p class="tight">Return documents matching a query, aggregations/facets, highlighted snippets, suggestions, and more. Write your queries as either <a href="http://www.elasticsearch.org/guide/reference/api/search/uri-request/">simple query strings</a> in the <code>q</code> parameter, or by specifying a <a href="http://www.elasticsearch.org/guide/reference/api/search/request-body/">full request definition</a> in the <a href="http://www.elasticsearch.org/guide/reference/query-dsl/">Query DSL</a> in the <code>body</code> parameter.
+</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://www.elasticsearch.org/guide/reference/api/search/" title="search
+at elasticsearch.org">http://www.elasticsearch.org/guide/reference/api/search/</a> for more about this method.</p><h3>Examples</h3><h4>Search with a simple query string query</h4><pre><code>client.search({
+  index: 'myindex',
+  q: 'title:test'
+}, function (error, response) {
+  // ...
+});
+</code></pre><h4>Passing a full request definition in the Elasticsearch's Query DSL as a `Hash`</h4><pre><code>client.search({
+  index: 'myindex',
+  body: {
+    query: {
+      match: {
+        title: 'test'
+      }
+    },
+    facets: {
+      tags: {
+        terms: {
+          field: 'tags'
+        }
+      }
+    }
+  }
+}, function (error, response) {
+  // ...
+}):</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>analyzer</code></dfn></dt><dd><span class="types">String</span>
 The analyzer to use for the query string</dd><dt><dfn><code>analyzeWildcard</code></dfn></dt><dd><span class="types">Boolean</span>
 Specify whether wildcard and prefix queries should be analyzed (default: false)</dd><dt><dfn><code>[defaultOperator=OR]</code></dfn></dt><dd><span class="types">String</span>
 The default operator for query string query (AND or OR)</dd><dt><dfn><code>df</code></dfn></dt><dd><span class="types">String</span>
@@ -651,20 +968,100 @@ Explicit operation timeout</dd><dt><dfn><code>version</code></dfn></dt><dd><span
 Specify whether to return document version as part of a hit</dd><dt><dfn><code>[index=_all]</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to search; use `_all` or empty string to perform the operation on all indices</dd><dt><dfn><code>type</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of document types to search; leave empty to perform the operation on all types
-</dd></dl><h2 id="suggest" class="fn">suggest(params, [callback])</h2><p class="tight">The suggest feature suggests similar looking terms based on a provided text by
-using a specific suggester.</p><a href="http://elasticsearch.org/guide/reference/api/search/suggest/" title="suggest at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/search/suggest/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="suggest" class="fn">suggest(params, [callback])</h2><p class="tight">The suggest feature suggests similar looking terms based on a provided text by
+using a specific suggester.</p><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/search/suggest/" title="suggest
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/search/suggest/</a> for more about this method.</p><h3>Examples</h3><h4>Return query terms suggestions (“auto-correction”)</h4><pre><code>client.suggest({
+  index: 'myindex',
+  body: {
+    mysuggester: {
+      text: 'tset',
+      term: {
+        field: 'title'
+      }
+    }
+  }
+}, function (error, response) {
+  // response will be formatted like so:
+  //
+  // {
+  //   ...
+  //   mysuggester: [
+  //     {
+  //       text: "tset",
+  //       ...
+  //       options: [
+  //         {
+  //           text: "test",
+  //           score: 0.75,
+  //           freq: 5
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // }
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>[ignoreIndices=none]</code></dfn></dt><dd><span class="types">String</span>
 When performed on multiple indices, allows to ignore `missing` ones</dd><dt><dfn><code>preference</code></dfn></dt><dd><span class="types">String</span>
 Specify the node or shard the operation should be performed on (default: random)</dd><dt><dfn><code>routing</code></dfn></dt><dd><span class="types">String</span>
 Specific routing value</dd><dt><dfn><code>source</code></dfn></dt><dd><span class="types">String</span>
 The URL-encoded request definition (instead of using request body)</dd><dt><dfn><code>index</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of index names to restrict the operation; use `_all` or empty string to perform the operation on all indices
-</dd></dl><h2 id="update" class="fn">update(params, [callback])</h2><p class="tight">Update a document based on a script or partial data provided.</p><a href="http://elasticsearch.org/guide/reference/api/update/" title="update at elasticsearch.org" class="esdoc">http://elasticsearch.org/guide/reference/api/update/</a><p class="tight">The default method is <code>POST</code> and
-the usual <a href="#api-conventions">params and return values</a> apply.
 
-</p><h3>Params:</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
+</dd></dl><h2 id="update" class="fn">update(params, [callback])</h2><p class="tight">Update parts of a document. The required body parameter can contain one of two things:</p><ol><li>a partial document, which will be merged with the existing one.</li><li>a <code>script</code> which will update the document content</li></ol><p>The default method is <code>POST</code> and
+the usual <a href="#api-conventions">params and return values</a> apply.
+See <a href="http://elasticsearch.org/guide/reference/api/update/" title="update
+at elasticsearch.org">http://elasticsearch.org/guide/reference/api/update/</a> for more about this method.</p><h3>Examples</h3><h4>Update document title using partial document</h4><pre><code>client.update({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    // put the partial document under the `doc` key
+    doc: {
+      title: 'Updated'
+    }
+  }
+}, function (error, response) {
+  // ...
+})
+</code></pre><h4>Add a tag to document `tags` property using a `script`</h4><pre><code>client.update({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    script: 'ctx._source.tags += tag',
+    params: { tag: 'some new tag' }
+  }
+}, function (error, response) {
+  // ...
+});
+</code></pre><h4>Increment a document counter by 1 or initialize it, when the document does not exist</h4><pre><code>client.update({
+  index: 'myindex',
+  type: 'mytype',
+  id: '666',
+  body: {
+    script: 'ctx._source.counter += 1',
+    upsert: {
+      counter: 1
+    }
+  }
+}, function (error, response) {
+  // ...
+})
+</code></pre><h4>Delete a document if it's tagged “to-delete”</h4><pre><code>client.update({
+  index: 'myindex',
+  type: 'mytype',
+  id: '1',
+  body: {
+    script: 'ctx._source.tags.contains(tag) ? ctx.op = "delete" : ctx.op = "none"',
+    params: {
+      tag: 'to-delete'
+    }
+  }
+}, function (error, response) {
+  // ...
+});</code></pre><h3>Params</h3><dl class="params api"><dt><dfn><code>consistency</code></dfn></dt><dd><span class="types">String</span>
 Explicit write consistency setting for the operation</dd><dt><dfn><code>fields</code></dfn></dt><dd><span class="types">String, String[], Boolean</span>
 A comma-separated list of fields to return in the response</dd><dt><dfn><code>lang</code></dfn></dt><dd><span class="types">String</span>
 The script language (default: mvel)</dd><dt><dfn><code>parent</code></dfn></dt><dd><span class="types">String</span>
