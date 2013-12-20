@@ -15,10 +15,10 @@ cycles within Angular
     // ...
   });
 });
-</code></pre><h4>jQuery Build (elasticsearch.jquery.js)</h4><ul><li>Uses jQuery's <code>.ajax()</code> functionality</li><li>Returns jQuery "promises"</li><li>Registers the module at <code>jQuery.es</code></li></ul><h5>Create a client with the jQuery build</h5><pre><code>var es = new $.es.Client({
+</code></pre><h4>jQuery Build (elasticsearch.jquery.js)</h4><ul><li>Uses jQuery's <code>.ajax()</code> functionality</li><li>Returns jQuery "promises"</li><li>Registers the module at <code>jQuery.es</code></li></ul><h5>Create a client with the jQuery build</h5><pre><code>var client = new $.es.Client({
   hosts: 'localhost:9200'
-});</code></pre><h2 id="quick-start">Quick Start</h2><h3>Creating a client</h3><p>The first thing to do after installing Elasticsearch.js is creating an instance of the
-<code>elasticsearch.Client</code> class. The constructor accepts a config object/hash
+});</code></pre><h2 id="quick-start">Quick Start</h2><h3>Creating a client</h3><p>Start using Elasticsearch.js by creating an instance of the <code>elasticsearch.Client</code> class.
+The constructor accepts a config object/hash
 where you can define defaults values, or even entire classes, for the client to use.
 For a full list of config options check out the the
 <a href="#configuration">section deicated to configuration</a>.
@@ -29,7 +29,7 @@ var client = new elasticsearch.Client({
 });
 </code></pre><h3>Say hello to Elasticsearch</h3><p>Almost all of the methods on the client accept two arguments:
 </p><dl><dt><dfn><code>params</code></dfn></dt><dd>an optional object/hash of parameters</dd><dt><dfn><code>callback</code></dfn></dt><dd>an optional function that will be called with the final result of the method. When omitted, a <a href="https://github.com/cujojs/when/blob/master/docs/api.md#promise">promise</a> is returned.</dd></dl><h4>Perform a ping request to see if the cluster is responding</h4><pre><code>// Send a HEAD request to "/?hello=elasticsearch"
-// and allows up to 1 second for it to complete.
+// and allow up to 1 second for it to complete.
 client.ping({
   requestTimeout: 1000,
   // undocumented params are appended to the query string
@@ -63,14 +63,14 @@ client.ping({
 }, function (error) {
   // oh no!
 });
-</code></pre><h3>Searching for documents</h3><p>The most common use-case for elasticsearch is to sort through through large collections
-of documents in order to find relevant documents. In most cases you will use the
-client's <code>search()</code> method to accomplish this.
+</code></pre><h3>Searching for documents</h3><p>A very common use-case for elasticsearch is to sort through through large collections
+of documents in order to find ones that are relavent to a query. In most cases
+you will use the client's <code>search()</code> method to accomplish this.
 </p><h4>Elasticsearch Query DSL</h4><p>For many searches you will want to define a search document that tells elasticsearch exactly
 how to find the documents you are looking for. To do this you will use the <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl.html">elasticsearch query DSL</a>.
 If you are not familiary with Elasticsearch's query DSL is it recommended that you
 research the topic at elasticsearch.org or watch/read one of these introductions:
-</p><ul><li><a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471"><i class="yt-icon"></i></a> <a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471">Clinton Gormley "Getting down and dirty with Elasticsearch"</a></li><li><a href="http://okfnlabs.org/blog/2013/07/01/elasticsearch-query-tutorial.html#query-dsl-overview">Querying ElasticSearch - A Tutorial and Guide</a></li><li><a href="http://exploringelasticsearch.com/book/searching-data/the-query-dsl-and-the-search-api.html">The Query DSL and the Search API - Searching Data - Exploring Elasticsearch
+</p><ul><li><a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471"><i class="yt-icon"></i></a> <a href="https://www.youtube.com/watch?v=52G5ZzE0XpY#t=1471">Clinton Gormley "Getting down and dirty with Elasticsearch"</a></li><li><a href="http://okfnlabs.org/blog/2013/07/01/elasticsearch-query-tutorial.html#query-dsl-overview">Querying Elasticsearch - A Tutorial and Guide</a></li><li><a href="http://exploringelasticsearch.com/book/searching-data/the-query-dsl-and-the-search-api.html">The Query DSL and the Search API - Searching Data - Exploring Elasticsearch
 </a></li></ul><p>Now for some examples using the Query DSL.</p><h5>Simple match query</h5><pre><code>// match tweets that have "elasticsearch"
 // in their body field
 client.search({
@@ -86,57 +86,73 @@ client.search({
 });
 </code></pre><h5>More complex filtered query</h5><p>To power a search form on a public site, you might want to allow the user to specify
 some text but also limit the documents returned by a few criteria. This is a good use-case
-for a filtered query.</p><p><strong>NOTE:</strong> In the example, <code>request</code>
-is an <a href="http://expressjs.com/api.html#request">Express</a> request object,
-which already has session information about the user, and the parameters from
-this request.</p><pre><code>client.search({
+for a filtered query.</p><p><strong>NOTE:</strong> In this example, <code>request</code> and <code>response</code>
+are <a href="http://expressjs.com/api.html#request">Express</a> request and response objects.</p><pre><code>var pageNum = request.param('page', 0);
+var perPage = request.param('per_page', 15);
+var userQuery = request.param('search_query');
+var userId = request.session.userId;
+
+client.search({
   index: 'posts',
+  from: (pageNum - 1) * perPage,
+  size: perPage,
   body: {
     filtered: {
       query: {
         match: {
-          // find matched using all of the fields in the posts index
-          _all: request.param('search_query')
+          // match the query agains all of
+          // the fields in the posts index
+          _all: userQuery
         }
       },
       filter: {
-        // only allow documents that are public or owned by the current user
+        // only return documents that are
+        // public or owned by the current user
         or: [
           {
             term: { privacy: "public" }
           },
           {
-            term: { owner: request.session.userId }
+            term: { owner: userId }
           }
         ]
       }
     }
   }
-}, function (error, response, status) {
-
+}, function (error, response) {
+  if (err) {
+    // handle error
+    return;
+  }
+  
+  response.render('search_results', {
+    results: response.hits.hits,
+    page: pageNum,
+    pages: Math.ceil(response.hists.total / perPage)
+  })
 });</code></pre><p>You can find a lot more information about <a href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-filters.html">filters at elasticsearch.org</a></p><h2 id="configuration">Configuration</h2><p>The <code>Client</code> constructor accepts a single object as it's argument, and the following keys
 can be used to configure that client instance.
 </p><pre><code>var elasticsearch = require('elasticsearch');
-var es = new elasticsearch.Client({
+var client = new elasticsearch.Client({
   ...
 });
 </code></pre><h3>Config options</h3><dl class="params config"><dt id="config-hosts"><dfn><code>host</code></dfn>&nbsp;or&nbsp;<dfn><code>hosts</code></dfn></dt><dd><p><span class="types">String, String[], Object[]</span> Specify the hosts that this client will connect to.
 If sniffing is enabled, or you call <code>client.sniff()</code>, this list will be used as seeds to
 discover the rest of your cluster.
 </p><h4>Default</h4><pre><code>'http://localhost:9200'
-</code></pre><h4>Examples</h4><h5>Just an address</h5><pre><code>var es = new elasticsearch.Client({
+</code></pre><h4>Examples</h4><h5>Just an address</h5><pre><code>var client = new elasticsearch.Client({
   host: 'localhost:9200'
 });
-</code></pre><h5>A couple of addresses</h5><pre><code>var es = new elasticsearch.Client({
+</code></pre><h5>A couple of addresses</h5><pre><code>var client = new elasticsearch.Client({
   hosts: [ 'https://box1.server.org:9200', 'https://box2.server.org:9200' ]
 });
-</code></pre><h5>Addresses with auth</h5><pre><code>var es = new elasticsearch.Client({
+</code></pre><h5>Addresses with auth</h5><pre><code>var client = new elasticsearch.Client({
   hosts: [
     'https://user:pass@box1.server.org:9200',
     'https://user:pass@box2.server.org:9200'
   ]
 });
-</code></pre><h5>Complete config objects with additional metadata used by our selector</h5><pre><code>var es = new elasticsearch.Client({
+</code></pre><h5>Complete config objects with additional metadata used by our selector</h5><pre><code>var client = new elasticsearch.Client({
   hosts: [
     {
       protocol: 'https',
@@ -186,7 +202,7 @@ implement special logic for your client such as preferring nodes in a certain ra
 <br>
 To make this function asynchronous, accept a second argument which will be the callback to use.
 The callback should be called Node-style, with a possible error like `cb(err, selectedConnection)`.
-</p><h4>Default</h4><code>"roundRobin"</code><h4>Options:<ul><li><code>"roundRobin"</code></li><li><code>"random"</code></li></ul></h4></dd><dt><dfn><code>sniffOnStart</code></dfn></dt><dd><p><span class="types">Boolean</span> Should the client
+</p><h4>Default</h4><code>"roundRobin"</code><h4>Options:</h4><ul><li><code>"roundRobin"</code></li><li><code>"random"</code></li></ul></dd><dt><dfn><code>sniffOnStart</code></dfn></dt><dd><p><span class="types">Boolean</span> Should the client
 attempt to detect the rest of the cluster when it is first instantiated?</p><h4>Default</h4><code>false</code></dd><dt><dfn><code>sniffInterval</code></dfn></dt><dd><p><span class="types">Number, false</span> Every <code>n</code> milliseconds, perform a sniff
 operation and make sure our list of nodes is complete.</p><h4>Default</h4><code>false</code></dd><dt><dfn><code>sniffOnConnectionFault</code></dfn></dt><dd><p><span class="types">Boolean</span> Should
 the client immediately sniff for a more current list of nodes when a connection dies?</p><h4>Default</h4><code>false</code></dd><dt id="config-max-retires"><dfn><code>maxRetries</code></dfn></dt><dd><p>How many times should the client try to connect to other nodes before returning
@@ -198,10 +214,10 @@ to it's corresponding node. This will also be the maximum number of concurrent r
 that could be made to that node. These sockets are currently kept alive using
 <a href="https://github.com/TBEDP/agentkeepalive">agentkeepalive</a>.</p><h4>Default</h4><code>10</code></dd><dt><dfn><code>maxKeepAliveTime</code></dfn></dt><dd><p><span class="types">Number, false</span> Milliseconds of inactivity before the socket is destroyed
 </p><h4>Default</h4><code>60000</code></dd><dt><dfn><code>defer</code></dfn></dt><dd><p><span class="types">Function</span> Override the way that the client creates
-promises. If you would rather use $q, bluebird, or another promise library
-this is how you'd do that. The defer object that is returned needs to provide
-the promise as a property. It also needs to have <code>resolve()</code> and
-<code>reject()</code> methods.
+promises. If you would rather use any other promise library
+this is how you'd do that. Elasticsearch.js expects that the defer object
+has a <code>promise</code> property (which will be returned to promise consumers),
+as well as <code>resolve</code> and <code>reject</code> methods.
 </p><h4>Default</h4><pre><code>function () {
   return when.defer();
 }
@@ -250,7 +266,7 @@ operation. The function should return an array of objects which match the
       })
     }, []);
   }
-})</code></pre></dd></dl><h2 id="extending">Extending Core Components</h2><p>Since this client is designed to be low-level, we probably have not implemented all the features you or others want. For this reason, we made extending or even replacing the core components simple.</p><h3>For Users</h3><h4>Connection</h4><p>Coming Soon</p><h4>ConnectionPool</h4><p>Coming Soon</p><h4>Log</h4><p>see <a href="#logging">logging section</a>.</p><h3>For developers of other clients</h3><h4>Client/API</h4><p>The Client's only real purpose (as you may be able to tell from client.js) is to hold the API methods, set a few default values, and instantiate the transport. The transport is where all the networking, retry, and cluster discovery takes place and including it in your client is as simple as <code>transport = new es.Transport({});</code>. This way, you can benefit from the <i>really</i> low-level features of our client while providing a complete API that works best for your use case. <b>NOTE:</b> In the near future the entire transport level will be abstracted into a separate module, as well as the API.</p><h2 id="logging">Logging</h2><p>Every application needs to have some solution for logging, and there isn't a standard
+})</code></pre></dd></dl><h2 id="extending">Extending Core Components</h2><p>We decided to make this client low-level, and as such we probably have not implemented all the features you are looking for. For this reason, we made extending or even replacing the core components simple.</p><h3>For Users</h3><h4>Connection</h4><p>Coming Soon</p><h4>ConnectionPool</h4><p>Coming Soon</p><h4>Log</h4><p>see <a href="#logging">logging section</a>.</p><h3>For developers of other clients</h3><h4>Client/API</h4><p>The Client's only real purpose (as you may be able to tell from client.js) is to hold the API methods, set a few default values, and instantiate the transport. The transport is where all the networking, retry, and cluster discovery takes place and including it in your client is as simple as <code>transport = new es.Transport({});</code>. This way, you can benefit from the <i>really</i> low-level features of our client. <b>NOTE:</b> In the near future the entire transport level will be abstracted into a separate module, as well as the API.</p><h2 id="logging">Logging</h2><p>Every application needs to have some solution for logging, and there isn't a standard
 in JavaScript, so instead of forcing you to rely on a specific logging module we created
 a bare bones logging solution and <a href="#logging-customization">below</a> we show you
 how to configure it. That said, our implementation of logging is very minimal and <b>it
