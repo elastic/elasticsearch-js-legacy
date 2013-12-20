@@ -13,8 +13,8 @@ at elasticsearch.org">http://elasticsearch.org/guide/reference/api/bulk/</a> for
     { index:  { _index: 'myindex', _type: 'mytype', _id: 1 } }, // action description
     { title: 'foo' }, // the document to index
     { update: { _index: 'myindex', _type: 'mytype', _id: 2 } }, // action description
-    { doc: { title: 'foo' } // the document to update
-    { delete: { _index: 'myindex', _type: 'mytype', _id: 3  },  // action description
+    { doc: { title: 'foo' } }, // the document to update
+    { delete: { _index: 'myindex', _type: 'mytype', _id: 3 } }, // action description
     // no document needed for this delete
   ]
 }, function (err, resp) {
