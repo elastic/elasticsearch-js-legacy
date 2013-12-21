@@ -1,4 +1,4 @@
-/*! elasticsearch - v1.0.2 - 2013-12-20
+/*! elasticsearch - v1.0.3 - 2013-12-21
  * http://elasticsearch.github.io/elasticsearch-js/
  * Copyright (c) 2013 Elasticsearch BV; Licensed Apache 2.0 */
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -16962,7 +16962,9 @@ JqueryConnector.prototype.request = function (params, cb) {
 
   var jqXHR = jQuery.ajax(ajax)
     .done(function (data, textStatus, jqXHR) {
-      cb(null, data, jqXHR.statusCode(), jqXHR.getAllResponseHeaders());
+      cb(null, data, jqXHR.statusCode(), {
+        'content-type': jqXHR.getResponseHeader('content-type')
+      });
     })
     .fail(function (jqXHR, textStatus, err) {
       cb(new ConnectionFault(err && err.message));
