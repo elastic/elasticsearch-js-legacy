@@ -28,7 +28,7 @@ var client = new elasticsearch.Client({
   log: 'trace'
 });
 </code></pre><h3>Say hello to Elasticsearch</h3><p>Almost all of the methods on the client accept two arguments:
-</p><dl><dt><dfn><code>params</code></dfn></dt><dd>an optional object/hash of parameters</dd><dt><dfn><code>callback</code></dfn></dt><dd>an optional function that will be called with the final result of the method. When omitted, a <a href="https://github.com/cujojs/when/blob/master/docs/api.md#promise">promise</a> is returned.</dd></dl><h4>Perform a ping request to see if the cluster is responding</h4><pre><code>// Send a HEAD request to "/?hello=elasticsearch"
+</p><dl><dt><dfn><code>params</code></dfn></dt><dd>an optional object/hash of parameters <a href="api.html#api-conventions-params">More info here.</a></dd><dt><dfn><code>callback</code></dfn></dt><dd>an optional function that will be called with the final result of the method. When omitted, a <a href="https://github.com/cujojs/when/blob/master/docs/api.md#promise">promise</a> is returned. <a href="api.html#api-conventions-cb">More info here</a>.</dd></dl><h4>Perform a ping request to see if the cluster is responding</h4><pre><code>// Send a HEAD request to "/?hello=elasticsearch"
 // and allow up to 1 second for it to complete.
 client.ping({
   requestTimeout: 1000,
