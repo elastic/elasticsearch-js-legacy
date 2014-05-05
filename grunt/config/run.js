@@ -8,10 +8,11 @@ var esOpts = [
   '-D es.discovery.zen.ping.multicast.enabled=false',
   '-D es.discovery.zen.ping_timeout=1',
   '-D es.logger.level=ERROR',
-  '-D es.script.disable_dynamic=false'
-].join(' ');
+];
 
-module.exports = {
+var utils = require('../utils');
+
+var config = {
   generate: {
     exec: 'node ./scripts/generate/index.js',
     options: {
@@ -28,39 +29,45 @@ module.exports = {
       ready: /listening/
     }
   },
-  install_es_master: {
-    exec: './scripts/es.sh install master',
-  },
-  es_master: {
-    exec: './.snapshots/master_nightly/bin/elasticsearch ' + esOpts,
-    options: {
-      wait: false,
-      quiet: true,
-      onClose: function () {
-
-      },
-      onReady: function () {
-
-      }
-    }
-  },
-  'install_es_0.90': {
-    exec: './scripts/es.sh install 0.90',
-  },
-  'es_0.90': {
-    exec: './.snapshots/0.90_nightly/bin/elasticsearch -f ' + esOpts,
-    options: {
-      wait: false,
-      quiet: true
-    }
-  },
-  init_submodules: {
-    exec: 'git submodule update --init',
+  clone_bower_repo: {
+    exec: [
+      'test -d src/bower_es_js',
+      'git clone git@github.com:elasticsearch/bower-elasticsearch-js.git <%= bowerSubmodule %>'
+    ].join(' || '),
     options: {
       quiet: true
     }
   },
-  release_bower_subm_tag: {
+  release_bower_tag: {
     exec: 'node ./scripts/release/bower'
   }
 };
+
+utils.branches.forEach(function (branch) {
+
+  config['install_es_' + branch] = {
+    exec: './scripts/es.sh install ' + branch,
+  };
+
+  var args = esOpts.slice(0);
+
+  switch (branch) {
+  case '0.90':
+    args.push('-f');
+    break;
+  case 'master':
+  case '1.x':
+    args.push('-Des.node.bench=true', '-Des.script.disable_dynamic=false');
+    break;
+  }
+
+  config['es_' + branch] = {
+    exec: './.snapshots/' + branch + '_nightly/bin/elasticsearch ' + args.join(' '),
+    options: {
+      wait: false,
+      quiet: true
+    }
+  };
+});
+
+module.exports = config;
