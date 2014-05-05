@@ -1,7 +1,7 @@
 describe('Client instances creation', function () {
   var es = require('../../../src/elasticsearch');
-  var api = require('../../../src/lib/api');
-  var api090 = require('../../../src/lib/api_0_90');
+  var api = require('../../../src/lib/apis').master;
+  var api090 = require('../../../src/lib/apis/0_90');
   var expect = require('expect.js');
   var client;
 

@@ -11,6 +11,8 @@ var _ = require('../../../src/lib/utils');
 var expect = require('expect.js');
 var clientManager = require('./client_manager');
 
+var implementedFeatures = ['gtelte', 'regex'];
+
 /**
  * The version that ES is running, in comparable string form XXX-XXX-XXX, fetched when needed
  * @type {String}
@@ -114,7 +116,7 @@ function YamlDoc(doc, file) {
     var method = self['do_' + action.name];
 
     // check that it's a function
-    expect(method).to.be.a('function');
+    expect(method || 'YamlDoc#' + action.name).to.be.a('function');
 
     if (_.isPlainObject(action.args)) {
       action.name += '(' + JSON.stringify(action.args) + ')';
@@ -126,28 +128,27 @@ function YamlDoc(doc, file) {
     action.bound = _.bind(method, self, action.args);
 
     // create a function that can be passed to mocha or async
-    action.testable = function (done) {
+    action.testable = function (_cb) {
+      function done(err) {
+        process.nextTick(function () {
+          if (err) {
+            err.message += ' in ' + action.name;
+          }
+          _cb(err);
+        });
+      }
+
       if (self.skipping || self.file.skipping) {
         return done();
       }
       if (method.length > 1) {
-        action.bound(function (err) {
-          if (err) {
-            err.message += ' in ' + action.name;
-          }
-          process.nextTick(function () {
-            done(err);
-          });
-        });
+        action.bound(done);
       } else {
         try {
           action.bound();
           process.nextTick(done);
         } catch (err) {
-          err.message += ' in ' + action.name;
-          process.nextTick(function () {
-            done(err);
-          });
+          done(err);
         }
       }
     };
@@ -260,21 +261,39 @@ YamlDoc.prototype = {
    * @param done
    */
   do_skip: function (args, done) {
-    rangeMatchesCurrentVersion(args.version, _.bind(function (match) {
-      if (match) {
+    if (args.version) {
+      return rangeMatchesCurrentVersion(args.version, _.bind(function (match) {
+        if (match) {
+          if (this.description === 'setup') {
+            this.file.skipping = true;
+            // console.log('skipping this file' + (args.reason ? ' because ' + args.reason : ''));
+          } else {
+            this.skipping = true;
+            // console.log('skipping the rest of this doc' + (args.reason ? ' because ' + args.reason : ''));
+          }
+        } else {
+          this.skipping = false;
+          this.file.skipping = false;
+        }
+        done();
+      }, this));
+    }
+
+    if (args.features) {
+      var features = Array.isArray(args.features) ? args.features : [args.features];
+      var notImplemented = _.difference(features, implementedFeatures);
+
+      if (notImplemented.length) {
         if (this.description === 'setup') {
           this.file.skipping = true;
-          // console.log('skipping this file' + (args.reason ? ' because ' + args.reason : ''));
+          console.log('skipping this file because ' + notImplemented.join(' & ') + ' are not implemented');
         } else {
           this.skipping = true;
-          // console.log('skipping the rest of this doc' + (args.reason ? ' because ' + args.reason : ''));
+          console.log('skipping the rest of this doc because ' + notImplemented.join(' & ') + ' are not implemented');
         }
-      } else {
-        this.skipping = false;
-        this.file.skipping = false;
       }
-      done();
-    }, this));
+      return done();
+    }
   },
 
   /**
@@ -322,52 +341,89 @@ YamlDoc.prototype = {
     var clientAction = this.get(clientActionName, client);
     var params = _.transform(args[action], function (params, val, name) {
       var camelName = _.camelCase(name);
-      // undocumented params should be passed through as-is
+
+      // search through the params and url peices to find this param name
       var paramName = name;
-      if (clientAction && clientAction.spec && clientAction.spec.params && clientAction.spec.params[camelName]) {
+      var spec = clientAction && clientAction.spec;
+      var knownParam = spec && spec.params && spec.params[camelName];
+      var knownUrlParam = spec && !knownParam && !!_.find(spec.url ? [spec.url] : spec.urls, function (url) {
+        if ((url.opt && url.opt[camelName]) || (url.req && url.req[camelName])) {
+          return true;
+        }
+      });
+
+      // if we do know this param name, use the camelCase verison
+      if (knownParam || knownUrlParam) {
         paramName = camelName;
       }
 
-      params[paramName] = (typeof val === 'string' && val[0] === '$') ? this.get(val) : val;
+      // for ercursively traversing the params to replace '$stashed' vars
+      var transformObject = function (vals, val, i) {
+        switch (typeof val) {
+        case 'string':
+          val = (val[0] === '$') ? this.get(val) : val;
+          break;
+        case 'object':
+          val = _.transform(val, transformObject);
+        }
+        vals[i] = val;
+      }.bind(this);
+
+      // start with the initial param, only traverse traversables
+      switch (typeof val) {
+      case 'string':
+        val = (val[0] === '$') ? this.get(val) : val;
+        break;
+      case 'object':
+        val = _.transform(val, transformObject);
+        break;
+      }
+
+      params[paramName] = val;
     }, {}, this);
+
 
     expect(clientAction || clientActionName).to.be.a('function');
 
-    if (typeof clientAction === 'function') {
-      if (_.isNumeric(catcher)) {
-        params.ignore = _.union(params.ignore || [], [catcher]);
-        catcher = null;
-      }
-
-      var cb =  _.bind(function (error, body, status) {
-        this._last_requests_response = body;
-
-        if (error) {
-          if (catcher) {
-            if (catcher instanceof RegExp) {
-              // error message should match the regexp
-              expect(error.message).to.match(catcher);
-              error = null;
-            } else if (typeof catcher === 'function') {
-              // error should be an instance of
-              expect(error).to.be.a(catcher);
-              error = null;
-            } else {
-              return done(new Error('Invalid catcher ' + catcher));
-            }
-          } else {
-            return done(error);
-          }
-        }
-
-        done(error);
-      }, this);
-
-      clientAction.call(client, params, cb);
-    } else {
-      done(new Error('stepped in do_do, did not find a function'));
+    if (_.isNumeric(catcher)) {
+      params.ignore = _.union(params.ignore || [], [catcher]);
+      catcher = null;
     }
 
+    var timeoutId;
+    var cb =  _.bind(function (error, body, status) {
+      this._last_requests_response = body;
+      clearTimeout(timeoutId);
+
+      if (error) {
+        if (catcher) {
+          if (catcher instanceof RegExp) {
+            // error message should match the regexp
+            expect(error.message).to.match(catcher);
+            error = null;
+          } else if (typeof catcher === 'function') {
+            // error should be an instance of
+            expect(error).to.be.a(catcher);
+            error = null;
+          } else {
+            return done(new Error('Invalid catcher ' + catcher));
+          }
+        } else {
+          return done(error);
+        }
+      }
+
+      done(error);
+    }, this);
+
+    var req = clientAction.call(client, params, cb);
+    timeoutId = setTimeout(function () {
+      // request timed out, so we will skip the rest of the tests and continue
+      req.abort();
+      this.skipping = true;
+      this._last_requests_response = {};
+      done();
+    }.bind(this), 20000);
   },
 
   /**
@@ -416,10 +472,18 @@ YamlDoc.prototype = {
    */
   do_match: function (args) {
     _.forOwn(args, function (val, path) {
-      if (val[0] === '$') {
-        val = this.get(val);
+      var isRef = _.isString(val) && val[0] === '$';
+      var isRE = _.isString(val) && val[0] === '/' && path[path.length - 1] === '/';
+
+      if (isRef) {
+        val = this.get(val === '$body' ? '' : val);
+      } else if (isRE) {
+        val = new RegExp(val);
+      } else {
+        val = this.get(path);
       }
-      expect(this.get(path)).to.eql(val, 'path: ' + path);
+
+      var assert = expect(val).to[isRE ? 'match' : 'eql'](val, 'path: ' + path);
     }, this);
   },
 
@@ -436,6 +500,18 @@ YamlDoc.prototype = {
   },
 
   /**
+   * Test that the response field (arg key) is less than the value specified
+   *
+   * @param  {Object} args - Hash of fields->values that need to be checked
+   * @return {undefined}
+   */
+  do_lte: function (args) {
+    _.forOwn(args, function (num, path) {
+      expect(this.get(path) <= num).to.be.ok('path: ' + path);
+    }, this);
+  },
+
+  /**
    * Test that the response field (arg key) is greater than the value specified
    *
    * @param  {Object} args - Hash of fields->values that need to be checked
@@ -444,6 +520,18 @@ YamlDoc.prototype = {
   do_gt: function (args) {
     _.forOwn(args, function (num, path) {
       expect(this.get(path)).to.be.above(num, 'path: ' + path);
+    }, this);
+  },
+
+  /**
+   * Test that the response field (arg key) is greater than the value specified
+   *
+   * @param  {Object} args - Hash of fields->values that need to be checked
+   * @return {undefined}
+   */
+  do_gte: function (args) {
+    _.forOwn(args, function (num, path) {
+      expect(this.get(path) >= num).to.be.ok('path: ' + path);
     }, this);
   },
 

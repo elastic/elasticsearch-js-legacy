@@ -1,8 +1,8 @@
 [[api-reference-0-90]]
 == 0.90 API
 
-NOTE: This is currently the default API, but with the upcoming release of Elasticsearch 1.0 that will change. We recommend setting the `apiVersion` config param when you instantiate your client to make sure that the API does not change when the default does.
 
+NOTE: At this time, you must opt into the 0.90 API by setting the `apiVersion` config parameter.
 
 [[js-api-method-index-0-90]]
 * <<api-bulk-0-90,bulk>>
@@ -32,6 +32,7 @@ NOTE: This is currently the default API, but with the upcoming release of Elasti
 * <<api-cluster-nodeinfo-0-90,cluster.nodeInfo>>
 * <<api-cluster-nodeshutdown-0-90,cluster.nodeShutdown>>
 * <<api-cluster-nodestats-0-90,cluster.nodeStats>>
+* <<api-cluster-pendingtasks-0-90,cluster.pendingTasks>>
 * <<api-cluster-putsettings-0-90,cluster.putSettings>>
 * <<api-cluster-reroute-0-90,cluster.reroute>>
 * <<api-cluster-state-0-90,cluster.state>>
@@ -1783,6 +1784,31 @@ Options:::
 
 `nodeId`::
 `String, String[], Boolean` -- A comma-separated list of node IDs or names to limit the returned information; use `_local` to return information from the node you're connecting to, leave empty to get information from all nodes
+
+link:#[back to top]
+
+[[api-cluster-pendingtasks-0-90]]
+=== `cluster.pendingTasks`
+
+[source,js]
+--------
+client.cluster.pendingTasks([params, [callback]])
+--------
+
+// no description
+
+The default method is `GET` and the usual <<api-conventions,params and return values>> apply. See http://www.elasticsearch.org/guide/en/elasticsearch/reference/0.90/cluster-pending.html[the elasticsearch docs] for more about this method.
+
+// no examples
+
+
+==== Params
+
+[horizontal]
+`local`::
+`Boolean` -- Return local information, do not retrieve the state from master node (default: false)
+`masterTimeout`::
+`Date, Number` -- Specify timeout for connection to master
 
 link:#[back to top]
 

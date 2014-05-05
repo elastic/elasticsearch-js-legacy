@@ -11,6 +11,7 @@
   "browser": {
     "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
     "./src/lib/loggers/index.js": "./src/lib/loggers/browser_index.js",
+    "./src/lib/apis/index.js": "./src/lib/apis/browser_index.js",
     "./test/mocks/server.js": "./test/mocks/browser_server.js",
     "lodash": "./node_modules/lodash/dist/lodash.compat.js"
   },
@@ -22,7 +23,9 @@
       "1.0",
       "0.90"
     ],
-    "unstable_es_branches": [],
+    "unstable_es_branches": [
+      "master"
+    ],
     "default_api_branch": "1.0"
   },
   "devDependencies": {
@@ -43,13 +46,12 @@
     "mocha-lcov-reporter": "0.0.1",
     "blanket": "~1.1.5",
     "sinon": "~1.7.3",
-    "nock": "0.27.0",
+    "nock": "~0.28.1",
     "open": "0.0.4",
     "load-grunt-tasks": "~0.2.0",
     "load-grunt-config": "~0.7.0",
     "grunt-s3": "~0.2.0-alpha.3",
-    "grunt-run": "~0.1.12",
-    "relative-fs": "0.0.1",
+    "grunt-run": "~0.2.2",
     "grunt-contrib-compress": "~0.5.3",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-prompt": "~0.1.2",
@@ -59,7 +61,10 @@
     "expect.js": "~0.2.0",
     "aliasify": "~1.2.4",
     "express": "~3.4.7",
-    "grunt-saucelabs": "git://github.com/spenceralger/grunt-saucelabs.git"
+    "find-root": "~0.1.1",
+    "event-stream": "~3.1.0",
+    "grunt-saucelabs": "~5.1.0",
+    "relative-fs": "*"
   },
   "license": "Apache 2.0",
   "dependencies": {

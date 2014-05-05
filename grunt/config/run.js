@@ -7,7 +7,8 @@ var esOpts = [
   '-D es.index.store.type=memory',
   '-D es.discovery.zen.ping.multicast.enabled=false',
   '-D es.discovery.zen.ping_timeout=1',
-  '-D es.logger.level=ERROR'
+  '-D es.logger.level=ERROR',
+  '-D es.script.disable_dynamic=false'
 ].join(' ');
 
 module.exports = {

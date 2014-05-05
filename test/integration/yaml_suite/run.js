@@ -7,7 +7,7 @@ module.exports = function (branch) {
   var es = require('../../../src/elasticsearch');
   var clientManager = require('./client_manager');
   var argv = require('./argv');
-  var branchSuffix = branch === 'master' ? '' : '_' + _.snakeCase(branch);
+  var branchSuffix = '_' + _.snakeCase(branch);
 
   describe('integration', function () {
     this.timeout(30000);
