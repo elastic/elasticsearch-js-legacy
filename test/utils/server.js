@@ -50,12 +50,7 @@ var bundleQueue = async.queue(function (task, done) {
 // create a route that bundles a file list, based on the patterns defined in testFiles
 function bundleTests(name) {
   return function (req, res, next) {
-    bundleQueue.push(function (_cb) {
-      var done = function (err) {
-        next(err);
-        _cb(err);
-      };
-
+    bundleQueue.push(function (done) {
       res.set('Content-Type', 'application/javascript');
 
       var b = browserify(testFiles[name]);
