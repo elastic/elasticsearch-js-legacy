@@ -1,9 +1,9 @@
 module.exports = {
   source: {
     src: [
-      'src/**/*.js -src/elasticsearch/**/* -src/bower-elasticsearch-js/**/*',
+      'src/**/*.js -src/_*/**/*',
       'scripts/**/*.js',
-      'test/**/*.js -test/browser_integration/yaml_tests.js',
+      'test/unit/specs/**/*.js',
       'grunt/**/*.js',
       'Gruntfile.js'
     ],

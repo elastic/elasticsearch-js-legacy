@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
 var fs = require('fs');
-var _ = require('lodash');
+var _ = require('lodash-node');
 var async = require('async');
 var root = require('path').join(__dirname, '../..');
 var browserify = require('browserify');
@@ -26,11 +26,13 @@ testFiles.unit = _(fs.readdirSync(unitSpecDir))
   })
   .value();
 
-testFiles.build = _(fs.readdirSync(browserBuildsDir))
+testFiles.build = fs.readdirSync(browserBuildsDir)
   .map(function (file) {
-    return browserBuildsDir + '/' + file;
+    if (file.charAt(0) !== '.') {
+      return browserBuildsDir + '/' + file;
+    }
   })
-  .value();
+  .filter(Boolean);
 
 // generic aliasify instance
 var aliasify = require('aliasify').configure({
@@ -48,7 +50,12 @@ var bundleQueue = async.queue(function (task, done) {
 // create a route that bundles a file list, based on the patterns defined in testFiles
 function bundleTests(name) {
   return function (req, res, next) {
-    bundleQueue.push(function (done) {
+    bundleQueue.push(function (_cb) {
+      var done = function (err) {
+        next(err);
+        _cb(err);
+      };
+
       res.set('Content-Type', 'application/javascript');
 
       var b = browserify(testFiles[name]);
