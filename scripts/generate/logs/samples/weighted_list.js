@@ -12,7 +12,6 @@ function WeightedList(list) {
 
   _.forEach(list, _.bindKey(this, 'push'));
 
-  console.log(this);
 }
 _.inherits(WeightedList, Array);
 
@@ -112,7 +111,7 @@ WeightedList.prototype._update = function () {
     sum = 0,
     totals = [];
 
-  _.each(me, function (item) {
+  me.forEach(function (item) {
     sum += item.weight;
     totals.push(sum);
   });

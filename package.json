@@ -17,7 +17,13 @@
   "config": {
     "blanket": {
       "pattern": "specified in test/unit/coverage.js"
-    }
+    },
+    "supported_es_branches": [
+      "1.0",
+      "0.90"
+    ],
+    "unstable_es_branches": [],
+    "default_api_branch": "1.0"
   },
   "devDependencies": {
     "mocha": "~1.14.0",

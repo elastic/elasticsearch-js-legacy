@@ -1,12 +1,9 @@
+/*jshint curly: false */
 var async = require('async');
+var fs = require('fs');
 var spawn = require('../_spawn');
 var argv = require('optimist')
   .options({
-    force: {
-      alias: 'f',
-      default: false,
-      boolean: true
-    },
     verbose: {
       alias: 'v',
       default: false,
@@ -23,11 +20,20 @@ var argv = require('optimist')
     update: {
       default: true,
       boolean: true
+    },
+    branch: {
+      default: null,
+      string: true
     }
   });
 
-var root = require('path').join(__dirname, '../..');
-var esSubModule = root + '/src/elasticsearch';
+var path = require('path');
+var root = require('find-root')(__dirname);
+var fromRoot = path.join.bind(path, root);
+var utils = require(fromRoot('grunt/utils'));
+var _ = require(fromRoot('src/lib/utils'));
+var esUrl = 'https://github.com/elasticsearch/elasticsearch.git';
+var branches;
 
 if (process.env.npm_config_argv) {
   // when called by NPM
@@ -37,55 +43,103 @@ if (process.env.npm_config_argv) {
   argv = argv.argv;
 }
 
-if (!argv.force && process.env.FORCE || process.env.FORCE_GEN) {
-  argv.force = argv.f = process.env.FORCE || process.env.FORCE_GEN;
+if (argv.branch) {
+  branches = [argv.branch];
+} else {
+  branches = utils.branches;
 }
 
-function makeSpawn(cmd, args, cwd) {
+var sourceDir = fromRoot('src/_elasticsearch_');
+function storeDir(branch) {
+  return fromRoot('src/_elasticsearch_' + _.snakeCase(branch));
+}
+
+function isDirectory(dir) {
+  var stat;
+  try { stat = fs.statSync(dir); } catch (e) {}
+  return (stat && stat.isDirectory());
+}
+
+function spawnStep(cmd, args, cwd) {
   return function (done) {
     spawn(cmd, args, {
-      verbose: argv.versbose,
-      cwd: cwd || esSubModule
+      verbose: argv.verbose,
+      cwd: cwd
     }, function (status) {
-      done(status ? new Error('Non-zero exit code: %d', status) : void 0);
+      done(status ? new Error('Non-zero exit code: ' + status) : void 0);
     });
   };
 }
 
-function generateBranch(branch, done) {
-  async.series([
-    makeSpawn('git', ['reset', '--hard']),
-    makeSpawn('git', ['clean', '-fdx']),
-    makeSpawn('git', ['checkout', 'origin/' + branch]),
-    function (done) {
-      var tasks = [];
+function execStep(cmd, cwd) {
+  return function (done) {
+    spawn.exec(cmd, {
+      verbose: argv.verbose,
+      cwd: cwd
+    }, function (status) {
+      done(status ? new Error('Non-zero exit code: ' + status) : void 0);
+    });
+  };
+}
 
-      if (argv.api) {
-        tasks.push(
-          async.apply(require('./js_api'), branch)
-        );
-      }
-      if (argv.tests) {
-        tasks.push(
-          async.apply(require('./yaml_tests'), branch)
-        );
-      }
+function initStep() {
+  return function (done) {
+    if (isDirectory(sourceDir)) return done();
+    async.series([
+      spawnStep('git', ['init', '--bare', sourceDir], root),
+      spawnStep('git', ['remote', 'add', 'origin', esUrl], sourceDir)
+    ], done);
+  };
+}
 
-      async.parallel(tasks, done);
-    }
-  ], done);
+function fetchBranchesStep() {
+  var branchArgs = branches.map(function (b) { return b + ':' + b; });
+  return spawnStep('git', ['fetch', '--no-tags', '--force', 'origin'].concat(branchArgs), sourceDir);
+}
+
+function removePrevArchive(branch) {
+  return function (done) {
+    var dir = storeDir(branch);
+
+    if (!isDirectory(dir)) return done();
+    else spawnStep('rm', ['-rf', dir], root)(done);
+  };
+}
+
+function createArchive(branch) {
+  return function (done) {
+    var dir = storeDir(branch);
+    if (isDirectory(dir)) return done();
+    async.series([
+      spawnStep('mkdir', [dir], root),
+      execStep('git archive --format tar ' + branch + ' rest-api-spec | tar -x -C ' + dir, sourceDir)
+    ], done);
+  };
+}
+
+function generateStep(branch) {
+  return function (done) {
+    async.parallel([
+      argv.api && async.apply(require('./js_api'), branch),
+      argv.tests && async.apply(require('./yaml_tests'), branch)
+    ].filter(Boolean), function () {
+      console.log('----\n');
+      done();
+    });
+  };
 }
 
 var steps = [
-  makeSpawn('git', ['submodule', 'update', '--', esSubModule], root)
+  initStep(),
+  fetchBranchesStep()
 ];
-if (argv.update) {
-  steps.push(makeSpawn('git', ['fetch', 'origin'], esSubModule));
-}
-steps.push(
-  async.apply(generateBranch, '0.90'),
-  async.apply(generateBranch, 'master')
-);
+branches.forEach(function (branch) {
+  if (argv.update) steps.push(removePrevArchive(branch));
+  steps.push(
+    createArchive(branch),
+    generateStep(branch)
+  );
+});
 
 async.series(steps, function (err) {
   if (err) {

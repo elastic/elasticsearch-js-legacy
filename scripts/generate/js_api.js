@@ -4,10 +4,12 @@ module.exports = function (branch, done) {
    * @type {[type]}
    */
   var _ = require('../../src/lib/utils');
-  var fs = require('relative-fs').relativeTo(__dirname);
+  var utils = require('../../grunt/utils');
+  var fs = require('fs');
   var async = require('async');
   var chalk = require('chalk');
   var path = require('path');
+  var fromRoot = path.join.bind(path, require('find-root')(__dirname));
   var templates = require('./templates');
   var urlParamRE = /\{(\w+)\}/g;
 
@@ -15,24 +17,37 @@ module.exports = function (branch, done) {
   var apiSpec; // populated by parseSpecFiles
   var docVars; // slightly modified clone of apiSpec for the docs
 
-  var branchSuffix = branch === 'master' ? '' : '_' + _.snakeCase(branch);
-  var aliases = require('./aliases' + branchSuffix);
+  var branchSuffix = utils.branchSuffix(branch);
+  var esDir = fromRoot('src/_elasticsearch_' + _.snakeCase(branch));
+  var aliases;
+  try {
+    aliases = require('./aliases_' + _.snakeCase(branch));
+  } catch (e) {
+    // fall back to the master aliases
+    aliases = require('./aliases');
+  }
 
-  // generate the API
-  async.series([
+  var steps = [
     readSpecFiles,
     parseSpecFiles,
-    writeApiFile,
-    ensureDocsDir,
-    formatDocVars,
-    writeMethodDocs
-  ], function (err) {
-    console.log('');
+    writeApiFile
+  ];
+
+  if (!~utils.unstableBranches.indexOf(branch)) {
+    steps.push(
+      ensureDocsDir,
+      formatDocVars,
+      writeMethodDocs
+    );
+  }
+
+  // generate the API
+  async.series(steps, function (err) {
     done(err);
   });
 
   function readSpecFiles(done) {
-    var apiDir = require('path').join(__dirname, '../../src/elasticsearch/rest-api-spec/api/');
+    var apiDir = path.join(esDir, 'rest-api-spec/api/');
     files = fs.readdirSync(apiDir).map(function (filename) {
       var module = require(apiDir + filename);
       delete require.cache[apiDir + filename];
@@ -87,14 +102,14 @@ module.exports = function (branch, done) {
   }
 
   function writeApiFile(done) {
-    var outputPath = require('path').join(__dirname, '../../src/lib/api' + branchSuffix + '.js');
+    var outputPath = fromRoot('src/lib/apis/' + _.snakeCase(branch) + '.js');
     fs.writeFileSync(outputPath, templates.apiFile(apiSpec));
     console.log(chalk.white.bold('wrote'), apiSpec.actions.length, 'api actions to', outputPath);
     done();
   }
 
   function ensureDocsDir(done) {
-    fs.stat('../../docs', function (err, stat) {
+    fs.stat(fromRoot('docs'), function (err, stat) {
       if (err) {
         if (err.message.match(/enoent/i)) {
           fs.mkdir('../../docs', done);
@@ -124,7 +139,7 @@ module.exports = function (branch, done) {
   }
 
   function writeMethodDocs(done) {
-    var filename = path.resolve(__dirname, '../../docs/api_methods' + branchSuffix + '.asciidoc');
+    var filename = fromRoot('docs/api_methods' + branchSuffix + '.asciidoc');
     fs.writeFile(
       filename,
       templates.apiMethods(docVars),
@@ -252,6 +267,7 @@ module.exports = function (branch, done) {
           'url',
           'urls',
           'needBody',
+          'requestTimeout',
           'bulkBody'
         ]),
         location: location,
