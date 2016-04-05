@@ -1,5 +1,10 @@
 # elasticsearch-js changelog
 
+## 3.1.4 (May 5 2016)
+ - Fixed a compatibility issue with recent versions of node.js
+ - added support for `"1.5"`, `"1.6"`, `"1.7"`
+ - removed support for unsupported apis, to use these please upgrade to the v10.2.0
+
 ## 3.1 (Jan 6 2015)
  - Added HTTPS/SSL configuration options and related errors
  - `client.scroll()` requests made without a body will use the `scrollId` param as the body to prevent #113 & #174
