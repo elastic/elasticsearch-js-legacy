@@ -59,6 +59,11 @@ function install_node {
   fi
 }
 
+if [[ "$ES_V" != "1.7_nightly" ]]; then
+  echo "3.1.x branch is not 2+ compatible";
+  exit
+fi
+
 get_lock
 install_node "$NODE_V"
 npm install
