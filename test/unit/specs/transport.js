@@ -841,7 +841,8 @@ describe('Transport Class', function () {
       ]);
 
       sinon.assert.calledOnce(trans.connectionPool.setHosts);
-      var host, hosts = trans.connectionPool.setHosts.firstCall.args[0];
+      var host;
+      var hosts = trans.connectionPool.setHosts.firstCall.args[0];
 
       expect(hosts).to.have.length(3);
 

@@ -5,7 +5,6 @@ describe('Client instances creation', function () {
   var es = require('../../../src/elasticsearch');
   var apis = require('../../../src/lib/apis');
   var expect = require('expect.js');
-  var stub = require('../../utils/auto_release_stub').make();
   var client;
 
   describe('', function () {

@@ -67,7 +67,8 @@ HttpConnector.prototype.onStatusSet = utils.handler(function (status) {
     _.each(agent.sockets, collectSockets);
     _.each(agent.freeSockets, collectSockets);
     _.each(toRemove, function (args) {
-      var host = args[0], socket = args[1];
+      var host = args[0];
+      var socket = args[1];
       agent.removeSocket(socket, parseUrl(host));
       socket.destroy();
     });

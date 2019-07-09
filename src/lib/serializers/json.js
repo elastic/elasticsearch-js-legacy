@@ -28,7 +28,7 @@ Json.prototype.serialize = function (val, replacer, spaces) {
       }
     /* falls through */
     default:
-      return;
+      return undefined;
   }
 };
 
@@ -48,7 +48,8 @@ Json.prototype.deserialize = function (str) {
 };
 
 Json.prototype.bulkBody = function (val) {
-  var body = '', i;
+  var body = '';
+  var i;
 
   if (_.isArray(val)) {
     for (i = 0; i < val.length; i++) {

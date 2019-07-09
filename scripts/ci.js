@@ -141,8 +141,8 @@ execTask('SETUP', function () {
       }
     }
 
-    var match;
-    if (match = ENV.ES_V.match(/^(.*)_nightly$/)) {
+    var match = ENV.ES_V.match(/^(.*)_nightly$/);
+    if (match) {
       return [match[1], null];
     }
 

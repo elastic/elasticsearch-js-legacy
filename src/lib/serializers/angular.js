@@ -14,8 +14,9 @@ AngularSerializer.prototype.encode = function (val) {
       if (val) return angular.toJson(val);
     /* falls through */
     default:
-      return;
+      return undefined
   }
+
 };
 
 module.exports = AngularSerializer;

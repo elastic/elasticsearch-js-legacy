@@ -379,7 +379,7 @@ Transport.prototype._timeout = function (cb, delay) {
   var id;
   var timers = this._timers || (this._timers = []);
 
-  if ('function' !== typeof cb) {
+  if (typeof cb !== 'function') {
     id = cb;
     cb = void 0;
   }

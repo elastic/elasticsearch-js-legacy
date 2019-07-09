@@ -184,7 +184,9 @@ var castType = {
 };
 
 function resolveUrl(url, params) {
-  var vars = {}, i, key;
+  var vars = {};
+  var i;
+  var key;
 
   if (url.req) {
     // url has required params
@@ -290,7 +292,8 @@ function exec(transport, spec, params, cb) {
     request.path = resolveUrl(spec.url, params);
   } else {
     for (i = 0; i < spec.urls.length; i++) {
-      if (request.path = resolveUrl(spec.urls[i], params)) {
+      request.path = resolveUrl(spec.urls[i], params)
+      if (request.path) {
         break;
       }
     }

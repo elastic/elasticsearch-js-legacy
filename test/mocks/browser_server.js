@@ -64,7 +64,7 @@ var mockNock = module.exports = function (url) {
           try {
             req.body = req.body && JSON.stringify(req.body);
           } catch (e) {
-            req.body = req.body;
+            // noop
           }
       }
       interceptors.push(req);

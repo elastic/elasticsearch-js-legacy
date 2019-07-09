@@ -40,9 +40,6 @@ function JenkinsReporter(runner) {
   Base.call(this, runner);
 
   var stats = this.stats;
-  var pass = 0;
-  var pending = 0;
-  var fail = 0;
   var rootSuite = {
     results: [],
     suites: []
@@ -87,21 +84,18 @@ function JenkinsReporter(runner) {
   });
 
   runner.on('fail', function (test) {
-    if ('hook' === test.type) {
+    if (test.type === 'hook') {
       runner.emit('test end', test);
     }
   });
 
   runner.on('test end', function (test) {
     if (test.state === 'passed') {
-      pass++;
       log(chalk.green('.'));
     } else if (test.pending) {
-      pending++;
       log(chalk.grey('.'));
       return;
     } else {
-      fail++;
       log(chalk.red('x'));
     }
 
@@ -117,7 +111,7 @@ function JenkinsReporter(runner) {
 
       // <=IE7 stringifies to [Object Error]. Since it can be overloaded, we
       // check for the result of the stringifying.
-      if ('[object Error]' === errMsg) {
+      if (errMsg === '[object Error]') {
         errMsg = test.err.message;
       }
 

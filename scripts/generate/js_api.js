@@ -261,13 +261,17 @@ module.exports = function (branch, done) {
         var param;
         var name;
         var target;
-        var match;
 
         if (url.charAt(0) !== '/') {
           url = '/' + url;
         }
 
-        while (match = urlParamRE.exec(url)) {
+        while (true) {
+          const match = urlParamRE.exec(url)
+          if (!match) {
+            break;
+          }
+
           name = utils.camelCase(match[1]);
           param = def.url.parts[name] || {};
           target = (param.required || !param.default) ? requiredVars : optionalVars;

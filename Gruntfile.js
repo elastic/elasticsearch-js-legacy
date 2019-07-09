@@ -1,11 +1,13 @@
+const { resolve } = require('path')
+
 module.exports = function (grunt) {
   // load plugins
   require('load-grunt-config')(grunt, {
-    configPath: __dirname + '/grunt/config',
+    configPath: resolve(__dirname, 'grunt/config'),
     init: true,
     config: {
-      distDir: __dirname + '/dist',
-      bowerSubmodule: __dirname + '/src/bower_es_js',
+      distDir: resolve(__dirname, 'dist'),
+      bowerSubmodule: resolve(__dirname, 'src/bower_es_js'),
       meta: {
         banner: '/*! <%= package.name %> - v<%= package.version %> - ' +
           '<%= grunt.template.today("yyyy-mm-dd") %>\n' +

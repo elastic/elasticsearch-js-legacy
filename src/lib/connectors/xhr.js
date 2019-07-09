@@ -5,8 +5,9 @@
  */
 module.exports = XhrConnector;
 
-/* jshint browser:true */
+/* eslint-env browser */
 
+var _ = require('lodash');
 var utils = require('../utils');
 var ConnectionAbstract = require('../connection');
 var ConnectionFault = require('../errors').ConnectionFault;
