@@ -14,18 +14,22 @@ var fs = require('fs');
 var path = require('path');
 var inspect = require('util').inspect;
 
-var log = (function () {
+var log = (function() {
   var locked = _.bind(process.stdout.write, process.stdout);
-  return function (str) {
+  return function(str) {
     if (typeof str !== 'string') {
       str = inspect(str);
     }
     locked(str);
   };
-}());
+})();
 
-var integration = _.find(process.argv, function (arg) { return arg.indexOf('test/integration') > -1; });
-var unit = _.find(process.argv, function (arg) { return arg.indexOf('test/unit') > -1; });
+var integration = _.find(process.argv, function(arg) {
+  return arg.indexOf('test/integration') > -1;
+});
+var unit = _.find(process.argv, function(arg) {
+  return arg.indexOf('test/unit') > -1;
+});
 var output;
 
 if (unit) {
@@ -42,16 +46,16 @@ function JenkinsReporter(runner) {
   var stats = this.stats;
   var rootSuite = {
     results: [],
-    suites: []
+    suites: [],
   };
 
   var stack = [rootSuite];
 
   function indt() {
-    return (new Array(stack.length + 1)).join('  ');
+    return new Array(stack.length + 1).join('  ');
   }
 
-  runner.on('suite', function (suite) {
+  runner.on('suite', function(suite) {
     if (suite.root) {
       return;
     }
@@ -62,7 +66,7 @@ function JenkinsReporter(runner) {
       results: [],
       start: Date.now(),
       stdout: '',
-      stderr: ''
+      stderr: '',
     };
 
     // append to the previous stack leader
@@ -75,7 +79,7 @@ function JenkinsReporter(runner) {
     stack.unshift(suite);
   });
 
-  runner.on('suite end', function (suite) {
+  runner.on('suite end', function(suite) {
     if (suite.root) {
       return;
     }
@@ -83,13 +87,13 @@ function JenkinsReporter(runner) {
     stack.shift();
   });
 
-  runner.on('fail', function (test) {
+  runner.on('fail', function(test) {
     if (test.type === 'hook') {
       runner.emit('test end', test);
     }
   });
 
-  runner.on('test end', function (test) {
+  runner.on('test end', function(test) {
     if (test.state === 'passed') {
       log(chalk.green('.'));
     } else if (test.pending) {
@@ -116,13 +120,19 @@ function JenkinsReporter(runner) {
       }
 
       // Safari doesn't give you a stack. Let's at least provide a source line.
-      if (!test.err.stack && test.err.sourceURL && test.err.line !== undefined) {
+      if (
+        !test.err.stack &&
+        test.err.sourceURL &&
+        test.err.line !== undefined
+      ) {
         errMsg += '\n(' + test.err.sourceURL + ':' + test.err.line + ')';
       }
 
-      console.error(_.map(errMsg.split('\n'), function (line) {
-        return indt() + '    ' + line;
-      }).join('\n'));
+      console.error(
+        _.map(errMsg.split('\n'), function(line) {
+          return indt() + '    ' + line;
+        }).join('\n')
+      );
     }
 
     if (stack[0]) {
@@ -132,14 +142,18 @@ function JenkinsReporter(runner) {
         pass: test.state === 'passed',
         test: test,
         stdout: stack[0].stdout,
-        stderr: stack[0].stderr
+        stderr: stack[0].stderr,
       });
       stack[0].stdout = stack[0].stderr = '';
     }
   });
 
-  runner.on('hook end', function (hook) {
-    if (hook.title.indexOf('"after each"') > -1 && stack[0] && stack[0].results.length) {
+  runner.on('hook end', function(hook) {
+    if (
+      hook.title.indexOf('"after each"') > -1 &&
+      stack[0] &&
+      stack[0].results.length
+    ) {
       var result = _.last(stack[0].results);
       result.stdout += stack[0].stdout;
       result.stderr += stack[0].stderr;
@@ -147,7 +161,7 @@ function JenkinsReporter(runner) {
     }
   });
 
-  runner.on('end', function () {
+  runner.on('end', function() {
     restoreStdio();
     var xml = makeJUnitXml('node ' + process.version, {
       stats: stats,
@@ -158,38 +172,43 @@ function JenkinsReporter(runner) {
           time: suite.time || 0,
           results: suite.results,
           stdout: suite.stdout,
-          stderr: suite.stderr
+          stderr: suite.stderr,
         };
 
         if (suite.suites) {
           s.suites = _.map(suite.suites, removeElements);
         }
         return s;
-      })
+      }),
     });
 
     fs.writeFileSync(output, xml, 'utf8');
 
-    console.log('\n' + [
-      'tests complete in ' + (Math.round(stats.duration / 10) / 100) + ' seconds',
-      '  fail:    ' + chalk.red(stats.failures),
-      '  pass:    ' + chalk.green(stats.passes),
-      '  pending: ' + chalk.grey(stats.pending)
-    ].join('\n'));
+    console.log(
+      '\n' +
+        [
+          'tests complete in ' +
+            Math.round(stats.duration / 10) / 100 +
+            ' seconds',
+          '  fail:    ' + chalk.red(stats.failures),
+          '  pass:    ' + chalk.green(stats.passes),
+          '  pending: ' + chalk.grey(stats.pending),
+        ].join('\n')
+    );
   });
 
   // overload the write methods on stdout and stderr
-  ['stdout', 'stderr'].forEach(function (name) {
+  ['stdout', 'stderr'].forEach(function(name) {
     var obj = process[name];
     var orig = obj.write;
-    obj.write = function (chunk) {
+    obj.write = function(chunk) {
       if (stack[0]) {
         stack[0][name] = (stack[0][name] || '') + chunk;
       }
 
       // orig.apply(obj, arguments);
     };
-    obj.__restore = function () {
+    obj.__restore = function() {
       this.write = orig;
     };
   });
@@ -198,5 +217,4 @@ function JenkinsReporter(runner) {
     process.stdout.__restore();
     process.stderr.__restore();
   }
-
 }
