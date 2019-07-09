@@ -17,7 +17,7 @@
     "test": "grunt test",
     "generate": "node scripts/generate",
     "grunt": "grunt",
-    "lint": "eslint ."
+    "lint": "node scripts/eslint"
   },
   "browser": {
     "./src/lib/connectors/index.js": "./src/lib/connectors/browser_index.js",
