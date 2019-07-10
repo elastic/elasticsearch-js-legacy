@@ -2,7 +2,7 @@ const { resolve } = require('path');
 
 module.exports = function(grunt) {
   // load plugins
-  require('load-grunt-config')(grunt, {
+  grunt.config.init({
     distDir: resolve(__dirname, 'dist'),
     bowerSubmodule: resolve(__dirname, 'src/bower_es_js'),
     meta: {
