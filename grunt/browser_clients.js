@@ -98,20 +98,22 @@ module.exports = function(grunt) {
 
         for (const name of Fs.readdirSync(archivesDir)) {
           grunt.log.writeln(`Uploading ${name} to ${bucket}`);
-          await s3.putObject({
-            ACL: 'public-read',
-            Body: Fs.createReadStream(resolve(archivesDir, name)),
-            Bucket: bucket,
-            Key: `elasticsearch/elasticsearch-js/${name}`,
-            ContentDisposition: 'attachment',
-          });
+          await s3
+            .putObject({
+              ACL: 'public-read',
+              Body: Fs.createReadStream(resolve(archivesDir, name)),
+              Bucket: bucket,
+              Key: `elasticsearch/elasticsearch-js/${name}`,
+              ContentDisposition: 'attachment',
+            })
+            .promise();
           grunt.log.ok(`${name} complete`);
         }
 
         done();
       })
       .catch(error => {
-        grunt.fail(error);
+        grunt.fatal(error);
       });
   });
 };
