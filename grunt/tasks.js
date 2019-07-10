@@ -4,12 +4,7 @@ module.exports = function(grunt) {
   var readFile = Promise.promisify(require('fs').readFile);
   var writeFile = Promise.promisify(require('fs').writeFile);
 
-  // Default task runs the build process.
-  grunt.registerTask('default', ['test']);
-
   grunt.registerTask('test', ['run:mocha']);
-
-  grunt.registerTask('unit_test', 'run:mocha');
 
   grunt.registerTask('version', function(nextVersion) {
     var root = require('path').join.bind(null, __dirname, '..');

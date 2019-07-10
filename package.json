@@ -76,7 +76,6 @@
     "grunt-run": "^0.8.1",
     "grunt-webpack": "^3.1.1",
     "jquery": "^3.3.1",
-    "js-yaml": "^3.6.0",
     "mocha": "^6.1.4",
     "moment": "^2.13.0",
     "nock": "^9.2.3",
