@@ -58,7 +58,8 @@ Create a client instance
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
   host: 'localhost:9200',
-  log: 'trace'
+  log: 'trace',
+  // apiVersion: '7.2', // if you're not using the latest version, uncomment and specify the engine version you are using
 });
 ```
 
