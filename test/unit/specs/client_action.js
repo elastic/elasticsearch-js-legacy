@@ -721,7 +721,7 @@ describe('Client Action runner', function() {
 
   describe('body handling', function() {
     var action = makeClientAction({
-      needsBody: true,
+      needBody: true,
     });
 
     it('passed the body when it is set', function(done) {

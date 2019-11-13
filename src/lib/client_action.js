@@ -295,7 +295,7 @@ function exec(transport, spec, params, cb) {
   }
 
   // verify that we have the body if needed
-  if (spec.needsBody && !params.body) {
+  if (spec.needBody && !params.body) {
     throw new TypeError('A request body is required.');
   }
 
