@@ -54,13 +54,13 @@ var paths = {
   docs: fromRoot('docs'),
   docsIndex: fromRoot('docs/index.asciidoc'),
   apiSrc: 'src/lib/apis',
-  getArchiveDir: function (branch) {
+  getArchiveDir: function(branch) {
     return fromRoot('src/_elasticsearch_' + utils.snakeCase(branch));
   },
-  getArchiveTarball: function (branch) {
+  getArchiveTarball: function(branch) {
     return fromRoot('src/_elasticsearch_' + utils.snakeCase(branch) + '.tar');
   },
-  getSpecPathInRepo: function (branch) {
+  getSpecPathInRepo: function(branch) {
     return /^v?(master|[2-9]\.)/.test(branch)
       ? 'rest-api-spec/src/main/resources/rest-api-spec'
       : 'rest-api-spec';
@@ -71,7 +71,7 @@ function isDirectory(dir) {
   var stat;
   try {
     stat = fs.statSync(dir);
-  } catch (e) { }
+  } catch (e) {}
   return stat && stat.isDirectory();
 }
 
@@ -79,10 +79,10 @@ function dirFilter(dir, fn) {
   try {
     return fs
       .readdirSync(dir)
-      .filter(function (name) {
+      .filter(function(name) {
         return name !== '.' && name !== '..' && fn(name);
       })
-      .map(function (filename) {
+      .map(function(filename) {
         return path.join(dir, filename);
       });
   } catch (e) {
@@ -91,20 +91,20 @@ function dirFilter(dir, fn) {
 }
 
 function dirRegex(dir, regexp) {
-  return dirFilter(dir, function (name) {
+  return dirFilter(dir, function(name) {
     return name.match(regexp);
   });
 }
 
 function dirOpts(dir, opts) {
   opts = _.isArray(opts) ? opts : [opts];
-  return dirFilter(dir, function (name) {
+  return dirFilter(dir, function(name) {
     return _.includes(opts, name);
   });
 }
 
 function spawnStep(cmd, args, cwd) {
-  return function (done) {
+  return function(done) {
     spawn(
       cmd,
       args,
@@ -112,7 +112,7 @@ function spawnStep(cmd, args, cwd) {
         verbose: argv.verbose,
         cwd: cwd,
       },
-      function (status) {
+      function(status) {
         done(status ? new Error('Non-zero exit code: ' + status) : void 0);
       }
     );
@@ -120,7 +120,7 @@ function spawnStep(cmd, args, cwd) {
 }
 
 function initStep() {
-  return function (done) {
+  return function(done) {
     if (isDirectory(paths.esSrc)) {
       async.series(
         [spawnStep('git', ['remote', 'set-url', 'origin', esUrl], paths.esSrc)],
@@ -139,7 +139,7 @@ function initStep() {
 }
 
 function fetchBranchesStep() {
-  var branchArgs = branches.map(function (b) {
+  var branchArgs = branches.map(function(b) {
     return b + ':' + b;
   });
   return spawnStep(
@@ -161,7 +161,7 @@ function findGeneratedApiFiles() {
     ];
   }
 
-  return branches.reduce(function (files, branch) {
+  return branches.reduce(function(files, branch) {
     var b = utils.snakeCase(branch);
 
     files.push(dirOpts(paths.docs, 'api_methods_' + b + '.asciidoc'));
@@ -190,14 +190,14 @@ function clearGeneratedFiles() {
   var rmSteps = _.chain(generatedFiles)
     .flattenDeep()
     .uniq()
-    .map(function (path) {
+    .map(function(path) {
       return spawnStep('rm', ['-rf', path]);
     })
     .value();
 
   if (!rmSteps.length) return;
 
-  return function (done) {
+  return function(done) {
     return async.series(rmSteps, done);
   };
 }
@@ -221,11 +221,9 @@ function convertToCommit(branch) {
     case '7.3':
       return branch;
     case '7.4':
-      return 'c31cddf27e9618582b3cd175e4e0bce320af6a14^1';
     case '7.5':
-      return 'c31cddf27e9618582b3cd175e4e0bce320af6a14^1';
     case '7.6':
-      return 'c31cddf27e9618582b3cd175e4e0bce320af6a14^1';
+    case '7.7':
     case '7.x':
       return 'c31cddf27e9618582b3cd175e4e0bce320af6a14^1';
     case 'master':
@@ -234,7 +232,7 @@ function convertToCommit(branch) {
 }
 
 function createArchive(branch) {
-  return function (done) {
+  return function(done) {
     var dir = paths.getArchiveDir(branch);
     var tarball = paths.getArchiveTarball(branch);
     var specPathInRepo = paths.getSpecPathInRepo(branch);
@@ -278,7 +276,7 @@ function createArchive(branch) {
 }
 
 function generateStep(branch) {
-  return function (done) {
+  return function(done) {
     async.parallel(
       [argv.api && async.apply(require('./js_api'), branch)].filter(Boolean),
       done
@@ -290,7 +288,7 @@ var steps = [initStep(), clearGeneratedFiles(), fetchBranchesStep()].filter(
   Boolean
 );
 
-branches.forEach(function (branch) {
+branches.forEach(function(branch) {
   steps.push(
     _.partial(
       async.series,
@@ -312,15 +310,15 @@ if (argv.api) {
 }
 
 async.series(
-  steps.map(function (step) {
-    return function (done) {
-      step(function (err) {
+  steps.map(function(step) {
+    return function(done) {
+      step(function(err) {
         console.log('----\n');
         done(err);
       });
     };
   }),
-  function (err) {
+  function(err) {
     if (err) {
       throw err;
     }
