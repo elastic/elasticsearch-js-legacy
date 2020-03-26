@@ -1,10 +1,20 @@
 [[changelog]]
 == Changelog
 
-=== 16.5.0(Oct 31 2019)
+=== 16.7.1 (Mar 26 2020)
+  * apiVersions before 7.6 restored after feedback in https://github.com/elastic/elasticsearch-js-legacy/issues/28
+
+=== 16.7.0 (Mar 25 2020)
+  * apiVersion `"7.6"` is now the default
+  * `"7.6"` is now the only apiVersion in the version 7 major version
+
+=== 16.6.0 (Jan 15 2020)
+  * apiVersion `"7.5"` is now the default
+
+=== 16.5.0 (Oct 31 2019)
   * apiVersion `"7.4"` is now the default
 
-=== 16.4.0(Jul 10 2019)
+=== 16.4.0 (Jul 10 2019)
   * apiVersion `"7.3"` is now the default
 
 === 16.3.0 (Jul 10 2019)
