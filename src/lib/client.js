@@ -48,11 +48,16 @@ function Client(config) {
     if (!config.hasOwnProperty('log')) {
       config.log = 'warning';
     }
+    let AWS = require('aws-sdk');
+    AWS.config.update({
+      credentials: new AWS.EnvironmentCredentials('AWS'),
+      region: process.env.ELASTICSEARCH_REGION || 'us-west-2'
+      });
 
     if (!config.hosts && !config.host) {
-      config.host = 'http://localhost:9200';
+      config.host = process.env.ELASTICSEARCH_DOMAIN || 'localhost:9200';
     }
-
+    config.connectionClass = require('./http-aws-es-handler/connector')
     this.close = function() {
       this.transport.close();
     };

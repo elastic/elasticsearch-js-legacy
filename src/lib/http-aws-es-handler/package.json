@@ -1,0 +1,41 @@
+{
+  "name": "http-aws-es-handler",
+  "version": "1.0.0",
+  "description": "Connect Remote Kibana with Amazon ES",
+  "repository": "https://github.com/kaiming1996/http-kibana-node-es",
+  "keywords": [
+    "elasticsearch",
+    "elasticsearch-js",
+    "aws-es",
+    "aws",
+    "amazon",
+    "es",
+    "http"
+  ],
+  "main": "connector.js",
+  "peerDependencies": {
+    "aws-sdk": "^2.138.0",
+    "elasticsearch": "^15.0.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.138.0",
+    "browserify": "^14.5.0",
+    "chai": "^4.1.2",
+    "elasticsearch": "^15.0.0",
+    "eslint": "^4.9.0",
+    "express": "^4.16.2",
+    "minimist": "^1.2.0",
+    "mocha": "^4.0.1",
+    "nyc": "^11.2.1",
+    "puppeteer": "^0.12.0",
+    "sinon": "^4.0.0"
+  },
+  "scripts": {
+    "lint": "eslint connector.js src"
+  },
+  "browser": {
+    "./src/node.js": "./src/xhr.js"
+  },
+  "author": "Kaiming Cheng <kc4jd@virginia.edu>",
+  "license": "MIT"
+}
