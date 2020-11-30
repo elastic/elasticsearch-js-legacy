@@ -1,6 +1,9 @@
 [[changelog]]
 == Changelog
 
+=== 16.7.2 (Nov 30 2020)
+  * use `undefined` as the default ssl ciphers to address a backwards-compatibility issue in node 15.3 https://github.com/nodejs/node/issues/36292
+
 === 16.7.1 (Mar 26 2020)
   * apiVersions before 7.6 restored after feedback in https://github.com/elastic/elasticsearch-js-legacy/issues/28
 
