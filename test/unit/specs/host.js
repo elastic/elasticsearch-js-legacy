@@ -17,7 +17,7 @@ var hostDefaults = {
     passphrase: null,
     cert: null,
     ca: null,
-    ciphers: null,
+    ciphers: undefined,
     rejectUnauthorized: false,
     secureProtocol: null,
   },
