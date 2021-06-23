@@ -85,7 +85,7 @@ function Host(config, globalConfig) {
     ) {
       config = defaultProto + '//' + config;
     }
-    config = _.pick(url.parse(config, false, true), urlParseFields);
+    config = _.pick(new url.URL(config), urlParseFields);
     // default logic for the port is to use 9200 for the default. When a string is specified though,
     // we will use the default from the protocol of the string.
     if (!config.port) {
