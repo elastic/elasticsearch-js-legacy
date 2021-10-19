@@ -1873,7 +1873,7 @@ api['delete'] = ca({
     }
   },
   url: {
-    fmt: '/<%=index%>/_doc/<%=id%>',
+    fmt: '/<%=index%>/<%=type%>/<%=id%>',
     req: {
       index: {
         type: 'string'
@@ -2193,7 +2193,7 @@ api.exists = ca({
     }
   },
   url: {
-    fmt: '/<%=index%>/_doc/<%=id%>',
+    fmt: '/<%=index%>/<%=type%>/<%=id%>',
     req: {
       index: {
         type: 'string'
@@ -2478,7 +2478,7 @@ api.get = ca({
     }
   },
   url: {
-    fmt: '/<%=index%>/_doc/<%=id%>',
+    fmt: '/<%=index%>/<%=type%>/<%=id%>',
     req: {
       index: {
         type: 'string'
@@ -2658,7 +2658,7 @@ api.index = ca({
   },
   urls: [
     {
-      fmt: '/<%=index%>/_doc/<%=id%>',
+      fmt: '/<%=index%>/<%=type%>/<%=id%>',
       req: {
         index: {
           type: 'string'
@@ -2669,7 +2669,7 @@ api.index = ca({
       }
     },
     {
-      fmt: '/<%=index%>/_doc',
+      fmt: '/<%=index%>/<%=type%>',
       req: {
         index: {
           type: 'string'
