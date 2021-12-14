@@ -3286,7 +3286,7 @@ api.indices.prototype.flush = ca({
 });
 
 /**
- * Perform a [indices.flushSynced](https://www.elastic.co/guide/en/elasticsearch/reference/7.5/indices-flush.html#synced-flush-api) request
+ * Perform a [indices.flushSynced](https://www.elastic.co/guide/en/elasticsearch/reference/7.5/indices-synced-flush-api.html) request
  *
  * @param {Object} params - An object with parameters used to carry out this action
  * @param {<<api-param-type-boolean,`Boolean`>>} params.ignoreUnavailable - Whether specified concrete indices should be ignored when unavailable (missing or closed)
