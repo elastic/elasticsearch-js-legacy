@@ -1,1 +1,1 @@
-The changelog has moved to https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/changelog.html
+The changelog has moved to https://www.elastic.co/guide/en/elasticsearch/elasticsearch-js/16.x/changelog.html
