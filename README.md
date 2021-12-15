@@ -16,7 +16,7 @@ The official low-level Elasticsearch client for Node.js and the browser.
 ## Features
 
  - One-to-one mapping with REST API and the other official clients
- - Generalized, pluggable architecture. See [Extending Core Components](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/extending_core_components.html)
+ - Generalized, pluggable architecture.
  - Configurable, automatic discovery of cluster nodes
  - Persistent, Keep-Alive connections
  - Load balancing (with pluggable selection strategy) across all available nodes.
@@ -29,22 +29,13 @@ npm install elasticsearch
 
 [![NPM Stats](https://nodei.co/npm/elasticsearch.png?downloads=true)](https://npmjs.org/package/elasticsearch)
 
-## Use in the Browser
-
-Check out the [Browser Builds](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/browser-builds.html) doc page for help downloading and setting up the client for use in the browser.
-
 ## Docs
- - [Quick Start](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/quick-start.html)
- - [Browser Builds](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/browser-builds.html)
- - [API](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/api-reference.html)
- - [Configuration](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/configuration.html)
- - [Development/Contributing](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/contributing.html)
- - [Extending Core Components](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/extending_core_components.html)
- - [Logging](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/logging.html)
+
+Documentation can be found on [elastic.co](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html)
 
 ## Supported Elasticsearch Versions
 
-Elasticsearch.js provides support for, and is regularly tested against, Elasticsearch releases 0.90.12 and greater. We also test against the latest changes in several branches in the Elasticsearch repository. To tell the client which version of Elasticsearch you are using, and therefore the API it should provide, set the `apiVersion` config param. [More info](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/configuration.html#config-options)
+Elasticsearch.js provides support for, and is regularly tested against, Elasticsearch releases 0.90.12 and greater. We also test against the latest changes in several branches in the Elasticsearch repository. To tell the client which version of Elasticsearch you are using, and therefore the API it should provide, set the `apiVersion` config param.
 
 ## Examples
 
@@ -102,8 +93,6 @@ for (const tweet of response.hits.hits) {
   console.log('tweet:', tweet);
 }
 ```
-
-More examples and detailed information about each method are available [here](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html)
 
 ## License
 
