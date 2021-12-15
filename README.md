@@ -3,8 +3,8 @@
 ---
 
 #### We have released the [new JavaScript client](https://www.elastic.co/blog/new-elasticsearch-javascript-client-released)!
-*In the next months this client will be deprecated, so you should start migrating your codebase as soon as possible.<br/>
-We have built a [migration guide](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/breaking-changes.html) that will help you move to the new client quickly, and if you have questions or need help, please [open an issue](https://github.com/elastic/elasticsearch-js/issues/new/choose).*
+* This client is no longer maintained. We strongly advise you to migrate to the new client.<br/>
+We have built a [migration guide](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/current/breaking-changes.html) that will help you move to the new client quickly. If you have questions or need help, please [open an issue](https://github.com/elastic/elasticsearch-js/issues/new/choose).*
 
 ---
 
@@ -16,7 +16,7 @@ The official low-level Elasticsearch client for Node.js and the browser.
 ## Features
 
  - One-to-one mapping with REST API and the other official clients
- - Generalized, pluggable architecture. See [Extending Core Components](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html)
+ - Generalized, pluggable architecture.
  - Configurable, automatic discovery of cluster nodes
  - Persistent, Keep-Alive connections
  - Load balancing (with pluggable selection strategy) across all available nodes.
@@ -29,27 +29,13 @@ npm install elasticsearch
 
 [![NPM Stats](https://nodei.co/npm/elasticsearch.png?downloads=true)](https://npmjs.org/package/elasticsearch)
 
-## Use in the Browser
-
-Check out the [Browser Builds](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/browser-builds.html) doc page for help downloading and setting up the client for use in the browser.
-
 ## Docs
- - [Quick Start](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/quick-start.html)
- - [Browser Builds](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/browser-builds.html)
- - [API](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/api-reference.html)
- - [Configuration](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/configuration.html)
- - [Development/Contributing](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/contributing.html)
- - [Extending Core Components](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html)
- - [Logging](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/logging.html)
 
-
-## Questions?
-You can probably find help in [#kibana](https://kiwiirc.com/client/irc.freenode.net/?#kibana) on freenode.
-
+Documentation can be found on [elastic.co](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html).
 
 ## Supported Elasticsearch Versions
 
-Elasticsearch.js provides support for, and is regularly tested against, Elasticsearch releases 0.90.12 and greater. We also test against the latest changes in several branches in the Elasticsearch repository. To tell the client which version of Elasticsearch you are using, and therefore the API it should provide, set the `apiVersion` config param. [More info](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/configuration.html#config-options)
+Elasticsearch.js provides support for, and is regularly tested against, Elasticsearch releases 0.90.12 and greater. We also test against the latest changes in several branches in the Elasticsearch repository. To tell the client which version of Elasticsearch you are using, and therefore the API it should provide, set the `apiVersion` config param.
 
 ## Examples
 
@@ -107,8 +93,6 @@ for (const tweet of response.hits.hits) {
   console.log('tweet:', tweet);
 }
 ```
-
-More examples and detailed information about each method are available [here](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/index.html)
 
 ## License
 

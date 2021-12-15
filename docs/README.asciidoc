@@ -1,1 +1,7 @@
-= These files are used to build http://www.elasticsearch.org/guide/en/elasticsearch/client/javascript-api/current/index.html
+= These files are used to build http://www.elasticsearch.org/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html
+
+This documentation is no longer maintained. Pull requests and issues will not be
+addressed.
+
+To contribute to the current JavaScript client docs, refer to the [Elasticsearch
+JavaScript client repository](https://github.com/elastic/elasticsearch-js).
