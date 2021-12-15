@@ -31,7 +31,7 @@ npm install elasticsearch
 
 ## Docs
 
-Documentation can be found on [elastic.co](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html)
+Documentation can be found on [elastic.co](https://www.elastic.co/guide/en/elasticsearch/client/elasticsearch-js/16.x/index.html).
 
 ## Supported Elasticsearch Versions
 
