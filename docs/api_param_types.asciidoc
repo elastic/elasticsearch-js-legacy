@@ -20,4 +20,4 @@ The <<api-reference>> describes the type that each parameter accepts, this refer
 
 [[api-param-type-json-lines]]`JSONLines`:: -- A string or `Buffer` of new-line (`\n`) delimited JSON objects.
 
-[[api-param-type-duration-string]]`DurationString`:: -- A string that represents a duration of time with a number followed by an https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units[elasticsearch time unit]. `30m` is thirty minutes, `2d` is two days, and so on.
+[[api-param-type-duration-string]]`DurationString`:: -- A string that represents a duration of time with a number followed by an https://www.elastic.co/guide/en/elasticsearch/reference/7.5/common-options.html#time-units[elasticsearch time unit]. `30m` is thirty minutes, `2d` is two days, and so on.
