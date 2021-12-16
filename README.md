@@ -1,6 +1,6 @@
 # elasticsearch.js 16.7.2
 
-⚠️ **This client is no longer maintained. We strongly advise you to migrate to the new Elasticsearch client.**
+⚠️ **This client is no longer maintained. We strongly advise you to migrate to the [new Elasticsearch client](https://github.com/elastic/elasticsearch-js).**
 
 ---
 
